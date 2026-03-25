@@ -7,6 +7,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -54,3 +57,23 @@ jobs:
           name: ai-web-builder-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Publish APK to GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest-apk
+          commit: ${{ github.sha }}
+          name: Latest APK Build
+          body: |
+            Automatically built from branch `${{ github.ref_name }}`.
+
+            Commit: `${{ github.sha }}`
+            Artifact: `app-debug.apk`
+
+            This release is updated on every push to `main` or `master`.
+          artifacts: android/app/build/outputs/apk/debug/app-debug.apk
+          prerelease: true
+          allowUpdates: true
+          updateOnlyUnreleased: true
+          replacesArtifacts: true
+          removeArtifacts: true

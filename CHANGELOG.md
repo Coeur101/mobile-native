@@ -2,6 +2,7 @@
 
 ## 2026-03-25
 
+- `ci`: GitHub Actions 现在会在构建完成后自动更新仓库 Release `latest-apk`，并附带 `app-debug.apk`。
 - `ci`: 切换构建工具到 pnpm，并新增 GitHub Actions 自动构建 Debug APK 工作流。
 - `fix`: 修复 GitHub Actions 中 `android/gradlew` 无执行权限导致的 APK 构建失败，工作流改为先执行 `chmod +x ./gradlew`。
 - `docs`: 更新 README 与 AGENTS，统一为 pnpm 命令并补充 CI 说明。
