@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import {
   ArrowLeft,
+  Clock,
   CloudSun,
   Eye,
   Grid2X2,
@@ -18,6 +19,7 @@ import { toast } from "sonner";
 import { PageTransition } from "@/components/ui/page-transition";
 import { PulsingDots } from "@/components/ui/pulsing-dots";
 import { ThoughtChain } from "@/components/ui/thought-chain";
+import { VersionPanel } from "@/components/ui/version-panel";
 import { promptTemplates } from "@/features/project/templates";
 import { mockProjectService } from "@/services/project/mock-project-service";
 import { buttonTap } from "@/lib/animations";
@@ -33,6 +35,9 @@ export function EditorPage() {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showVersionPanel, setShowVersionPanel] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editName, setEditName] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -94,6 +99,35 @@ export function EditorPage() {
     }
   };
 
+  const handleRestoreVersion = async (versionId: string) => {
+    if (!project) return;
+    const restored = await mockProjectService.restoreProjectVersion(project.id, versionId);
+    if (restored) {
+      setProject(restored);
+      toast.success("已恢复到目标版本。");
+      setShowVersionPanel(false);
+    }
+  };
+
+  const handleRenameSave = async () => {
+    if (!project || !editName.trim()) {
+      setIsEditingName(false);
+      return;
+    }
+    const updated = await mockProjectService.updateProjectMeta(project.id, { name: editName.trim() });
+    if (updated) {
+      setProject(updated);
+      toast.success("项目名称已更新。");
+    }
+    setIsEditingName(false);
+  };
+
+  const startEditing = () => {
+    if (!project) return;
+    setEditName(project.name);
+    setIsEditingName(true);
+  };
+
   const messages = project?.messages ?? [];
 
   return (
@@ -111,12 +145,31 @@ export function EditorPage() {
             >
               <ArrowLeft className="h-5 w-5" />
             </motion.button>
-            <div>
-              <h1 className="text-sm font-semibold text-foreground">
-                {project ? project.name : "新建项目"}
-              </h1>
-              {project && (
-                <p className="text-xs text-muted-foreground">{project.description?.slice(0, 20)}</p>
+            <div className="min-w-0 flex-1">
+              {isEditingName ? (
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  onBlur={() => void handleRenameSave()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") void handleRenameSave();
+                    if (e.key === "Escape") setIsEditingName(false);
+                  }}
+                  autoFocus
+                  className="w-full rounded-lg border border-primary/40 bg-input-background px-2 py-0.5 text-sm font-semibold text-foreground outline-none"
+                />
+              ) : (
+                <h1
+                  className="cursor-pointer truncate text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                  onClick={startEditing}
+                  title="点击编辑项目名称"
+                >
+                  {project ? project.name : "新建项目"}
+                </h1>
+              )}
+              {project && !isEditingName && (
+                <p className="truncate text-xs text-muted-foreground">{project.description?.slice(0, 20)}</p>
               )}
             </div>
           </div>
@@ -132,6 +185,15 @@ export function EditorPage() {
                   title="保存版本"
                 >
                   <Save className="h-4 w-4" />
+                </motion.button>
+                <motion.button
+                  type="button"
+                  whileTap={buttonTap}
+                  onClick={() => setShowVersionPanel(true)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
+                  title="版本历史"
+                >
+                  <Clock className="h-4 w-4" />
                 </motion.button>
                 <motion.button
                   type="button"
@@ -304,6 +366,14 @@ export function EditorPage() {
           </motion.button>
         </div>
       </div>
+
+      {/* 版本历史面板 */}
+      <VersionPanel
+        open={showVersionPanel}
+        onClose={() => setShowVersionPanel(false)}
+        versions={project?.versions ?? []}
+        onRestore={(versionId) => void handleRestoreVersion(versionId)}
+      />
     </PageTransition>
   );
 }

@@ -41,6 +41,11 @@ src/
     page-transition.tsx 页面转场动画（opacity 淡入）
     pulsing-dots.tsx  三点脉冲加载指示器
     thought-chain.tsx 思维链组件（垂直时间线 + 状态 + 折叠）
+    dialog.tsx        通用对话框（遮罩 + 确认/取消 + 危险操作）
+    code-block.tsx    代码高亮组件（highlight.js + 行号）
+    version-panel.tsx 版本历史侧滑面板（时间线 + 恢复）
+    skeleton.tsx      骨架屏组件（项目卡片/列表）
+    error-boundary.tsx 全局错误边界（捕获 + 重试）
   pages/              页面（按功能分组）
     login/            登录页（渐变背景 + Logo 弹簧入场）
     home/             项目列表页（卡片 + FAB）

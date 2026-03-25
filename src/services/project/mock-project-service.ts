@@ -146,4 +146,44 @@ export const mockProjectService: ProjectService = {
   async deleteProject(projectId) {
     persist(localDb.getProjects().filter((project) => project.id !== projectId));
   },
+  async restoreProjectVersion(projectId, versionId) {
+    const projects = localDb.getProjects();
+    const project = projects.find((item) => item.id === projectId);
+    if (!project) return null;
+
+    const version = project.versions.find((v) => v.id === versionId);
+    if (!version) return null;
+
+    // 恢复文件内容为该版本的快照
+    project.files = { ...version.files };
+    project.updatedAt = new Date().toISOString();
+
+    // 创建一个新的版本快照记录此次恢复操作
+    const nextVersionNo = project.versions.length + 1;
+    project.versions = [
+      {
+        id: nextVersionId(project.id, nextVersionNo),
+        versionNo: nextVersionNo,
+        summary: `恢复到版本 ${version.versionNo}`,
+        files: { ...version.files },
+        createdAt: new Date().toISOString(),
+      },
+      ...project.versions,
+    ];
+
+    persist(projects);
+    return project;
+  },
+  async updateProjectMeta(projectId, meta) {
+    const projects = localDb.getProjects();
+    const project = projects.find((item) => item.id === projectId);
+    if (!project) return null;
+
+    if (meta.name !== undefined) project.name = meta.name;
+    if (meta.description !== undefined) project.description = meta.description;
+    project.updatedAt = new Date().toISOString();
+
+    persist(projects);
+    return project;
+  },
 };

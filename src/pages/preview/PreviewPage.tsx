@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { ArrowLeft, Download, FileCode2, MonitorSmartphone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { PageTransition } from "@/components/ui/page-transition";
+import { CodeBlock } from "@/components/ui/code-block";
 import { buildPreviewDocument } from "@/lib/render-project";
 import { mockProjectService } from "@/services/project/mock-project-service";
 import { buttonTap } from "@/lib/animations";
@@ -130,9 +131,7 @@ export function PreviewPage() {
                     <FileCode2 className="mr-2 inline-block h-3.5 w-3.5 text-[#A78BFA]" />
                     {fileName}
                   </header>
-                  <pre className="overflow-auto p-4 text-xs leading-6 text-white/70">
-                    <code>{content}</code>
-                  </pre>
+                  <CodeBlock code={content} fileName={fileName} />
                 </section>
               ))}
             </motion.div>

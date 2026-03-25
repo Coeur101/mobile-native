@@ -3,6 +3,7 @@ import { Toaster } from "sonner";
 import { useEffect } from "react";
 import { router } from "./router";
 import { useThemeStore, applyTheme } from "./stores/use-theme-store";
+import { ErrorBoundary } from "./components/ui/error-boundary";
 
 export default function App() {
   const mode = useThemeStore((s) => s.mode);
@@ -21,9 +22,9 @@ export default function App() {
   }, [mode]);
 
   return (
-    <>
+    <ErrorBoundary>
       <RouterProvider router={router} />
       <Toaster position="bottom-center" richColors offset="80px" />
-    </>
+    </ErrorBoundary>
   );
 }

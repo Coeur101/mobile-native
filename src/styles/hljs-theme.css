@@ -1,0 +1,74 @@
+/* highlight.js 自定义暗色主题 — 适配项目紫色品牌色 */
+.hljs {
+  color: #d4d4d8;
+  background: transparent;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #c084fc;
+}
+
+.hljs-string,
+.hljs-addition {
+  color: #86efac;
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #fbbf24;
+}
+
+.hljs-built_in,
+.hljs-type {
+  color: #67e8f9;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable {
+  color: #f9a8d4;
+}
+
+.hljs-name,
+.hljs-tag {
+  color: #f472b6;
+}
+
+.hljs-attribute {
+  color: #a78bfa;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #fbbf24;
+}
+
+.hljs-title,
+.hljs-section {
+  color: #93c5fd;
+  font-weight: bold;
+}
+
+.hljs-selector-class,
+.hljs-selector-id {
+  color: #a78bfa;
+}
+
+.hljs-deletion {
+  color: #fca5a5;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

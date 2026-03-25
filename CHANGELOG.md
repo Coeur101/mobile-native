@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- 新增 Dialog 通用对话框组件，支持确认/取消/危险操作样式（2026-03-25）
+- 新增项目删除二次确认对话框，防止误删（2026-03-25）
+- 新增 VersionPanel 版本历史侧滑面板，支持查看版本列表和恢复历史版本（2026-03-25）
+- 新增 CodeBlock 代码高亮组件，集成 highlight.js，支持 HTML/CSS/JS 语法高亮和行号显示（2026-03-25）
+- 新增自定义 highlight.js 暗色主题，适配项目紫色品牌色（2026-03-25）
+- 新增首页项目搜索功能，支持按名称和描述模糊搜索（2026-03-25）
+- 新增首页项目状态筛选标签（全部/草稿/进行中/已归档）（2026-03-25）
+- 新增 Skeleton 骨架屏组件和项目列表骨架屏（2026-03-25）
+- 新增全局 ErrorBoundary 错误边界组件，捕获运行时错误并提供重试按钮（2026-03-25）
+- 新增编辑页项目名称点击编辑功能，支持重命名（2026-03-25）
+- ProjectService 接口新增 restoreProjectVersion 和 updateProjectMeta 方法（2026-03-25）
+- 新增 PRD 产品需求文档 docs/PRD.md（2026-03-25）
 - 新增 motion (Framer Motion v12+) 动画库依赖（2026-03-25）
 - 新增 ThemeProvider 主题系统：Zustand store + html class 切换，支持亮色/暗色/自动三种模式（2026-03-25）
 - 新增 PageTransition 页面转场组件（2026-03-25）
