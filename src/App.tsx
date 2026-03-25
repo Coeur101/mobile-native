@@ -23,7 +23,7 @@ export default function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <Toaster position="top-center" richColors />
+      <Toaster position="bottom-center" richColors offset="80px" />
     </>
   );
 }
