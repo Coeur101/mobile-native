@@ -27,6 +27,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - mock AI 服务生成带 5 步思维链的 AI 回复（2026-03-25）
 - 整理项目目录结构：将 App.tsx 和 router.tsx 从 src/app/ 提升到 src/，删除 src/app/ 下 46+ 个 shadcn/ui 死代码组件、5 个旧页面和冗余类型/工具文件，清理 tsconfig.json exclude 条目（2026-03-25）
 
+### Fixed
+
+- Toast 通知从 top-center 改为 bottom-center + 80px offset，避免遮挡顶部导航栏，符合移动端操作习惯（2026-03-25）
+
 ## 2026-03-25
 
 ### Added
