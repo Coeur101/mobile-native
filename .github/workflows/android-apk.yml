@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ai-web-builder-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/沙盒.apk
           if-no-files-found: error
 
       # ── 版本判定：基于 Conventional Commits 自动决定是否发版 ──
@@ -190,7 +190,7 @@ jobs:
           commit: ${{ github.sha }}
           name: v${{ steps.version.outputs.new_version }}
           body: ${{ steps.notes.outputs.body }}
-          artifacts: android/app/build/outputs/apk/debug/app-debug.apk
+          artifacts: android/app/build/outputs/apk/debug/沙盒.apk
           artifactContentType: application/vnd.android.package-archive
           prerelease: false
           makeLatest: true
@@ -209,7 +209,7 @@ jobs:
             Commit: `${{ github.sha }}`
 
             This release is updated on every push to `main` or `master`.
-          artifacts: android/app/build/outputs/apk/debug/app-debug.apk
+          artifacts: android/app/build/outputs/apk/debug/沙盒.apk
           prerelease: true
           allowUpdates: true
           updateOnlyUnreleased: true
