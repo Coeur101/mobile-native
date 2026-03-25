@@ -29,7 +29,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- 修复页面标题为 "Untitled"，改为 "AI Web Builder"，并添加 SVG emoji favicon（2026-03-25）
+- 修复项目名称中中文标点被替换为连字符的问题，改用原文截取作为项目名称（2026-03-25）
+- 修复首页空状态与项目列表同时显示的 AnimatePresence 动画竞态问题（2026-03-25）
+- 修复预览页 iframe sandbox 同时含 allow-scripts 和 allow-same-origin 的安全警告（2026-03-25）
 - Toast 通知从 top-center 改为 bottom-center + 80px offset，避免遮挡顶部导航栏，符合移动端操作习惯（2026-03-25）
+
+### Changed
+
+- 设置页主题切换按钮添加中文文字标签（浅色/自动/深色）（2026-03-25）
+- 设置页保存按钮从纯图标圆形改为带"保存设置"文字的完整按钮（2026-03-25）
+- index.html lang 属性从 "en" 改为 "zh-CN"（2026-03-25）
 
 ## 2026-03-25
 

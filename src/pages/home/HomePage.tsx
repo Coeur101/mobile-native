@@ -80,7 +80,13 @@ export function HomePage() {
               </motion.button>
             </motion.div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2">
+            <motion.div
+              key="projects"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="grid gap-4 md:grid-cols-2"
+            >
               {projects.map((project) => (
                 <article
                   key={project.id}
@@ -140,7 +146,7 @@ export function HomePage() {
                   </div>
                 </article>
               ))}
-            </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </main>

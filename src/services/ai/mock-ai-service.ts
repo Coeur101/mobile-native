@@ -1,12 +1,10 @@
 import type { AIService } from "./ai-service";
 import type { GeneratedProjectPayload, Project, ProjectFileMap, ProjectMessage, ThinkingStep } from "@/types";
 
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 24) || "demo-project";
+/** 从用户提示词中提取简短项目名称（保留中文原文） */
+function deriveProjectName(value: string) {
+  const trimmed = value.trim().slice(0, 20);
+  return trimmed || "演示项目";
 }
 
 function buildFiles(prompt: string, project?: Project): ProjectFileMap {
@@ -175,7 +173,7 @@ export const mockAIService: AIService = {
     ];
 
     const payload: GeneratedProjectPayload = {
-      projectName: slugify(prompt),
+      projectName: deriveProjectName(prompt),
       summary: prompt,
       files,
       messages,

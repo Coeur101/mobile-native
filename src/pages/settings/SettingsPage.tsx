@@ -20,9 +20,9 @@ const defaultForm: UserSettings = {
 };
 
 const themeOptions = [
-  { value: "light" as const, icon: Sun },
-  { value: "auto" as const, icon: Monitor },
-  { value: "dark" as const, icon: Moon },
+  { value: "light" as const, icon: Sun, label: "浅色" },
+  { value: "auto" as const, icon: Monitor, label: "自动" },
+  { value: "dark" as const, icon: Moon, label: "深色" },
 ];
 
 export function SettingsPage() {
@@ -97,7 +97,7 @@ export function SettingsPage() {
                     type="button"
                     whileTap={buttonTap}
                     onClick={() => handleThemeChange(option.value)}
-                    className={`relative flex h-16 items-center justify-center rounded-xl border-2 transition-all duration-200 ${
+                    className={`relative flex h-16 flex-col items-center justify-center gap-1 rounded-xl border-2 transition-all duration-200 ${
                       isActive
                         ? "border-primary bg-accent"
                         : "border-border bg-card hover:border-primary/30"
@@ -112,6 +112,7 @@ export function SettingsPage() {
                       />
                     )}
                     <Icon className={`h-5 w-5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+                    <span className={`text-xs ${isActive ? "text-primary font-medium" : "text-muted-foreground"}`}>{option.label}</span>
                   </motion.button>
                 );
               })}
@@ -181,7 +182,7 @@ export function SettingsPage() {
             type="button"
             whileTap={buttonTap}
             onClick={() => void handleSave()}
-            className="mt-4 flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:opacity-90"
+            className="mt-4 flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
             title="保存设置"
           >
             {saveSuccess ? (
@@ -189,11 +190,16 @@ export function SettingsPage() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={SPRING_BOUNCY}
+                className="flex items-center gap-2"
               >
-                <Check className="h-5 w-5" />
+                <Check className="h-4 w-4" />
+                <span>已保存</span>
               </motion.div>
             ) : (
-              <Save className="h-5 w-5" />
+              <span className="flex items-center gap-2">
+                <Save className="h-4 w-4" />
+                <span>保存设置</span>
+              </span>
             )}
           </motion.button>
         </section>

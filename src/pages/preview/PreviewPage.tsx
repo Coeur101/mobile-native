@@ -109,7 +109,7 @@ export function PreviewPage() {
                 title="project-preview"
                 srcDoc={previewDocument}
                 className="h-[calc(100vh-7rem)] w-full rounded-[28px] border border-white/10 bg-white"
-                sandbox="allow-scripts allow-same-origin"
+                sandbox="allow-scripts"
               />
             </motion.div>
           ) : (
