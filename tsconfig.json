@@ -20,13 +20,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "capacitor.config.ts"],
-  "exclude": [
-    "src/app/pages/**/*",
-    "src/app/types/**/*",
-    "src/app/utils/**/*",
-    "src/app/components/**/*",
-    "src/app/components/figma/**/*",
-    "src/app/components/ui/sonner.tsx"
-  ]
+  "include": ["src", "capacitor.config.ts"]
 }

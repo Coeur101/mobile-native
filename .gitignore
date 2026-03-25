@@ -6,3 +6,8 @@ android/.gradle/
 android/local.properties
 android/app/build/
 android/capacitor.settings.gradle
+project.md
+source
+source.zip
+
+.claude/settings.local.json

@@ -18,20 +18,44 @@
 - 本地调试 APK：`pnpm android:apk:debug`
 - JDK 要求：本地打包前需设置 `JAVA_HOME`
 
+## 技术栈
+
+- React 19 + TypeScript
+- Vite 7 + Tailwind CSS v4
+- Zustand 状态管理
+- React Router 7
+- Capacitor 8（Android）
+- pnpm 包管理
+
 ## 当前目录结构
 
 ```text
 src/
-  app/        应用入口、路由和 UI 公共组件
-  components/ 本地轻量 UI 组件
-  features/   业务特征数据和配置
-  lib/        本地存储、预览拼装等工具
-  pages/      login/home/editor/preview/settings 页面
-  services/   auth/project/settings/ai mock 服务
-  stores/     本地 UI 状态
-  types/      共享类型
-  styles/     样式与主题
-android/      Capacitor Android 工程
+  App.tsx             应用根组件
+  router.tsx          路由配置
+  main.tsx            挂载入口
+  components/ui/      轻量 UI 组件（Input, Tabs）
+  pages/              页面（按功能分组）
+    login/            登录页
+    home/             项目列表页
+    editor/           编辑页
+    preview/          独立预览页
+    settings/         用户设置页
+  services/           业务服务层
+    auth/             认证服务（mock）
+    ai/               AI 服务（mock）
+    project/          项目服务（mock）
+    settings/         设置服务（mock）
+  stores/             Zustand 状态
+  features/           业务配置数据
+    auth/             认证提供商标签
+    project/          提示词模板
+  lib/                工具库
+    local-db.ts       localStorage 封装
+    render-project.ts 预览文档拼装
+  types/              共享类型定义
+  styles/             样式与主题
+android/              Capacitor Android 工程
 ```
 
 ## 当前页面与路由
@@ -41,14 +65,6 @@ android/      Capacitor Android 工程
 - `/editor/:projectId?`：编辑页，包含对话、文件、预览、历史四个 Tab
 - `/preview/:projectId`：独立预览页
 - `/settings`：用户级设置页
-
-## 当前实现要点
-
-- 登录页同时展示邮箱登录和微信登录入口，均为 mock
-- 编辑页采用 `对话 / 文件 / 预览 / 历史` 四个 Tab
-- 项目数据采用结构化模型：`files / messages / versions`
-- 旧版 `code` 与 `chatHistory` 数据会在读取时自动迁移
-- 预览页使用文件集拼装 `srcDoc`，不是单段 HTML 字符串
 
 ## 当前 mock 边界
 
