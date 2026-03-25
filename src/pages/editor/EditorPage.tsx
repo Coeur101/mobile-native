@@ -1,22 +1,29 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ArrowLeft, Eye, FileCode2, History, MessageSquarePlus, Save } from "lucide-react";
+import {
+  ArrowLeft,
+  CloudSun,
+  Eye,
+  Grid2X2,
+  Grid3X3,
+  Loader2,
+  Save,
+  Send,
+  Sparkles,
+  Timer,
+  User,
+} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageTransition } from "@/components/ui/page-transition";
 import { PulsingDots } from "@/components/ui/pulsing-dots";
 import { promptTemplates } from "@/features/project/templates";
-import { buildPreviewDocument } from "@/lib/render-project";
 import { mockProjectService } from "@/services/project/mock-project-service";
-import { useEditorStore } from "@/stores/use-editor-store";
-import {
-  EASE_SMOOTH,
-  STAGGER_DELAY,
-  buttonTap,
-  cardHover,
-} from "@/lib/animations";
+import { buttonTap } from "@/lib/animations";
 import type { Project } from "@/types";
+
+// 模板图标映射
+const templateIcons = [Grid2X2, Grid3X3, Timer, CloudSun];
 
 export function EditorPage() {
   const navigate = useNavigate();
@@ -25,7 +32,7 @@ export function EditorPage() {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { activeTab, selectedFile, setActiveTab, setSelectedFile } = useEditorStore();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function loadProject() {
@@ -36,17 +43,16 @@ export function EditorPage() {
       const nextProject = await mockProjectService.getProjectById(projectId);
       setProject(nextProject);
     }
-
     void loadProject();
   }, [projectId]);
 
-  const previewDocument = useMemo(() => buildPreviewDocument(project?.files ?? {}), [project]);
+  // 自动滚动到底部
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [project?.messages]);
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
-      toast.error("请输入你想生成的页面需求。");
-      return;
-    }
+    if (!prompt.trim() || isGenerating) return;
 
     setIsGenerating(true);
     try {
@@ -61,7 +67,6 @@ export function EditorPage() {
 
       setProject(nextProject);
       setPrompt("");
-      setSelectedFile("index.html");
       toast.success(project ? "项目已按新需求更新。" : "项目已创建。");
       if (!projectId) {
         navigate(`/editor/${nextProject.id}`, { replace: true });
@@ -72,10 +77,7 @@ export function EditorPage() {
   };
 
   const handleSaveVersion = async () => {
-    if (!project) {
-      toast.error("请先生成项目。");
-      return;
-    }
+    if (!project) return;
     setIsSaving(true);
     try {
       const nextProject = await mockProjectService.createProjectVersion(
@@ -91,275 +93,210 @@ export function EditorPage() {
     }
   };
 
-  const updateSelectedFile = async (value: string) => {
-    if (!project) {
-      return;
-    }
-    const nextProject = await mockProjectService.updateProjectFiles(project.id, {
-      ...project.files,
-      [selectedFile]: value,
-    });
-    if (nextProject) {
-      setProject(nextProject);
-    }
-  };
-
-  const fileEntries = Object.entries(project?.files ?? {});
+  const messages = project?.messages ?? [];
 
   return (
-    <PageTransition className="min-h-screen bg-background">
-      {/* Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: EASE_SMOOTH }}
-        className="sticky top-0 z-10 border-b border-border bg-card/80 backdrop-blur-xl"
-      >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+    <PageTransition className="flex min-h-screen flex-col bg-background">
+      {/* Header — 紧凑，纯图标 */}
+      <header className="sticky top-0 z-10 border-b border-border bg-card/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-md items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
             <motion.button
               type="button"
               whileTap={buttonTap}
               onClick={() => navigate("/")}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-card text-muted-foreground transition hover:border-primary/20 hover:text-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary"
+              title="返回"
             >
               <ArrowLeft className="h-5 w-5" />
             </motion.button>
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">Editor</p>
-              <h1 className="text-lg font-semibold text-foreground">
+              <h1 className="text-sm font-semibold text-foreground">
                 {project ? project.name : "新建项目"}
               </h1>
+              {project && (
+                <p className="text-xs text-muted-foreground">{project.description?.slice(0, 20)}</p>
+              )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <motion.button
-              type="button"
-              whileTap={buttonTap}
-              onClick={() => project && navigate(`/preview/${project.id}`)}
-              disabled={!project}
-              className="inline-flex h-11 items-center gap-2 rounded-2xl border border-border px-4 text-sm font-medium text-foreground transition hover:border-primary/20 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Eye className="h-4 w-4" />
-              独立预览
-            </motion.button>
-            <motion.button
-              type="button"
-              whileTap={buttonTap}
-              onClick={() => void handleSaveVersion()}
-              disabled={!project || isSaving}
-              className="inline-flex h-11 items-center gap-2 rounded-2xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:cursor-wait disabled:opacity-50"
-            >
-              <Save className="h-4 w-4" />
-              保存版本
-            </motion.button>
+          <div className="flex items-center gap-1">
+            {project && (
+              <>
+                <motion.button
+                  type="button"
+                  whileTap={buttonTap}
+                  onClick={() => void handleSaveVersion()}
+                  disabled={isSaving}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-primary disabled:opacity-50"
+                  title="保存版本"
+                >
+                  <Save className="h-4 w-4" />
+                </motion.button>
+                <motion.button
+                  type="button"
+                  whileTap={buttonTap}
+                  onClick={() => navigate(`/preview/${project.id}`)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-primary-foreground"
+                  style={{ background: "var(--gradient-brand)" }}
+                  title="预览"
+                >
+                  <Eye className="h-4 w-4" />
+                </motion.button>
+              </>
+            )}
           </div>
         </div>
-      </motion.header>
+      </header>
 
-      <main className="mx-auto grid max-w-6xl gap-4 px-4 py-6 lg:grid-cols-[360px_1fr]">
-        {/* 左侧 — 需求输入 */}
-        <motion.section
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: EASE_SMOOTH, delay: 0.1 }}
-          className="rounded-[28px] border border-border bg-card p-5 shadow-sm"
-        >
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <MessageSquarePlus className="h-4 w-4 text-primary" />
-            需求输入
-          </div>
-          <textarea
-            value={prompt}
-            onChange={(event) => setPrompt(event.target.value)}
-            placeholder="描述你想创建或更新的网页。当前会生成结构化文件，并保留后续对接真实 AI 的入口。"
-            className="mt-3 min-h-32 w-full rounded-3xl border border-border bg-input-background px-4 py-4 text-sm text-foreground outline-none transition focus:border-primary/40 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]"
-          />
-
-          {/* 模板卡片 */}
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            {promptTemplates.map((template, i) => (
-              <motion.button
-                key={template.id}
-                type="button"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * STAGGER_DELAY, duration: 0.3, ease: EASE_SMOOTH }}
-                whileTap={buttonTap}
-                whileHover={{ scale: 1.02, borderColor: "var(--primary)" }}
-                onClick={() => setPrompt(template.prompt)}
-                className="rounded-2xl border border-border bg-card px-3 py-3 text-left text-sm transition hover:bg-accent"
+      {/* 消息区域 */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-md px-4 py-4">
+          <AnimatePresence mode="popLayout">
+            {messages.length === 0 ? (
+              /* 欢迎状态 + 模板 */
+              <motion.div
+                key="welcome"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center py-8 text-center"
               >
-                <div className="font-medium text-foreground">{template.label}</div>
-                <div className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                  {template.prompt}
+                <div className="animate-float mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border bg-accent">
+                  <Sparkles className="h-8 w-8 text-primary" />
                 </div>
-              </motion.button>
-            ))}
-          </div>
+                <h2 className="text-lg font-semibold text-foreground mb-1">
+                  你想创造点什么？
+                </h2>
+                <p className="text-sm text-muted-foreground mb-8">
+                  输入需求或者尝试以下灵感模板
+                </p>
 
-          {/* 生成按钮 */}
+                <div className="grid w-full max-w-sm grid-cols-2 gap-3">
+                  {promptTemplates.map((template, idx) => {
+                    const Icon = templateIcons[idx] ?? Sparkles;
+                    return (
+                      <button
+                        key={template.id}
+                        type="button"
+                        onClick={() => setPrompt(template.prompt)}
+                        className="group flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-4 text-left transition-all duration-200 hover:border-primary/30 hover:shadow-sm"
+                      >
+                        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent text-muted-foreground transition-transform duration-200 group-hover:scale-110 group-hover:text-primary">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-foreground mb-0.5">
+                            {template.label}
+                          </h3>
+                          <p className="text-xs text-muted-foreground line-clamp-1">
+                            {template.prompt}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            ) : (
+              /* 对话消息列表 */
+              <div className="space-y-4">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}
+                  >
+                    {/* 头像 */}
+                    <div
+                      className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
+                        message.role === "user"
+                          ? "bg-primary text-primary-foreground"
+                          : "border border-border bg-accent text-muted-foreground"
+                      }`}
+                    >
+                      {message.role === "user" ? (
+                        <User className="h-4 w-4" />
+                      ) : (
+                        <Sparkles className="h-4 w-4" />
+                      )}
+                    </div>
+
+                    {/* 气泡 */}
+                    <div className={`flex-1 ${message.role === "user" ? "text-right" : ""}`}>
+                      <div
+                        className={`inline-block max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                          message.role === "user"
+                            ? "rounded-tr-sm bg-primary text-primary-foreground shadow-sm"
+                            : "rounded-tl-sm border border-border bg-card text-foreground shadow-sm"
+                        }`}
+                      >
+                        <p className="whitespace-pre-wrap">{message.content}</p>
+                      </div>
+                      <p className={`mt-1.5 px-2 text-[11px] text-muted-foreground/60 ${message.role === "user" ? "text-right" : ""}`}>
+                        {new Date(message.createdAt).toLocaleTimeString("zh-CN", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+
+                {/* 生成中指示器 */}
+                {isGenerating && (
+                  <div className="flex gap-3">
+                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-accent text-muted-foreground">
+                      <Sparkles className="h-4 w-4" />
+                    </div>
+                    <div className="inline-block rounded-2xl rounded-tl-sm border border-border bg-card px-4 py-2.5 shadow-sm">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        正在思考 <PulsingDots />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* 底部输入栏 */}
+      <div className="sticky bottom-0 z-20 border-t border-border bg-card/80 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
+        <div className="mx-auto flex max-w-md items-end gap-2 px-4 py-3">
+          <div className="flex-1 overflow-hidden rounded-2xl border border-border bg-input-background shadow-sm transition-all focus-within:border-primary/40 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]">
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void handleGenerate();
+                }
+              }}
+              placeholder="描述你想要的网页..."
+              className="max-h-32 min-h-[48px] w-full resize-none bg-transparent px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+              rows={1}
+              disabled={isGenerating}
+            />
+          </div>
           <motion.button
             type="button"
             whileTap={buttonTap}
             onClick={() => void handleGenerate()}
-            disabled={isGenerating}
-            className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
-            style={{ background: isGenerating ? undefined : "var(--gradient-brand)" }}
+            disabled={!prompt.trim() || isGenerating}
+            className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
+            title="发送"
           >
             {isGenerating ? (
-              <>
-                生成中 <PulsingDots />
-              </>
-            ) : project ? "继续生成" : "生成项目"}
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Send className="h-5 w-5" />
+            )}
           </motion.button>
-
-          <div className="mt-5 rounded-3xl border border-amber-200/50 bg-amber-50/50 p-4 text-sm leading-6 text-amber-900 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-300">
-            当前为演示模式。邮箱登录、微信登录、Supabase 数据和真实 AI 调用都只预留了入口，页面结构与数据模型已按后续真实接入形态组织。
-          </div>
-        </motion.section>
-
-        {/* 右侧 — Tabs 内容 */}
-        <motion.section
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: EASE_SMOOTH, delay: 0.2 }}
-          className="rounded-[28px] border border-border bg-card p-5 shadow-sm"
-        >
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)}>
-            <TabsList className="grid h-auto grid-cols-4 rounded-2xl bg-secondary p-1">
-              <TabsTrigger value="chat" className="rounded-xl py-2">对话</TabsTrigger>
-              <TabsTrigger value="files" className="rounded-xl py-2">文件</TabsTrigger>
-              <TabsTrigger value="preview" className="rounded-xl py-2">预览</TabsTrigger>
-              <TabsTrigger value="history" className="rounded-xl py-2">历史</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="chat" className="mt-5">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key="chat-content"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, ease: EASE_SMOOTH }}
-                  className="space-y-3"
-                >
-                  {(project?.messages ?? []).length === 0 ? (
-                    <div className="rounded-3xl border border-dashed border-border bg-secondary p-8 text-center text-sm text-muted-foreground">
-                      还没有对话记录，先输入一个需求生成项目。
-                    </div>
-                  ) : (
-                    project?.messages.map((message, index) => (
-                      <motion.div
-                        key={message.id}
-                        initial={{
-                          opacity: 0,
-                          x: message.role === "user" ? 20 : -20,
-                        }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{
-                          delay: index * 0.05,
-                          duration: 0.3,
-                          ease: EASE_SMOOTH,
-                        }}
-                        className={`rounded-3xl border px-4 py-3 text-sm leading-6 ${
-                          message.role === "user"
-                            ? "border-primary/20 bg-primary text-primary-foreground"
-                            : "border-border bg-secondary text-foreground"
-                        }`}
-                      >
-                        <div className="mb-1 text-xs uppercase tracking-[0.18em] opacity-70">
-                          {message.role}
-                        </div>
-                        {message.content}
-                      </motion.div>
-                    ))
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </TabsContent>
-
-            <TabsContent value="files" className="mt-5">
-              {!project ? (
-                <div className="rounded-3xl border border-dashed border-border bg-secondary p-8 text-center text-sm text-muted-foreground">
-                  先生成项目后再编辑文件。
-                </div>
-              ) : (
-                <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
-                  <aside className="space-y-2">
-                    {fileEntries.map(([fileName]) => (
-                      <motion.button
-                        key={fileName}
-                        type="button"
-                        whileTap={buttonTap}
-                        onClick={() => setSelectedFile(fileName)}
-                        className={`flex w-full items-center gap-2 rounded-2xl px-3 py-3 text-left text-sm transition ${
-                          selectedFile === fileName
-                            ? "bg-primary text-primary-foreground"
-                            : "border border-border bg-card text-foreground hover:border-primary/20"
-                        }`}
-                      >
-                        <FileCode2 className="h-4 w-4" />
-                        {fileName}
-                      </motion.button>
-                    ))}
-                  </aside>
-                  <textarea
-                    value={project.files[selectedFile] ?? ""}
-                    onChange={(event) => void updateSelectedFile(event.target.value)}
-                    className="min-h-[420px] w-full rounded-3xl border border-border bg-[#1C1917] px-4 py-4 font-mono text-sm leading-6 text-[#FAFAF9] outline-none transition focus:border-primary/40 dark:bg-[#0C0A09]"
-                  />
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="preview" className="mt-5">
-              {!project ? (
-                <div className="rounded-3xl border border-dashed border-border bg-secondary p-8 text-center text-sm text-muted-foreground">
-                  先生成项目后再预览。
-                </div>
-              ) : (
-                <div className="overflow-hidden rounded-[28px] border border-border">
-                  <iframe
-                    title="embedded-preview"
-                    srcDoc={previewDocument}
-                    className="h-[560px] w-full border-0 bg-white"
-                    sandbox="allow-scripts allow-same-origin"
-                  />
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="history" className="mt-5">
-              {!project ? (
-                <div className="rounded-3xl border border-dashed border-border bg-secondary p-8 text-center text-sm text-muted-foreground">
-                  还没有版本历史。
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {project.versions.map((version, index) => (
-                    <motion.article
-                      key={version.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * STAGGER_DELAY, duration: 0.3, ease: EASE_SMOOTH }}
-                      className="rounded-3xl border border-border bg-secondary p-4"
-                    >
-                      <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                        <History className="h-4 w-4 text-primary" />
-                        版本 #{version.versionNo}
-                      </div>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{version.summary}</p>
-                      <p className="mt-2 text-xs text-muted-foreground/60">
-                        {new Date(version.createdAt).toLocaleString("zh-CN")}
-                      </p>
-                    </motion.article>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </motion.section>
-      </main>
+        </div>
+      </div>
     </PageTransition>
   );
 }

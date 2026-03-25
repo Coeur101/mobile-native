@@ -6,12 +6,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { PageTransition } from "@/components/ui/page-transition";
 import { mockAuthService } from "@/services/auth/mock-auth-service";
-import {
-  EASE_SMOOTH,
-  SPRING_BOUNCY,
-  STAGGER_DELAY,
-  buttonTap,
-} from "@/lib/animations";
+import { SPRING_BOUNCY, buttonTap } from "@/lib/animations";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -56,7 +51,6 @@ export function LoginPage() {
       </div>
 
       <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col justify-between rounded-[28px] border border-border bg-card/80 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur dark:shadow-[0_24px_80px_rgba(0,0,0,0.3)]">
-        {/* Logo + 标题 */}
         <div>
           <motion.div
             initial={{ scale: 0, rotate: -20 }}
@@ -67,32 +61,15 @@ export function LoginPage() {
           >
             <Sparkles className="h-6 w-6" />
           </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: STAGGER_DELAY, duration: 0.4, ease: EASE_SMOOTH }}
-            className="text-3xl font-semibold tracking-tight text-foreground"
-          >
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             AI Web Builder
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: STAGGER_DELAY * 2, duration: 0.4, ease: EASE_SMOOTH }}
-            className="mt-3 text-sm leading-6 text-muted-foreground"
-          >
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
             当前为演示模式。邮箱登录、微信登录、Supabase 会话和回调链路都已预留入口，后续可直接替换为真实实现。
-          </motion.p>
+          </p>
         </div>
 
-        {/* 登录卡片 */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: STAGGER_DELAY * 3, duration: 0.5, ease: EASE_SMOOTH }}
-          className="space-y-5"
-        >
-          {/* 邮箱登录 */}
+        <div className="space-y-5">
           <section className="rounded-3xl border border-border bg-secondary/60 p-4 backdrop-blur-sm">
             <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
               <Mail className="h-4 w-4 text-primary" />
@@ -109,14 +86,13 @@ export function LoginPage() {
               whileTap={buttonTap}
               onClick={handleEmailLogin}
               disabled={isEmailLoading}
-              className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-medium text-primary-foreground transition-all hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
+              className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
             >
               {isEmailLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
               进入邮箱演示模式
             </motion.button>
           </section>
 
-          {/* 微信登录 */}
           <section className="rounded-3xl border border-emerald-200/50 bg-emerald-50/50 p-4 dark:border-emerald-900/30 dark:bg-emerald-950/20">
             <div className="mb-3 flex items-center gap-2 text-sm font-medium text-emerald-700 dark:text-emerald-400">
               <MessageCircleMore className="h-4 w-4" />
@@ -130,7 +106,7 @@ export function LoginPage() {
               whileTap={buttonTap}
               onClick={handleWechatLogin}
               disabled={isWechatLoading}
-              className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#07C160] text-sm font-medium text-white transition-all hover:bg-[#05a953] disabled:cursor-wait disabled:opacity-70"
+              className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#07C160] text-sm font-medium text-white transition-colors hover:bg-[#05a953] disabled:cursor-wait disabled:opacity-70"
             >
               {isWechatLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -140,7 +116,7 @@ export function LoginPage() {
               进入微信演示模式
             </motion.button>
           </section>
-        </motion.div>
+        </div>
       </div>
     </PageTransition>
   );

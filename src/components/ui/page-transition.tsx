@@ -8,15 +8,14 @@ interface PageTransitionProps {
   style?: CSSProperties;
 }
 
-/** 页面转场包装组件 — 统一的进入/退出动画 */
+/** 页面转场 — 仅 opacity，GPU 友好 */
 export const PageTransition = ({ children, className = "", style }: PageTransitionProps) => (
   <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
     transition={{ duration: DURATION_PAGE, ease: EASE_APPLE }}
     className={className}
-    style={style}
+    style={{ willChange: "opacity", ...style }}
   >
     {children}
   </motion.div>
