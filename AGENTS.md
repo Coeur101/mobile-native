@@ -5,14 +5,18 @@
 - 当前阶段：前端 MVP 已对齐方案，认证和云端能力仅预留入口
 - 真实接入状态：未接入 Supabase、未接入真实邮箱登录、未接入真实微信登录、未接入真实 AI
 - 安卓状态：已初始化 `Capacitor` 与 `android/` 工程，并完成 `cap sync android`
+- CI 状态：已新增 GitHub Actions 工作流，推送代码后自动构建 Debug APK 并上传 artifact
+- 本地 APK 构建状态：命令链路已验证到 Gradle 启动阶段，本机缺少 `JAVA_HOME`，需安装 JDK 后再本地出包
 
 ## 启动与构建
 
-- 安装依赖：`npm install`
-- 本地开发：`npm run dev`
-- Web 构建：`npm run build`
-- 安卓同步：`npm run android:sync`
-- 打开 Android 工程：`npm run android:open`
+- 安装依赖：`pnpm install`
+- 本地开发：`pnpm dev`
+- Web 构建：`pnpm build`
+- 安卓同步：`pnpm android:sync`
+- 打开 Android 工程：`pnpm android:open`
+- 本地调试 APK：`pnpm android:apk:debug`
+- JDK 要求：本地打包前需设置 `JAVA_HOME`
 
 ## 当前目录结构
 
@@ -62,6 +66,7 @@ android/      Capacitor Android 工程
 - `services/settings`：切换到用户级云端设置
 - `capacitor.config.ts`：补充 deep link 和认证回调
 - `android/`：后续补充签名、图标、deep link、微信回调和真实发布配置
+- `.github/workflows/android-apk.yml`：后续可升级为 release 签名包、AAB、自动发布
 
 ## 维护规则
 
