@@ -4,11 +4,25 @@ export type ProjectStatus = "draft" | "active" | "archived";
 
 export type ProjectFileMap = Record<string, string>;
 
+/** 思维链步骤状态 */
+export type ThinkingStepStatus = "pending" | "loading" | "success" | "error";
+
+/** 思维链单步 */
+export interface ThinkingStep {
+  id: string;
+  title: string;
+  description?: string;
+  status: ThinkingStepStatus;
+  content?: string;
+}
+
 export interface ProjectMessage {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
   createdAt: string;
+  /** AI 回复的思维链步骤 */
+  thinkingSteps?: ThinkingStep[];
   metadata?: Record<string, string | number | boolean | null>;
 }
 

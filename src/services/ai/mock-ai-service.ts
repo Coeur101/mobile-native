@@ -1,5 +1,5 @@
 import type { AIService } from "./ai-service";
-import type { GeneratedProjectPayload, Project, ProjectFileMap, ProjectMessage } from "@/types";
+import type { GeneratedProjectPayload, Project, ProjectFileMap, ProjectMessage, ThinkingStep } from "@/types";
 
 function slugify(value: string) {
   return value
@@ -110,16 +110,64 @@ if (button && list) {
   };
 }
 
+/** 生成 mock 思维链步骤 */
+function buildThinkingSteps(prompt: string, isUpdate: boolean): ThinkingStep[] {
+  const now = Date.now();
+  const steps: ThinkingStep[] = [
+    {
+      id: `step-${now}-1`,
+      title: "理解需求",
+      description: `分析用户输入: "${prompt.slice(0, 30)}${prompt.length > 30 ? "..." : ""}"`,
+      status: "success",
+      content: `用户希望${isUpdate ? "更新现有项目" : "创建一个新项目"}。\n关键词提取: ${prompt.split(/[，,。.！!？?\s]+/).filter(Boolean).slice(0, 5).join("、")}`,
+    },
+    {
+      id: `step-${now}-2`,
+      title: "设计方案",
+      description: "确定技术栈与页面结构",
+      status: "success",
+      content: "技术栈: HTML5 + CSS3 + Vanilla JS\n布局方案: 响应式单页，移动端优先\n视觉风格: 毛玻璃卡片 + 渐变背景",
+    },
+    {
+      id: `step-${now}-3`,
+      title: "生成代码",
+      description: isUpdate ? "基于现有文件增量更新" : "生成 index.html / style.css / main.js",
+      status: "success",
+      content: "生成文件清单:\n- index.html (页面结构)\n- style.css (样式与动画)\n- main.js (交互逻辑)",
+    },
+    {
+      id: `step-${now}-4`,
+      title: "质量检查",
+      description: "验证代码规范与浏览器兼容性",
+      status: "success",
+    },
+    {
+      id: `step-${now}-5`,
+      title: "部署就绪",
+      description: "项目文件已准备完毕，可预览",
+      status: "success",
+    },
+  ];
+
+  return steps;
+}
+
 export const mockAIService: AIService = {
   async generateProjectFromPrompt(prompt, project) {
     const createdAt = new Date().toISOString();
     const files = buildFiles(prompt, project);
+    const isUpdate = !!project;
+    const thinkingSteps = buildThinkingSteps(prompt, isUpdate);
+
     const messages: ProjectMessage[] = [
       {
         id: `${Date.now()}-assistant`,
         role: "assistant",
-        content: "已根据你的描述生成结构化项目文件。当前为演示模式，后续可以替换为真实 AI 输出。",
+        content: isUpdate
+          ? "已根据你的新需求更新了项目文件。你可以在预览中查看效果，或继续描述新的修改。"
+          : "已根据你的描述生成结构化项目文件，包含 HTML 页面、CSS 样式和 JS 交互。你可以预览效果或继续优化。",
         createdAt,
+        thinkingSteps,
         metadata: {
           provider: "mock-ai",
         },

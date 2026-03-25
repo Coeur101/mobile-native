@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { PageTransition } from "@/components/ui/page-transition";
 import { PulsingDots } from "@/components/ui/pulsing-dots";
+import { ThoughtChain } from "@/components/ui/thought-chain";
 import { promptTemplates } from "@/features/project/templates";
 import { mockProjectService } from "@/services/project/mock-project-service";
 import { buttonTap } from "@/lib/animations";
@@ -229,6 +230,12 @@ export function EditorPage() {
                             : "rounded-tl-sm border border-border bg-card text-foreground shadow-sm"
                         }`}
                       >
+                        {/* 思维链（仅 AI 消息且有步骤时显示） */}
+                        {message.role === "assistant" && message.thinkingSteps && message.thinkingSteps.length > 0 && (
+                          <div className="mb-2.5">
+                            <ThoughtChain steps={message.thinkingSteps} />
+                          </div>
+                        )}
                         <p className="whitespace-pre-wrap">{message.content}</p>
                       </div>
                       <p className={`mt-1.5 px-2 text-[11px] text-muted-foreground/60 ${message.role === "user" ? "text-right" : ""}`}>
