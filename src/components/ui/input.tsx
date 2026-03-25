@@ -5,8 +5,10 @@ export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={[
-        "w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-800 outline-none transition",
-        "placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200",
+        "w-full rounded-2xl border border-border bg-input-background px-3 py-2 text-sm text-foreground outline-none transition",
+        "placeholder:text-muted-foreground",
+        "focus:border-primary/40 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]",
+        "dark:focus:shadow-[0_0_0_3px_rgba(167,139,250,0.1)]",
         props.className ?? "",
       ].join(" ")}
     />

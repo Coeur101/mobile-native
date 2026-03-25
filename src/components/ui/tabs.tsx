@@ -53,8 +53,10 @@ export function TabsTrigger({ value, className = "", children, ...props }: TabsT
       type="button"
       onClick={() => context.onValueChange(value)}
       className={[
-        "flex-1 px-3 py-2 text-sm font-medium transition",
-        isActive ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900",
+        "relative flex-1 px-3 py-2 text-sm font-medium transition-all duration-200",
+        isActive
+          ? "bg-card text-foreground shadow-sm"
+          : "text-muted-foreground hover:text-foreground",
         className,
       ].join(" ")}
     >

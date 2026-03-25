@@ -1,81 +1,131 @@
 @custom-variant dark (&:is(.dark *));
 
+/* ===== 亮色主题 — 温暖柔和 ===== */
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
+
+  /* 基础 */
+  --background: #FBF9F7;
+  --foreground: #1C1917;
+
+  /* 卡片 */
+  --card: #FFFFFF;
+  --card-foreground: #1C1917;
+
+  /* 弹出层 */
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1917;
+
+  /* 品牌主色 — 柔紫 */
+  --primary: #8B5CF6;
+  --primary-foreground: #FFFFFF;
+
+  /* 次要 — 温暖米色 */
+  --secondary: #F5F0EB;
+  --secondary-foreground: #1C1917;
+
+  /* 静音 */
+  --muted: #F0EDE8;
+  --muted-foreground: #8E8C88;
+
+  /* 强调 — 淡紫 */
+  --accent: #F3EEFF;
+  --accent-foreground: #6D28D9;
+
+  /* 危险 */
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  /* 边框与输入 */
+  --border: rgba(28, 25, 23, 0.06);
   --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
+  --input-background: #F5F2EE;
+  --switch-background: #D6D3CE;
+  --ring: #8B5CF6;
+
+  /* 图表 */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  /* 圆角 */
+  --radius: 0.625rem;
+
+  /* 品牌渐变 */
+  --gradient-brand: linear-gradient(135deg, #8B5CF6, #EC4899);
+  --gradient-subtle: linear-gradient(135deg, #F3EEFF, #FDF2F8);
+  --gradient-warm-bg: linear-gradient(180deg, #FBF9F7 0%, #F3EEFF 100%);
+
+  /* 字重 */
   --font-weight-medium: 500;
   --font-weight-normal: 400;
+
+  /* 侧边栏 */
+  --sidebar: #FAF8F5;
+  --sidebar-foreground: #1C1917;
+  --sidebar-primary: #8B5CF6;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F3EEFF;
+  --sidebar-accent-foreground: #6D28D9;
+  --sidebar-border: rgba(28, 25, 23, 0.06);
+  --sidebar-ring: #8B5CF6;
+}
+
+/* ===== 暗色主题 ===== */
+.dark {
+  --background: #0C0A09;
+  --foreground: #FAFAF9;
+
+  --card: #1C1917;
+  --card-foreground: #FAFAF9;
+
+  --popover: #1C1917;
+  --popover-foreground: #FAFAF9;
+
+  --primary: #A78BFA;
+  --primary-foreground: #0C0A09;
+
+  --secondary: #292524;
+  --secondary-foreground: #FAFAF9;
+
+  --muted: #292524;
+  --muted-foreground: #A8A29E;
+
+  --accent: #1E1533;
+  --accent-foreground: #C4B5FD;
+
+  --destructive: #DC2626;
+  --destructive-foreground: #FAFAF9;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.06);
+  --input-background: #292524;
+  --switch-background: #44403C;
+  --ring: #A78BFA;
+
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+
+  --gradient-brand: linear-gradient(135deg, #A78BFA, #F472B6);
+  --gradient-subtle: linear-gradient(135deg, #1E1533, #2D1B3D);
+  --gradient-warm-bg: linear-gradient(180deg, #0C0A09 0%, #1E1533 100%);
+
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+
+  --sidebar: #1C1917;
+  --sidebar-foreground: #FAFAF9;
+  --sidebar-primary: #A78BFA;
+  --sidebar-primary-foreground: #0C0A09;
+  --sidebar-accent: #1E1533;
+  --sidebar-accent-foreground: #C4B5FD;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #A78BFA;
 }
 
 @theme inline {
@@ -128,11 +178,6 @@
     @apply bg-background text-foreground;
   }
 
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
-
   html {
     font-size: var(--font-size);
   }
@@ -178,4 +223,38 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+}
+
+/* ===== 动画工具类 ===== */
+@layer utilities {
+  /* 浮动呼吸动画 */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* 渐变闪光 */
+  .animate-shimmer {
+    animation: shimmer 2s ease-in-out infinite;
+    background-size: 200% 100%;
+  }
+
+  /* 脉冲缩放 */
+  .animate-pulse-scale {
+    animation: pulse-scale 2s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
