@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -58,7 +60,144 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-      - name: Publish APK to GitHub Release
+      # ── 版本判定：基于 Conventional Commits 自动决定是否发版 ──
+
+      - name: Determine release version
+        id: version
+        run: |
+          # 获取最新 tag（如果没有 tag 则默认 v0.0.0）
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="v0.0.0"
+            COMMIT_RANGE="HEAD"
+          else
+            COMMIT_RANGE="${LATEST_TAG}..HEAD"
+          fi
+          echo "latest_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+          # 获取自上次 tag 以来的 commit 消息
+          if [ "$COMMIT_RANGE" = "HEAD" ]; then
+            COMMITS=$(git log --pretty=format:"%s" 2>/dev/null || echo "")
+          else
+            COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null || echo "")
+          fi
+
+          # 判断版本升级类型
+          MAJOR=false
+          MINOR=false
+          PATCH=false
+
+          while IFS= read -r msg; do
+            [ -z "$msg" ] && continue
+            # BREAKING CHANGE（通过 ! 后缀或 commit body）
+            if echo "$msg" | grep -qE "^[a-z]+(\(.+\))?!:"; then
+              MAJOR=true
+            # feat: → 新功能 → minor
+            elif echo "$msg" | grep -qE "^feat(\(.+\))?:"; then
+              MINOR=true
+            # fix: → Bug 修复 → patch
+            elif echo "$msg" | grep -qE "^fix(\(.+\))?:"; then
+              PATCH=true
+            fi
+          done <<< "$COMMITS"
+
+          # 计算新版本号
+          CURRENT="${LATEST_TAG#v}"
+          IFS='.' read -r CUR_MAJOR CUR_MINOR CUR_PATCH <<< "$CURRENT"
+          CUR_MAJOR=${CUR_MAJOR:-0}
+          CUR_MINOR=${CUR_MINOR:-0}
+          CUR_PATCH=${CUR_PATCH:-0}
+
+          if [ "$MAJOR" = true ]; then
+            NEW_VERSION="$((CUR_MAJOR + 1)).0.0"
+            BUMP_TYPE="major"
+          elif [ "$MINOR" = true ]; then
+            NEW_VERSION="${CUR_MAJOR}.$((CUR_MINOR + 1)).0"
+            BUMP_TYPE="minor"
+          elif [ "$PATCH" = true ]; then
+            NEW_VERSION="${CUR_MAJOR}.${CUR_MINOR}.$((CUR_PATCH + 1))"
+            BUMP_TYPE="patch"
+          else
+            NEW_VERSION="$CURRENT"
+            BUMP_TYPE="none"
+          fi
+
+          SHOULD_RELEASE=$( [ "$BUMP_TYPE" != "none" ] && echo "true" || echo "false" )
+
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "bump_type=$BUMP_TYPE" >> "$GITHUB_OUTPUT"
+          echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
+
+          echo "::notice::Latest tag: $LATEST_TAG | Bump: $BUMP_TYPE | New version: v$NEW_VERSION | Release: $SHOULD_RELEASE"
+
+      - name: Generate release notes
+        if: steps.version.outputs.should_release == 'true'
+        id: notes
+        run: |
+          LATEST_TAG="${{ steps.version.outputs.latest_tag }}"
+          if [ "$LATEST_TAG" = "v0.0.0" ]; then
+            COMMIT_RANGE="HEAD"
+          else
+            COMMIT_RANGE="${LATEST_TAG}..HEAD"
+          fi
+
+          {
+            echo "body<<RELEASE_NOTES_EOF"
+
+            # 收集 feat 类型
+            FEATS=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null | grep -E "^feat(\(.+\))?:" | sed 's/^feat\(.*\)\?:\s*//' || true)
+            if [ -n "$FEATS" ]; then
+              echo "### Added"
+              while IFS= read -r line; do
+                [ -n "$line" ] && echo "- $line"
+              done <<< "$FEATS"
+              echo ""
+            fi
+
+            # 收集 fix 类型
+            FIXES=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null | grep -E "^fix(\(.+\))?:" | sed 's/^fix\(.*\)\?:\s*//' || true)
+            if [ -n "$FIXES" ]; then
+              echo "### Fixed"
+              while IFS= read -r line; do
+                [ -n "$line" ] && echo "- $line"
+              done <<< "$FIXES"
+              echo ""
+            fi
+
+            # 收集其他类型
+            OTHERS=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null | grep -vE "^(feat|fix)(\(.+\))?:" | head -20 || true)
+            if [ -n "$OTHERS" ]; then
+              echo "### Other Changes"
+              while IFS= read -r line; do
+                [ -n "$line" ] && echo "- $line"
+              done <<< "$OTHERS"
+              echo ""
+            fi
+
+            echo "---"
+            echo "Built from \`${{ github.ref_name }}\` at \`${{ github.sha }}\`"
+
+            echo "RELEASE_NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # ── 发版：仅当存在 feat/fix commit 时创建 tag + Release ──
+
+      - name: Create versioned release
+        if: steps.version.outputs.should_release == 'true'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v${{ steps.version.outputs.new_version }}
+          commit: ${{ github.sha }}
+          name: v${{ steps.version.outputs.new_version }}
+          body: ${{ steps.notes.outputs.body }}
+          artifacts: android/app/build/outputs/apk/debug/app-debug.apk
+          artifactContentType: application/vnd.android.package-archive
+          prerelease: false
+          makeLatest: true
+
+      # ── 始终更新 latest-apk 滚动 Release ──
+
+      - name: Publish APK to latest-apk release
         uses: ncipollo/release-action@v1
         with:
           tag: latest-apk
@@ -68,7 +207,6 @@ jobs:
             Automatically built from branch `${{ github.ref_name }}`.
 
             Commit: `${{ github.sha }}`
-            Artifact: `沙盒.apk`
 
             This release is updated on every push to `main` or `master`.
           artifacts: android/app/build/outputs/apk/debug/app-debug.apk

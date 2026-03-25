@@ -84,8 +84,67 @@ android/              Capacitor Android 工程
 - `android/`：后续补充签名、图标、deep link、微信回调和真实发布配置
 - `.github/workflows/android-apk.yml`：当前会自动更新 `latest-apk` Release，后续可升级为 release 签名包、AAB、自动发布
 
+## Git Commit 规范
+
+遵循 Conventional Commits。Commit message 使用中文。
+
+| Type | 说明 | 触发发版 |
+|---|---|---|
+| `feat:` | 新功能 | minor bump |
+| `fix:` | Bug 修复 | patch bump |
+| `feat!:` / `fix!:` | 含破坏性变更 | major bump |
+| `refactor:` | 重构 | 不发版 |
+| `perf:` | 性能优化 | 不发版 |
+| `style:` | 格式调整 | 不发版 |
+| `test:` | 测试 | 不发版 |
+| `docs:` | 文档 | 不发版 |
+| `chore:` | 构建/工具 | 不发版 |
+| `ci:` | CI 配置 | 不发版 |
+
+示例：
+```
+feat: 添加微信登录真实接入
+fix: 修复预览页白屏
+refactor: 提取公共 Header 组件
+```
+
+## Git Push 规范
+
+### 推送前必须完成
+
+1. `pnpm build` 编译通过
+2. 相关功能已验证可用
+3. CHANGELOG.md 已更新（feat/fix 类型 commit）
+
+### 推送目标
+
+- 默认推送到 `master` 分支
+- 推送后 CI 自动构建 APK 并上传 artifact
+- CI 根据 commit 类型**自动判断是否发版**（见下方规则）
+
+### 自动发版规则（CI 执行）
+
+推送到 `master` 后，GitHub Actions 工作流自动执行：
+
+1. **始终执行**：构建 APK → 上传 artifact → 更新 `latest-apk` 滚动 Release
+2. **有 `feat:` 或 `fix:` commit**：额外创建版本 tag（如 `v0.2.0`）+ 正式 GitHub Release（附带 APK + 自动 release notes）
+3. **仅 `refactor:/docs:/chore:` 等**：不创建 tag，不发正式 Release
+
+版本号计算基于上一个 tag 到当前 HEAD 之间的 commit：
+- `feat:` → **minor**（0.x.0）
+- `fix:` → **patch**（0.0.x）
+- `feat!:` / `fix!:` → **major**（x.0.0）
+- 多种类型并存时取最高级别
+
+### 禁止事项
+
+- 禁止 `git push --force` 到 master
+- 禁止跳过构建验证直接推送
+- 禁止手动创建 `v*` 格式的 tag（由 CI 自动管理）
+
 ## 维护规则
 
 - 页面路由变更时同步更新本文件
 - 启动命令、构建命令变更时同步更新本文件
 - 新增真实接入能力时，将 mock 边界改为真实状态
+- Git 工作流或 CI 规则变更时同步更新本文件
