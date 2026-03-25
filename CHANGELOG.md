@@ -3,6 +3,7 @@
 ## 2026-03-25
 
 - `ci`: 切换构建工具到 pnpm，并新增 GitHub Actions 自动构建 Debug APK 工作流。
+- `fix`: 修复 GitHub Actions 中 `android/gradlew` 无执行权限导致的 APK 构建失败，工作流改为先执行 `chmod +x ./gradlew`。
 - `docs`: 更新 README 与 AGENTS，统一为 pnpm 命令并补充 CI 说明。
 - `feat`: 新增结构化项目模型、mock 认证服务、mock AI 服务、mock 项目服务和用户设置服务。
 - `feat`: 新增登录页、项目列表页、编辑页、预览页、设置页，并将编辑页升级为对话/文件/预览/历史四个 Tab。
