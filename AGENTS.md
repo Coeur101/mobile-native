@@ -22,6 +22,7 @@
 
 - React 19 + TypeScript
 - Vite 7 + Tailwind CSS v4
+- Motion (Framer Motion v12+) 动画
 - Zustand 状态管理
 - React Router 7
 - Capacitor 8（Android）
@@ -31,40 +32,48 @@
 
 ```text
 src/
-  App.tsx             应用根组件
-  router.tsx          路由配置
+  App.tsx             应用根组件（含 ThemeProvider）
+  router.tsx          路由配置（含 requireAuth 守卫）
   main.tsx            挂载入口
-  components/ui/      轻量 UI 组件（Input, Tabs）
+  components/ui/      轻量 UI 组件
+    input.tsx         输入框（主题适配 + 焦点发光）
+    tabs.tsx          标签页（主题适配）
+    page-transition.tsx 页面转场动画（opacity 淡入）
+    pulsing-dots.tsx  三点脉冲加载指示器
+    thought-chain.tsx 思维链组件（垂直时间线 + 状态 + 折叠）
   pages/              页面（按功能分组）
-    login/            登录页
-    home/             项目列表页
-    editor/           编辑页
-    preview/          独立预览页
-    settings/         用户设置页
+    login/            登录页（渐变背景 + Logo 弹簧入场）
+    home/             项目列表页（卡片 + FAB）
+    editor/           聊天式编辑页（气泡对话 + 思维链 + 底部输入）
+    preview/          独立预览页（预览/代码模式切换）
+    settings/         用户设置页（主题切换 + API 配置）
   services/           业务服务层
     auth/             认证服务（mock）
-    ai/               AI 服务（mock）
+    ai/               AI 服务（mock，生成带思维链的回复）
     project/          项目服务（mock）
     settings/         设置服务（mock）
   stores/             Zustand 状态
+    use-editor-store.ts  编辑器 Tab 状态
+    use-theme-store.ts   主题模式状态（light/dark/auto）
   features/           业务配置数据
     auth/             认证提供商标签
     project/          提示词模板
   lib/                工具库
     local-db.ts       localStorage 封装
     render-project.ts 预览文档拼装
-  types/              共享类型定义
-  styles/             样式与主题
+    animations.ts     动画常量（缓动曲线、弹簧参数）
+  types/              共享类型定义（含 ThinkingStep 思维链类型）
+  styles/             样式与主题（温暖色调 + 亮暗双主题）
 android/              Capacitor Android 工程
 ```
 
 ## 当前页面与路由
 
 - `/login`：邮箱登录入口 + 微信登录入口，全部为 mock
-- `/`：项目列表页
-- `/editor/:projectId?`：编辑页，包含对话、文件、预览、历史四个 Tab
-- `/preview/:projectId`：独立预览页
-- `/settings`：用户级设置页
+- `/`：项目列表页（卡片列表 + 浮动新建按钮）
+- `/editor/:projectId?`：聊天式编辑页，全屏对话气泡 + 底部输入栏 + 模板卡片 + AI 思维链展示
+- `/preview/:projectId`：独立预览页（预览/代码双模式切换）
+- `/settings`：用户级设置页（主题亮暗切换 + API 配置）
 
 ## 当前 mock 边界
 
