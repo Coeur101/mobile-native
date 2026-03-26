@@ -1,18 +1,25 @@
 # AI Web Builder Mobile CHANGELOG
 
-## [Unreleased]
+## [未发布]
 
-### Attempted
+### 尝试中
 
 - 暂无
 
-### Completed
+### 已完成
 
-- 初始化 task 级闭环工作流编排：新增 OpenSpec workflow change、development-workflow 规范、TASK.json 质量门结构与追加式 task history 约定
+- 登录与注册升级为移动端分步式邮箱认证：支持注册后设密码、密码登录、验证码登录与密码重置入口
+- 客户端登录态显式保留 7 天，过期后会清理本地状态并要求重新登录
+- 当前用户、项目、项目版本、项目消息与用户设置建立了明确的本地归属模型，便于后续迁移到 Supabase 表
+- 接入 Supabase Auth 邮箱 OTP / 验证码登录与 `/login` 会话回调恢复，替换本地 mock auth
+- 登录页改为发送邮箱验证码并支持验证码校验，且明确移除微信登录的误导入口
+- 补充 `.env.example`、`docs/auth-email-setup.md`、`vitest.config.ts`、`playwright.config.ts` 以支持免费优先邮箱认证与自动化验证
+- 初始化 task 级闭环工作流编排：新增 OpenSpec workflow change、development-workflow 规范、`TASK.json` 质量门禁结构与追加式 task history 约定
 - 明确 user-facing task 必须执行 Playwright 自动化 UI 测试，并规定临时生成测试文件与测试产物在记录结果后必须删除
-- 将项目工作流扩展为 Definition / Delivery / Closure 三阶段，并拆分 design_review 与 implementation_review 两个 review 节点
+- 将项目工作流扩展为 Definition / Delivery / Closure 三阶段，并拆分 `design_review` 与 `implementation_review` 两个 review 节点
+- 收紧 task 级提交闭环：每个交付型 task 完成后必须独立 commit，并在 `TASK.json` 与 task history 中记录可追溯提交证据
 
-### Reverted
+### 已回退
 
 - 暂无
 
@@ -20,11 +27,11 @@
 
 ## 2026-03-25（MVP 前端对齐）
 
-### Attempted
+### 尝试中
 
 - 评估 shadcn/ui 方案，最终改为轻量自研 UI 组件路线
 
-### Completed
+### 已完成
 
 - 新增 Dialog、VersionPanel、CodeBlock、Skeleton、ErrorBoundary、PageTransition、PulsingDots、ThoughtChain 等 UI 组件
 - 完成首页搜索、状态筛选、项目删除确认、版本恢复、编辑页项目重命名等交互能力
@@ -35,17 +42,17 @@
 - 新增 `docs/PRD.md`
 - 修复中英文标题、空状态动画冲突、iframe sandbox 警告等问题
 
-### Reverted
+### 已回退
 
 - 暂无
 
 ## 2026-03-25（项目初始化）
 
-### Attempted
+### 尝试中
 
 - 评估 React Native + WebView 方案，最终选定 React + Capacitor 路线
 
-### Completed
+### 已完成
 
 - 初始化结构化项目模型与 mock 认证、AI、项目、设置服务
 - 新增登录页、项目列表页、编辑页、预览页、设置页
@@ -55,6 +62,6 @@
 - 将早期 code 模型升级为 `files/messages/versions` 结构
 - 同步 README 与项目治理文档
 
-### Reverted
+### 已回退
 
 - 暂无

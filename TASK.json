@@ -1,9 +1,9 @@
 {
-  "version": 3,
+  "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-26T16:10:00+08:00",
-  "workflowVersion": "project-lifecycle-v2",
+  "updatedAt": "2026-03-26T21:05:00+08:00",
+  "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
     "delivery",
@@ -13,22 +13,23 @@
     "design_review",
     "implementation_review"
   ],
+  "taskCommitPolicy": "one-task-one-commit",
   "tasks": [
     {
       "id": "TASK-001",
       "change": "task-level-closed-loop-workflow",
       "phase": "closure",
-      "title": "Initialize task-level closed-loop workflow orchestration",
+      "title": "初始化 task 级闭环工作流编排",
       "type": "init",
       "status": "done",
       "priority": "P0",
-      "scope": "OpenSpec artifacts, execution ledger, project governance docs",
+      "scope": "OpenSpec 工件、执行台账、项目治理文档",
       "acceptanceCriteria": [
-        "Repository contains proposal, design, and tasks artifacts for task-level-closed-loop-workflow",
-        "openspec/specs/development-workflow/spec.md defines task-level closure requirements",
-        "TASK.json is upgraded with quality gates and historyRef",
-        "Project docs require Playwright UI automation for user-facing tasks",
-        "Rules require deleting generated tests and test artifacts after recording structured results"
+        "仓库包含 task-level-closed-loop-workflow 的 proposal、design 与 tasks 工件",
+        "openspec/specs/development-workflow/spec.md 定义 task 级闭环要求",
+        "TASK.json 升级为带质量门禁与 historyRef 的执行台账",
+        "项目文档要求 user-facing task 执行 Playwright UI 自动化验证",
+        "规则要求在记录结构化结果后删除生成测试与测试产物"
       ],
       "functionalTestsRequired": false,
       "uiTestsRequired": false,
@@ -44,6 +45,8 @@
         ".gitignore"
       ],
       "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -71,17 +74,17 @@
       "id": "TASK-002",
       "change": "task-level-closed-loop-workflow",
       "phase": "closure",
-      "title": "Expand workflow to a full three-phase project lifecycle",
+      "title": "将工作流扩展为全项目三阶段生命周期",
       "type": "docs",
       "status": "done",
       "priority": "P0",
-      "scope": "Change lifecycle, dual reviews, project workflow docs, execution ledger",
+      "scope": "change 生命周期、双 review、项目工作流文档、执行台账",
       "acceptanceCriteria": [
-        "Workflow defines Definition, Delivery, and Closure phases",
-        "Workflow defines both design_review and implementation_review",
-        "Spec defines change lifecycle states and archive gating",
-        "Project docs and CLAUDE instructions match the new lifecycle",
-        "TASK.json expresses workflow phases and dual review model"
+        "工作流定义 Definition、Delivery、Closure 三个阶段",
+        "工作流定义 design_review 与 implementation_review 两个 review 节点",
+        "规范定义 change 生命周期状态机与 archive 门禁",
+        "项目文档与 CLAUDE 说明与新的生命周期一致",
+        "TASK.json 能表达工作流阶段与双 review 模型"
       ],
       "functionalTestsRequired": false,
       "uiTestsRequired": false,
@@ -100,6 +103,8 @@
         "TASK.json"
       ],
       "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -124,6 +129,394 @@
       "createdAt": "2026-03-26T15:30:00+08:00",
       "updatedAt": "2026-03-26T16:10:00+08:00",
       "closedAt": "2026-03-26T16:10:00+08:00"
+    },
+    {
+      "id": "TASK-003",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "搭建 Supabase 邮箱认证基础层",
+      "type": "feature",
+      "status": "docs_verified",
+      "priority": "P0",
+      "scope": "Supabase 环境契约、auth service 类型、登录态持久化",
+      "acceptanceCriteria": [
+        "仓库定义 Supabase 认证环境变量与 SMTP 接入文档",
+        "AuthService 不再暴露微信登录入口",
+        "本地持久化保存真实认证会话元数据，而不是 mock 用户标记",
+        "认证基础层重构后 build 通过"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        ".env.example",
+        "docs/auth-email-setup.md",
+        "openspec/changes/integrate-free-email-auth/tasks.md"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          ".env.example",
+          "docs/auth-email-setup.md",
+          "src/services/auth/auth-service.ts",
+          "src/services/auth/auth-config.ts",
+          "src/services/auth/supabase-auth-service.ts",
+          "src/lib/local-db.ts",
+          "src/vite-env.d.ts"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-003.jsonl",
+      "createdAt": "2026-03-26T16:35:00+08:00",
+      "updatedAt": "2026-03-26T20:05:00+08:00"
+    },
+    {
+      "id": "TASK-004",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "交付真实邮箱 OTP 登录体验",
+      "type": "feature",
+      "status": "docs_verified",
+      "priority": "P0",
+      "scope": "邮箱验证码发送与校验、回调恢复、受保护路由认证检查",
+      "acceptanceCriteria": [
+        "登录页通过 Supabase Auth 发送邮箱验证码",
+        "用户输入收到的 OTP 后可以完成登录",
+        "/login 的会话恢复和受保护路由判断使用真实 auth store",
+        "build 与自动化验证通过"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/changes/integrate-free-email-auth/tasks.md",
+        "PROJECT.md",
+        "docs/PRD.md",
+        "CHANGELOG.md"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts"
+        ],
+        "uiTests": [
+          "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/pages/login/LoginPage.tsx",
+          "src/router.tsx",
+          "src/App.tsx",
+          "src/stores/use-auth-store.ts"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-004.jsonl",
+      "createdAt": "2026-03-26T16:45:00+08:00",
+      "updatedAt": "2026-03-26T20:05:00+08:00"
+    },
+    {
+      "id": "TASK-005",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "清理登录面上的微信与 mock 认证漂移",
+      "type": "cleanup",
+      "status": "docs_verified",
+      "priority": "P1",
+      "scope": "登录页范围收敛、provider 文案、设置页登出、mock auth 移除",
+      "acceptanceCriteria": [
+        "仓库不再保留本次 change 的真实微信登录路径引用",
+        "登录页和设置页使用真实 auth service",
+        "mock auth service 已移除，旧的假用户恢复逻辑不再生效"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/changes/integrate-free-email-auth/tasks.md",
+        "PROJECT.md",
+        "docs/PRD.md",
+        "CHANGELOG.md"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [
+          "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/features/auth/providers.ts",
+          "src/pages/settings/SettingsPage.tsx",
+          "src/services/auth/mock-auth-service.ts"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-005.jsonl",
+      "createdAt": "2026-03-26T16:55:00+08:00",
+      "updatedAt": "2026-03-26T20:05:00+08:00"
+    },
+    {
+      "id": "TASK-006",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "记录验证证据并清理临时测试产物",
+      "type": "verification",
+      "status": "docs_verified",
+      "priority": "P0",
+      "scope": "build、Vitest、Playwright 证据落账以及生成测试与结果清理",
+      "acceptanceCriteria": [
+        "认证重构后的 build 成功",
+        "临时 Vitest 验证成功",
+        "临时 Playwright UI 验证成功",
+        "临时测试文件与运行产物在结果记录后被删除"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "TASK.json",
+        "openspec/changes/integrate-free-email-auth/logs/TASK-006.jsonl",
+        "openspec/changes/integrate-free-email-auth/tasks.md",
+        "CHANGELOG.md"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts"
+        ],
+        "uiTests": [
+          "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "TASK.json",
+          "openspec/changes/integrate-free-email-auth/logs/TASK-006.jsonl"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-006.jsonl",
+      "createdAt": "2026-03-26T17:05:00+08:00",
+      "updatedAt": "2026-03-26T20:05:00+08:00"
+    },
+    {
+      "id": "TASK-007",
+      "change": "task-level-closed-loop-workflow",
+      "phase": "closure",
+      "title": "收紧 task 级独立提交闭环规则并同步中文治理文档",
+      "type": "docs",
+      "status": "done",
+      "priority": "P0",
+      "scope": "工作流规范、项目治理文档、TASK 台账、提交追溯规则",
+      "acceptanceCriteria": [
+        "development-workflow 规范明确 docs_verified -> committed -> done 的门禁顺序",
+        "设计文档、项目文档与 CLAUDE 指南全部用中文表达 task 级独立提交规则",
+        "TASK.json 为交付型 task 记录 commitRequired、commitRef、commitMessage 字段",
+        "治理更新拥有独立 task 日志，可回溯本次规则收紧"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/specs/development-workflow/spec.md",
+        "openspec/changes/task-level-closed-loop-workflow/proposal.md",
+        "openspec/changes/task-level-closed-loop-workflow/design.md",
+        "openspec/changes/task-level-closed-loop-workflow/tasks.md",
+        "openspec/config.yaml",
+        ".claude/CLAUDE.md",
+        "PROJECT.md",
+        "CHANGELOG.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/specs/development-workflow/spec.md",
+          "openspec/changes/task-level-closed-loop-workflow/proposal.md",
+          "openspec/changes/task-level-closed-loop-workflow/design.md",
+          "openspec/changes/task-level-closed-loop-workflow/tasks.md",
+          "openspec/config.yaml",
+          ".claude/CLAUDE.md",
+          "PROJECT.md",
+          "CHANGELOG.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/task-level-closed-loop-workflow/logs/TASK-007.jsonl",
+      "createdAt": "2026-03-26T19:20:00+08:00",
+      "updatedAt": "2026-03-26T20:05:00+08:00",
+      "closedAt": "2026-03-26T20:05:00+08:00"
+    },
+    {
+      "id": "TASK-008",
+      "change": "mobile-friendly-email-auth-with-password-and-otp",
+      "phase": "delivery",
+      "title": "实现移动端邮箱注册、双模式登录、密码重置与 7 天会话恢复",
+      "type": "feature",
+      "status": "docs_verified",
+      "priority": "P0",
+      "scope": "认证状态机、登录页交互、7 天 TTL、本地用户与项目归属模型",
+      "acceptanceCriteria": [
+        "注册流程支持邮箱验证后设置密码",
+        "登录页支持密码登录与验证码登录双模式",
+        "密码找回入口和重置回流可在登录页完成",
+        "客户端会话恢复遵守 7 天 TTL",
+        "当前用户、项目、项目版本、项目消息与用户设置存在明确归属字段"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts"
+        ],
+        "uiTests": [
+          "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/types/index.ts",
+          "src/lib/local-db.ts",
+          "src/lib/supabase.ts",
+          "src/services/auth/auth-service.ts",
+          "src/services/auth/auth-config.ts",
+          "src/services/auth/supabase-auth-service.ts",
+          "src/services/project/mock-project-service.ts",
+          "src/pages/login/LoginPage.tsx",
+          "src/vite-env.d.ts",
+          ".env.example"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [
+        "尚未生成该 task 的独立 commit，无法进入 committed / done"
+      ],
+      "historyRef": "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-008.jsonl",
+      "createdAt": "2026-03-26T20:20:00+08:00",
+      "updatedAt": "2026-03-26T21:05:00+08:00"
+    },
+    {
+      "id": "TASK-009",
+      "change": "mobile-friendly-email-auth-with-password-and-otp",
+      "phase": "delivery",
+      "title": "记录认证验证证据、同步文档并清理临时测试产物",
+      "type": "verification",
+      "status": "docs_verified",
+      "priority": "P0",
+      "scope": "Vitest、Playwright、构建结果落账，文档同步与临时测试清理",
+      "acceptanceCriteria": [
+        "Vitest 覆盖注册、密码登录、验证码登录、TTL 过期与项目归属映射",
+        "Playwright 覆盖注册、密码登录、验证码登录与过期重登提示",
+        "build 成功",
+        "认证接入文档、PRD、CHANGELOG 与当前 change tasks 已同步",
+        "临时测试文件与 test-results 在记录结果后已删除"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "docs/auth-email-setup.md",
+        "docs/PRD.md",
+        "CHANGELOG.md",
+        "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts"
+        ],
+        "uiTests": [
+          "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "docs/auth-email-setup.md",
+          "docs/PRD.md",
+          "CHANGELOG.md",
+          "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/tasks.md",
+          "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-008.jsonl",
+          "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-009.jsonl"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [
+        "尚未生成该 task 的独立 commit，无法进入 committed / done"
+      ],
+      "historyRef": "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-009.jsonl",
+      "createdAt": "2026-03-26T20:30:00+08:00",
+      "updatedAt": "2026-03-26T21:05:00+08:00"
     }
   ]
 }
