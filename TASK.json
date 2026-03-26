@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-26T22:15:00+08:00",
+  "updatedAt": "2026-03-26T22:18:00+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -188,7 +188,7 @@
       "phase": "delivery",
       "title": "交付真实邮箱 OTP 登录体验",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "邮箱验证码发送与校验、回调恢复、受保护路由认证检查",
       "acceptanceCriteria": [
@@ -598,8 +598,8 @@
       "docsToUpdate": [
         "CHANGELOG.md",
         "TASK.json",
-        "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
-        "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl"
+        "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
+        "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-011.jsonl"
       ],
       "commitRequired": true,
       "commitRef": "d96d70b",
@@ -627,7 +627,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-011.jsonl",
       "createdAt": "2026-03-26T21:50:00+08:00",
-      "updatedAt": "2026-03-26T22:15:00+08:00",
+      "updatedAt": "2026-03-26T22:18:00+08:00",
       "closedAt": "2026-03-26T22:15:00+08:00"
     }
   ]
