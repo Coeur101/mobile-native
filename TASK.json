@@ -209,8 +209,8 @@
         "CHANGELOG.md"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "372c254",
+      "commitMessage": "fix: TASK-010 压缩登录页并移除引导文案",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [
@@ -563,13 +563,16 @@
           "CHANGELOG.md",
           "TASK.json"
         ],
-        "commits": [],
+        "commits": [
+          "372c254 fix: TASK-010 压缩登录页并移除引导文案"
+        ],
         "pushes": []
       },
       "blockers": [],
       "historyRef": "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
       "createdAt": "2026-03-26T21:45:00+08:00",
-      "updatedAt": "2026-03-26T21:55:00+08:00"
+      "updatedAt": "2026-03-26T22:05:00+08:00",
+      "closedAt": "2026-03-26T22:05:00+08:00"
     },
     {
       "id": "TASK-011",
@@ -600,7 +603,7 @@
       ],
       "commitRequired": true,
       "commitRef": null,
-      "commitMessage": null,
+      "commitMessage": "test: TASK-011 记录登录页重构验证证据",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -622,7 +625,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl",
       "createdAt": "2026-03-26T21:50:00+08:00",
-      "updatedAt": "2026-03-26T21:55:00+08:00"
+      "updatedAt": "2026-03-26T22:05:00+08:00"
     }
   ]
 }
