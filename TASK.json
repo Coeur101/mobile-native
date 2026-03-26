@@ -242,7 +242,7 @@
       "phase": "delivery",
       "title": "清理登录面上的微信与 mock 认证漂移",
       "type": "cleanup",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P1",
       "scope": "登录页范围收敛、provider 文案、设置页登出、mock auth 移除",
       "acceptanceCriteria": [
@@ -262,8 +262,8 @@
         "CHANGELOG.md"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "372c254",
+      "commitMessage": "fix: TASK-010 压缩登录页并移除引导文案",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -526,7 +526,7 @@
       "phase": "delivery",
       "title": "压缩登录页信息层并清理演示性测试文案",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "登录页顶部信息区、入口切换区、主表单区与辅助文案的紧凑化调整",
       "acceptanceCriteria": [
@@ -547,8 +547,8 @@
         "TASK.json"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "372c254",
+      "commitMessage": "fix: TASK-010 压缩登录页并移除引导文案",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -580,7 +580,7 @@
       "phase": "closure",
       "title": "记录登录页重构验证证据并完成归档前收口",
       "type": "verification",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "构建结果、UI 自动化、临时测试清理、任务日志与归档前文档同步",
       "acceptanceCriteria": [
