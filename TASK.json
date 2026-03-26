@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-26T21:40:00+08:00",
+  "updatedAt": "2026-03-26T21:55:00+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -519,6 +519,110 @@
       "createdAt": "2026-03-26T20:30:00+08:00",
       "updatedAt": "2026-03-26T21:40:30+08:00",
       "closedAt": "2026-03-26T21:40:30+08:00"
+    },
+    {
+      "id": "TASK-010",
+      "change": "redesign-login-page-interaction-ui",
+      "phase": "delivery",
+      "title": "压缩登录页信息层并清理演示性测试文案",
+      "type": "feature",
+      "status": "docs_verified",
+      "priority": "P0",
+      "scope": "登录页顶部信息区、入口切换区、主表单区与辅助文案的紧凑化调整",
+      "acceptanceCriteria": [
+        "登录页不再展示“认证入口重构”“当前交互策略”等内部说明性文案",
+        "顶部区域不再以大段引导文案拉长页面高度",
+        "入口切换区压缩为紧凑的移动端选择控件",
+        "不同认证流切换后始终只保留一个主 CTA",
+        "页面构建通过且 Playwright UI 验证通过"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "src/pages/login/LoginPage.tsx",
+        "CHANGELOG.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [
+          "pnpm test:ui:auth -- .tmp/task-runs/playwright/login-redesign.spec.ts"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/pages/login/LoginPage.tsx",
+          "CHANGELOG.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
+      "createdAt": "2026-03-26T21:45:00+08:00",
+      "updatedAt": "2026-03-26T21:55:00+08:00"
+    },
+    {
+      "id": "TASK-011",
+      "change": "redesign-login-page-interaction-ui",
+      "phase": "closure",
+      "title": "记录登录页重构验证证据并完成归档前收口",
+      "type": "verification",
+      "status": "docs_verified",
+      "priority": "P0",
+      "scope": "构建结果、UI 自动化、临时测试清理、任务日志与归档前文档同步",
+      "acceptanceCriteria": [
+        "Playwright UI 用例验证页面已去除引导性长区块且维持单一主 CTA",
+        "pnpm build 成功",
+        "临时测试文件与 test-results 在记录结果后删除",
+        "TASK.json、CHANGELOG 与 task history 已同步",
+        "change 满足进入 archive 的收口条件"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "CHANGELOG.md",
+        "TASK.json",
+        "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
+        "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [
+          "pnpm test:ui:auth -- .tmp/task-runs/playwright/login-redesign.spec.ts"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "CHANGELOG.md",
+          "TASK.json",
+          "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
+          "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl",
+      "createdAt": "2026-03-26T21:50:00+08:00",
+      "updatedAt": "2026-03-26T21:55:00+08:00"
     }
   ]
 }
