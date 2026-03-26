@@ -1,7 +1,129 @@
 {
-  "version": 1,
+  "version": 3,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-26T00:00:00+08:00",
-  "tasks": []
+  "updatedAt": "2026-03-26T16:10:00+08:00",
+  "workflowVersion": "project-lifecycle-v2",
+  "workflowPhases": [
+    "definition",
+    "delivery",
+    "closure"
+  ],
+  "reviewModel": [
+    "design_review",
+    "implementation_review"
+  ],
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "change": "task-level-closed-loop-workflow",
+      "phase": "closure",
+      "title": "Initialize task-level closed-loop workflow orchestration",
+      "type": "init",
+      "status": "done",
+      "priority": "P0",
+      "scope": "OpenSpec artifacts, execution ledger, project governance docs",
+      "acceptanceCriteria": [
+        "Repository contains proposal, design, and tasks artifacts for task-level-closed-loop-workflow",
+        "openspec/specs/development-workflow/spec.md defines task-level closure requirements",
+        "TASK.json is upgraded with quality gates and historyRef",
+        "Project docs require Playwright UI automation for user-facing tasks",
+        "Rules require deleting generated tests and test artifacts after recording structured results"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/config.yaml",
+        "openspec/specs/development-workflow/spec.md",
+        ".claude/CLAUDE.md",
+        "PROJECT.md",
+        "CHANGELOG.md",
+        ".gitignore"
+      ],
+      "commitRequired": false,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/task-level-closed-loop-workflow/proposal.md",
+          "openspec/changes/task-level-closed-loop-workflow/design.md",
+          "openspec/changes/task-level-closed-loop-workflow/tasks.md",
+          "openspec/specs/development-workflow/spec.md",
+          ".claude/CLAUDE.md",
+          "PROJECT.md",
+          "CHANGELOG.md"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/task-level-closed-loop-workflow/logs/TASK-001.jsonl",
+      "createdAt": "2026-03-26T14:20:00+08:00",
+      "updatedAt": "2026-03-26T15:05:00+08:00",
+      "closedAt": "2026-03-26T15:05:00+08:00"
+    },
+    {
+      "id": "TASK-002",
+      "change": "task-level-closed-loop-workflow",
+      "phase": "closure",
+      "title": "Expand workflow to a full three-phase project lifecycle",
+      "type": "docs",
+      "status": "done",
+      "priority": "P0",
+      "scope": "Change lifecycle, dual reviews, project workflow docs, execution ledger",
+      "acceptanceCriteria": [
+        "Workflow defines Definition, Delivery, and Closure phases",
+        "Workflow defines both design_review and implementation_review",
+        "Spec defines change lifecycle states and archive gating",
+        "Project docs and CLAUDE instructions match the new lifecycle",
+        "TASK.json expresses workflow phases and dual review model"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/changes/task-level-closed-loop-workflow/proposal.md",
+        "openspec/changes/task-level-closed-loop-workflow/design.md",
+        "openspec/changes/task-level-closed-loop-workflow/tasks.md",
+        "openspec/specs/development-workflow/spec.md",
+        "openspec/config.yaml",
+        ".claude/CLAUDE.md",
+        "PROJECT.md",
+        "CHANGELOG.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/task-level-closed-loop-workflow/proposal.md",
+          "openspec/changes/task-level-closed-loop-workflow/design.md",
+          "openspec/changes/task-level-closed-loop-workflow/tasks.md",
+          "openspec/specs/development-workflow/spec.md",
+          "openspec/config.yaml",
+          ".claude/CLAUDE.md",
+          "PROJECT.md",
+          "CHANGELOG.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/task-level-closed-loop-workflow/logs/TASK-002.jsonl",
+      "createdAt": "2026-03-26T15:30:00+08:00",
+      "updatedAt": "2026-03-26T16:10:00+08:00",
+      "closedAt": "2026-03-26T16:10:00+08:00"
+    }
+  ]
 }

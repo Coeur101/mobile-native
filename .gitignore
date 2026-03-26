@@ -10,3 +10,6 @@ source
 source.zip
 
 .claude/settings.local.json
+.tmp/
+playwright-report/
+test-results/

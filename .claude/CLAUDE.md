@@ -2,68 +2,124 @@
 
 ## 项目信息
 
-- 项目: AI Web Builder Mobile
-- 类型: AI-native 安卓应用
-- 语言: zh-CN
+- 项目：AI Web Builder Mobile
+- 类型：AI-native 移动端网页生成器
+- 主要语言：zh-CN
 
 ## 关联文档
 
-- `docs/PRD.md` — 产品需求文档，功能边界和里程碑的唯一来源
-- `PROJECT.md` — 项目结构、技术栈、启动命令，开发前必读
-- `AGENTS.md` — 项目详细架构、目录结构、路由、Git/CI 规范
-- `CHANGELOG.md` — 变更日志（Attempted/Completed/Reverted），每次 commit 后更新
-- `TASK.json` — 任务执行台账，所有功能点和修复必须先登记
+- `docs/PRD.md`：产品需求、范围与里程碑
+- `PROJECT.md`：项目结构、技术栈、命令与交付规则
+- `CHANGELOG.md`：仅记录已完成且已验证的变更
+- `TASK.json`：任务执行账本，所有功能、修复、治理改动都必须先登记
+- `openspec/specs/development-workflow/spec.md`：全项目三阶段工作流规范
 
-## Bug 修复闭环
+## 能力审计顺序
 
-1. 定位根因（代码追踪、日志分析、按需启动子代理协助）
-2. 修复代码（仅改问题相关代码，不扩大范围）
-3. 为修复编写或补充单元测试，覆盖触发该 Bug 的场景
-4. 运行全量测试套件确认无回归
-5. 若涉及 UI 变更，运行 UI 规范测试（Playwright / 视觉回归）
-6. 提交 commit（`fix: 描述`）
-7. 更新 CHANGELOG.md（Completed 区）
+1. 先检查本地已安装的 skills。
+2. 再检查可用 MCP 资源与模板。
+3. 本地能力不足时，再使用 `find-skills` 搜索补充技能。
+4. 需要安装外部技能或下载外部资源时，必须先征得用户同意。
 
-## 功能开发闭环
+## 三阶段主工作流
 
-1. 实现功能代码
-2. 为新功能编写单元测试，覆盖核心路径和边界情况
-3. 运行全量测试套件确认通过
-4. 若涉及 UI 变更，运行 UI 规范测试（Playwright / 视觉回归）
-5. 提交 commit（`feat: 描述`）
-6. 更新 CHANGELOG.md（Completed 区）
+### Phase 1: Definition
 
-## 测试标准
+按顺序完成：
 
-- 每个功能点和修复必须有对应的单元测试，不允许跳过
-- 前端 UI 变更必须有 UI 规范测试或截图对比
-- 测试未通过不允许提交 commit
-- "只编译通过"不等于"测试通过"
-- 单测全部通过后，删除本次生成的测试文件（测试仅用于验证闭环，不持久保留）
+1. 需求接收 `intake`
+2. 调研 `research`
+3. 方案设计 `design`
+4. 设计评审 `design_review`
+5. 任务规划 `planned`
 
-## 自主决策原则
+Definition 阶段必须产出或更新：
 
-- Claude 自行判断当前任务需要哪些 Skill、MCP 工具、子代理
-- 优先搜索已安装的 Skill；不足时使用 find-skill 搜索；安装需用户批准
-- Claude 自行决定是否启动子代理并行处理（测试代理、审查代理、探索代理等）
-- Claude 自行选择最合适的调试、测试、构建工具，不限定具体命令
-- 所有决策基于项目实际技术栈和当前上下文，而非固定模板
+- `proposal.md`
+- `design.md`
+- `tasks.md`
+- `TASK.json`
 
-## 提交规范
+未完成设计评审，不得进入开发。
 
-- 每完成一个功能点或修复即提交一次 commit
-- 使用中文 Conventional Commits: `<type>: <描述>`
-- type: feat / fix / refactor / docs / test / chore
-- 禁止 `git push --force` 到 master
+### Phase 2: Delivery
 
-## 文档同步
+按顺序完成：
 
-- 每次 commit 后更新 CHANGELOG.md
-- 项目结构变更时更新 PROJECT.md 和 AGENTS.md
-- PRD 变化时同步更新 docs/PRD.md
+1. 开发实现 `implementation`
+2. task 执行与历史记录
+3. 实现评审 `implementation_review`
+4. 功能测试、UI 测试、build 验证
+5. change 进入 `verified`
 
-## 代码规范
+user-facing task 必须执行 Playwright 自动化 UI 测试。
 
-- 注释和日志使用中文
-- 包管理器: pnpm
-- 箭头函数优先
+### Phase 3: Closure
+
+按顺序完成：
+
+1. 文档同步
+2. changelog 更新
+3. commit
+4. archive
+
+未完成 Closure，不得宣称 change 已结束。
+
+## 双 Review 规则
+
+### design_review
+
+- 发生在开发前
+- 检查需求理解、边界、风险、非目标、task 拆解是否足够
+- 未通过时回退到 `research` 或 `design`
+
+### implementation_review
+
+- 发生在开发后
+- 检查实现是否符合 design、是否有未报告偏差、是否有回归风险、task history 是否完整
+- 未通过时回退到 `implementation`
+
+## Task 级闭环规则
+
+1. 所有开发工作必须先在 `TASK.json` 中登记 task，并关联对应 OpenSpec change。
+2. 每个 task 都是独立闭环单元，不能只完成代码实现。
+3. 每个 task 都必须维护追加式历史日志，写入 `openspec/changes/<change>/logs/<task-id>.jsonl`。
+4. 每个 task 按需完成这些门禁：
+   - 功能实现
+   - 功能测试验证
+   - user-facing 变更的 Playwright 自动化 UI 测试
+   - 构建或编译验证
+   - 文档同步
+   - commit
+   - push
+5. 只有当 task 的必需门禁全部通过，并且无 blocker 时，task 才能进入 `done`。
+6. 只有当一个 change 下所有 task 都是 `done`，且双 review 完成时，该 change 才允许 archive。
+
+## 测试与临时产物规则
+
+- 功能测试与 UI 测试可以为当前 task 临时生成测试文件。
+- 所有临时生成的测试文件、Playwright 报告、截图、trace、视频、临时输出目录，在结果写入 task history 后必须删除。
+- 不允许保留无明确长期价值的临时测试文件，避免污染仓库和增加后续上下文读取负担。
+- 如果某个测试需要长期作为回归资产保留，必须在 task 中显式声明为 persistent test，而不是默认保留。
+- 未先记录结果就删除临时测试产物，视为流程违规。
+- 已记录结果但未清理临时测试产物，task 不得进入 `done`。
+
+## 提交与推送规则
+
+- 使用中文 Conventional Commits：`feat:`、`fix:`、`refactor:`、`docs:`、`test:`、`chore:`
+- 不得伪造 push 成功；没有 remote 或 upstream 时必须明确说明阻塞。
+- 未通过必需门禁前，不得提交会宣称“已完成”的 changelog 记录。
+- 禁止 `git push --force` 到主分支。
+
+## 文档同步规则
+
+- 项目结构、命令、工作流变化时同步维护 `PROJECT.md`
+- 产品范围或需求变化时同步维护 `docs/PRD.md`
+- 只有完成并验证通过的变更才能写入 `CHANGELOG.md`
+- OpenSpec 的 proposal、design、tasks、spec 与 `TASK.json` 必须保持一致
+
+## 代码与输出约定
+
+- 注释、日志、任务说明优先使用中文
+- 包管理器使用 `pnpm`
+- 默认优先小范围改动，不扩大无关变更

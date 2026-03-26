@@ -1,0 +1,26 @@
+schema: spec-driven
+context: |
+  Project: AI Web Builder Mobile
+  Tech stack: React 19, TypeScript, Vite 7, Tailwind CSS 4, Capacitor 8
+  Primary language: zh-CN
+  Governance:
+    - The project workflow is split into Definition, Delivery, and Closure.
+    - All delivery work is tracked per task, not only per change.
+    - Each change must complete design_review before implementation and implementation_review before closure.
+    - Every task must be registered in TASK.json with explicit quality gates.
+    - Every task must keep append-only execution history under openspec/changes/<change>/logs/<task-id>.jsonl.
+    - User-facing tasks require automated UI verification with Playwright.
+    - Generated test files, reports, screenshots, traces, and temporary outputs are ephemeral artifacts and must be deleted after the result is recorded.
+    - A change can be archived only when every task is done and no blocker remains.
+rules:
+  proposal:
+    - Explain the operational gap, why a three-phase workflow is needed, and how change lifecycle gating works.
+    - Include scope, non-goals, and the policy for ephemeral generated tests.
+  design:
+    - Define the three workflow phases, change lifecycle states, two review nodes, task state machine, and cleanup policy.
+    - Specify how TASK.json and openspec change logs stay consistent.
+  tasks:
+    - Break work into atomic tasks with explicit phase ownership, implementation, review, verification, documentation, cleanup, and closure steps.
+    - Do not mark a task complete without recorded evidence and cleanup completion.
+  spec:
+    - Use normative requirements with scenarios for three-phase lifecycle, dual reviews, task-level closure, automated UI testing, ephemeral test cleanup, and archive gating.
