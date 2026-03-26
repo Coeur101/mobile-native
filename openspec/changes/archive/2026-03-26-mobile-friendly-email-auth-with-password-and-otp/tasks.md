@@ -23,5 +23,7 @@
 ## 4. 文档与收口
 
 - [x] 4.1 更新 `PROJECT.md`、`docs/PRD.md`、`CHANGELOG.md` 与认证接入文档，说明移动端优先认证策略、7 天会话规则与不默认强制双因子
-- [ ] 4.2 确认所有 delivery tasks 在 `TASK.json` 与 `logs/<task-id>.jsonl` 中证据完整、无 blocker，且每个 task 都已独立 commit 并记录 `commitRef`
-- [ ] 4.3 完成剩余 change 级收口记录 / push 检查，并在所有 task done 后归档该 change
+- [x] 4.2 确认所有 delivery tasks 在 `TASK.json` 与 `logs/<task-id>.jsonl` 中证据完整、无 blocker，且每个 task 都已独立 commit 并记录 `commitRef`
+- [x] 4.3 完成剩余 change 级收口记录 / push 检查，并在所有 task done 后归档该 change
+
+> 收口备注：已执行 `git push --dry-run origin HEAD` 作为 push 检查，当前环境缺少远端凭据（`SEC_E_NO_CREDENTIALS`），因此本次仅完成本地归档与证据回写。

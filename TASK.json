@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-26T21:05:00+08:00",
+  "updatedAt": "2026-03-26T21:40:00+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -136,7 +136,7 @@
       "phase": "delivery",
       "title": "搭建 Supabase 邮箱认证基础层",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "Supabase 环境契约、auth service 类型、登录态持久化",
       "acceptanceCriteria": [
@@ -156,8 +156,8 @@
         "openspec/changes/integrate-free-email-auth/tasks.md"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "9a21c9c",
+      "commitMessage": "feat: TASK-008 实现移动端邮箱密码与验证码认证",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -448,15 +448,16 @@
           "src/vite-env.d.ts",
           ".env.example"
         ],
-        "commits": [],
+        "commits": [
+          "9a21c9c feat: TASK-008 实现移动端邮箱密码与验证码认证"
+        ],
         "pushes": []
       },
-      "blockers": [
-        "尚未生成该 task 的独立 commit，无法进入 committed / done"
-      ],
+      "blockers": [],
       "historyRef": "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-008.jsonl",
       "createdAt": "2026-03-26T20:20:00+08:00",
-      "updatedAt": "2026-03-26T21:05:00+08:00"
+      "updatedAt": "2026-03-26T21:40:00+08:00",
+      "closedAt": "2026-03-26T21:40:00+08:00"
     },
     {
       "id": "TASK-009",
@@ -464,7 +465,7 @@
       "phase": "delivery",
       "title": "记录认证验证证据、同步文档并清理临时测试产物",
       "type": "verification",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "Vitest、Playwright、构建结果落账，文档同步与临时测试清理",
       "acceptanceCriteria": [
@@ -487,8 +488,8 @@
         "TASK.json"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "36d821e",
+      "commitMessage": "test: TASK-009 记录认证验证证据与文档同步",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [
@@ -508,15 +509,16 @@
           "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-008.jsonl",
           "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-009.jsonl"
         ],
-        "commits": [],
+        "commits": [
+          "36d821e test: TASK-009 记录认证验证证据与文档同步"
+        ],
         "pushes": []
       },
-      "blockers": [
-        "尚未生成该 task 的独立 commit，无法进入 committed / done"
-      ],
+      "blockers": [],
       "historyRef": "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-009.jsonl",
       "createdAt": "2026-03-26T20:30:00+08:00",
-      "updatedAt": "2026-03-26T21:05:00+08:00"
+      "updatedAt": "2026-03-26T21:40:30+08:00",
+      "closedAt": "2026-03-26T21:40:30+08:00"
     }
   ]
 }
