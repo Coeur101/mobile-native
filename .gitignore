@@ -13,3 +13,4 @@ source.zip
 .tmp/
 playwright-report/
 test-results/
+.env

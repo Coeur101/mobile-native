@@ -1,26 +1,27 @@
 schema: spec-driven
 context: |
-  Project: AI Web Builder Mobile
-  Tech stack: React 19, TypeScript, Vite 7, Tailwind CSS 4, Capacitor 8
-  Primary language: zh-CN
-  Governance:
-    - The project workflow is split into Definition, Delivery, and Closure.
-    - All delivery work is tracked per task, not only per change.
-    - Each change must complete design_review before implementation and implementation_review before closure.
-    - Every task must be registered in TASK.json with explicit quality gates.
-    - Every task must keep append-only execution history under openspec/changes/<change>/logs/<task-id>.jsonl.
-    - User-facing tasks require automated UI verification with Playwright.
-    - Generated test files, reports, screenshots, traces, and temporary outputs are ephemeral artifacts and must be deleted after the result is recorded.
-    - A change can be archived only when every task is done and no blocker remains.
+  项目：AI Web Builder Mobile
+  技术栈：React 19、TypeScript、Vite 7、Tailwind CSS 4、Capacitor 8
+  默认语言：zh-CN
+  治理规则：
+    - 项目工作流拆分为 Definition、Delivery、Closure 三个阶段。
+    - 所有交付工作以 task 为闭环单位，而不是只看 change。
+    - 每个 change 必须先完成 design_review，才能进入实现；必须完成 implementation_review，才能进入收口。
+    - 每个 task 都必须先登记到 TASK.json，并显式声明所需质量门禁。
+    - 每个 task 都必须维护追加式历史，写入 openspec/changes/<change>/logs/<task-id>.jsonl。
+    - user-facing task 必须执行 Playwright 自动化 UI 验证。
+    - 生成的测试文件、报告、截图、trace、视频与临时输出都属于一次性产物，记录结果后必须删除。
+    - 每个交付型 task 在进入 done 前必须完成独立 commit，并在 TASK.json 与 task history 中记录可追溯提交证据。
+    - 只有当所有 task 都完成且无 blocker 时，change 才允许归档。
 rules:
   proposal:
-    - Explain the operational gap, why a three-phase workflow is needed, and how change lifecycle gating works.
-    - Include scope, non-goals, and the policy for ephemeral generated tests.
+    - 说明当前流程缺口、为什么需要三阶段工作流，以及为什么 task 级独立 commit 是必要门禁。
+    - 明确 scope、non-goals 与一次性测试产物清理策略。
   design:
-    - Define the three workflow phases, change lifecycle states, two review nodes, task state machine, and cleanup policy.
-    - Specify how TASK.json and openspec change logs stay consistent.
+    - 定义三阶段、change 生命周期、双 review、task 状态机、提交追溯规则与清理策略。
+    - 说明 TASK.json 与 openspec 变更日志如何保持一致。
   tasks:
-    - Break work into atomic tasks with explicit phase ownership, implementation, review, verification, documentation, cleanup, and closure steps.
-    - Do not mark a task complete without recorded evidence and cleanup completion.
+    - 将工作拆成原子任务，并明确阶段归属、实现、评审、验证、文档、提交、清理与收口步骤。
+    - 未记录证据、未完成清理、未记录独立 commit 的 task 不得标记完成。
   spec:
-    - Use normative requirements with scenarios for three-phase lifecycle, dual reviews, task-level closure, automated UI testing, ephemeral test cleanup, and archive gating.
+    - 使用带场景的规范性要求，覆盖三阶段生命周期、双 review、task 级闭环、task 级独立提交、自动化 UI 测试、临时测试清理与归档门禁。
