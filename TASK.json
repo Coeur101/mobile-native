@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-26T21:55:00+08:00",
+  "updatedAt": "2026-03-26T22:15:00+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -569,7 +569,7 @@
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
       "createdAt": "2026-03-26T21:45:00+08:00",
       "updatedAt": "2026-03-26T22:05:00+08:00",
       "closedAt": "2026-03-26T22:05:00+08:00"
@@ -602,7 +602,7 @@
         "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl"
       ],
       "commitRequired": true,
-      "commitRef": null,
+      "commitRef": "d96d70b",
       "commitMessage": "test: TASK-011 记录登录页重构验证证据",
       "pushRequired": false,
       "artifacts": {
@@ -616,16 +616,19 @@
         "docs": [
           "CHANGELOG.md",
           "TASK.json",
-          "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
-          "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl"
+          "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
+          "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-011.jsonl"
         ],
-        "commits": [],
+        "commits": [
+          "d96d70b test: TASK-011 记录登录页重构验证证据"
+        ],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/redesign-login-page-interaction-ui/logs/TASK-011.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-011.jsonl",
       "createdAt": "2026-03-26T21:50:00+08:00",
-      "updatedAt": "2026-03-26T22:05:00+08:00"
+      "updatedAt": "2026-03-26T22:15:00+08:00",
+      "closedAt": "2026-03-26T22:15:00+08:00"
     }
   ]
 }
