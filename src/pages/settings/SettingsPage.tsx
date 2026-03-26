@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { PageTransition } from "@/components/ui/page-transition";
-import { mockAuthService } from "@/services/auth/mock-auth-service";
+import { authService } from "@/services/auth";
 import { mockSettingsService } from "@/services/settings/mock-settings-service";
 import { useThemeStore } from "@/stores/use-theme-store";
 import { SPRING_BOUNCY, buttonTap } from "@/lib/animations";
@@ -16,7 +16,7 @@ const defaultForm: UserSettings = {
   preferredModel: "mock-gpt",
   customBaseUrl: "",
   apiKey: "",
-  notes: "当前为演示模式，设置仅保存在本地。",
+  notes: "当前设置仅保存在本地设备。",
 };
 
 const themeOptions = [
@@ -48,16 +48,15 @@ export function SettingsPage() {
   };
 
   const handleLogout = async () => {
-    await mockAuthService.signOut();
-    toast.success("已退出演示模式。");
+    await authService.signOut();
+    toast.success("已退出当前账号。");
     navigate("/login", { replace: true });
   };
 
   return (
     <PageTransition className="min-h-screen bg-background">
-      {/* Header — 纯图标 */}
       <header className="sticky top-0 z-10 border-b border-border bg-card/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 h-14">
+        <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <motion.button
               type="button"
@@ -84,13 +83,13 @@ export function SettingsPage() {
 
       <main className="mx-auto max-w-4xl px-4 py-6">
         <div className="grid gap-4 lg:grid-cols-2">
-          {/* 主题与模型 */}
           <section className="rounded-[28px] border border-border bg-card p-5">
-            <h2 className="text-lg font-semibold text-foreground">主题</h2>
+            <h2 className="text-lg font-semibold text-foreground">主题与模型</h2>
             <div className="mt-4 grid grid-cols-3 gap-3">
               {themeOptions.map((option) => {
                 const Icon = option.icon;
                 const isActive = settings.theme === option.value;
+
                 return (
                   <motion.button
                     key={option.value}
@@ -102,17 +101,19 @@ export function SettingsPage() {
                         ? "border-primary bg-accent"
                         : "border-border bg-card hover:border-primary/30"
                     }`}
-                    title={option.value}
+                    title={option.label}
                   >
-                    {isActive && (
+                    {isActive ? (
                       <motion.div
                         layoutId="theme-indicator"
                         className="absolute inset-0 rounded-[10px] border-2 border-primary"
                         transition={SPRING_BOUNCY}
                       />
-                    )}
+                    ) : null}
                     <Icon className={`h-5 w-5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className={`text-xs ${isActive ? "text-primary font-medium" : "text-muted-foreground"}`}>{option.label}</span>
+                    <span className={`text-xs ${isActive ? "font-medium text-primary" : "text-muted-foreground"}`}>
+                      {option.label}
+                    </span>
                   </motion.button>
                 );
               })}
@@ -120,7 +121,7 @@ export function SettingsPage() {
 
             <div className="mt-4">
               <label className="block text-sm font-medium text-foreground">
-                模型偏好
+                偏好模型
                 <Input
                   value={settings.preferredModel}
                   onChange={(event) =>
@@ -132,9 +133,8 @@ export function SettingsPage() {
             </div>
           </section>
 
-          {/* 认证与云端 */}
           <section className="rounded-[28px] border border-border bg-card p-5">
-            <h2 className="text-lg font-semibold text-foreground">认证与云端</h2>
+            <h2 className="text-lg font-semibold text-foreground">云端连接</h2>
             <div className="mt-4 space-y-4">
               <label className="block text-sm font-medium text-foreground">
                 Base URL
@@ -155,7 +155,7 @@ export function SettingsPage() {
                   onChange={(event) =>
                     setSettings((current) => ({ ...current, apiKey: event.target.value }))
                   }
-                  placeholder="仅预留，不做真实调用"
+                  placeholder="仅本地保存，不会自动上传"
                   className="mt-2 h-11 rounded-2xl"
                 />
               </label>
@@ -164,7 +164,7 @@ export function SettingsPage() {
         </div>
 
         <section className="mt-4 rounded-[28px] border border-amber-200/50 bg-amber-50/50 p-5 text-sm leading-6 text-amber-900 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-300">
-          当前所有设置都只保存在本地。后续可以直接替换 mock 实现。
+          当前设置仍以本地存储为主。认证能力已经切换到真实邮箱链路，但云端业务配置仍需按部署环境补齐。
         </section>
 
         <section className="mt-4 rounded-[28px] border border-border bg-card p-5">

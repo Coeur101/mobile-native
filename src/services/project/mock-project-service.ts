@@ -15,6 +15,15 @@ function persist(projects: Project[]) {
   localDb.saveProjects(projects);
 }
 
+function requireCurrentUserId(): string {
+  const userId = localDb.getUser()?.id;
+  if (!userId) {
+    throw new Error("当前未登录，无法操作项目数据。");
+  }
+
+  return userId;
+}
+
 export const mockProjectService: ProjectService = {
   async listProjects() {
     return localDb.getProjects().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
@@ -23,11 +32,13 @@ export const mockProjectService: ProjectService = {
     return localDb.getProjects().find((project) => project.id === id) ?? null;
   },
   async createProject(prompt) {
+    const ownerUserId = requireCurrentUserId();
     const payload = await mockAIService.generateProjectFromPrompt(prompt);
     const now = new Date().toISOString();
     const projectId = nextProjectId();
     const project: Project = {
       id: projectId,
+      ownerUserId,
       name: payload.projectName,
       description: payload.summary,
       status: "active",
@@ -38,8 +49,14 @@ export const mockProjectService: ProjectService = {
           role: "user",
           content: prompt,
           createdAt: now,
+          projectId,
+          ownerUserId,
         },
-        ...payload.messages,
+        ...payload.messages.map((message) => ({
+          ...message,
+          projectId,
+          ownerUserId,
+        })),
       ],
       versions: [
         {
@@ -48,6 +65,8 @@ export const mockProjectService: ProjectService = {
           summary: "首次根据提示词生成项目文件",
           files: payload.files,
           createdAt: now,
+          projectId,
+          ownerUserId,
         },
       ],
       preview: payload.meta,
@@ -78,8 +97,14 @@ export const mockProjectService: ProjectService = {
         role: "user",
         content: prompt,
         createdAt: now,
+        projectId: project.id,
+        ownerUserId: project.ownerUserId,
       },
-      ...payload.messages,
+      ...payload.messages.map((message) => ({
+        ...message,
+        projectId: project.id,
+        ownerUserId: project.ownerUserId,
+      })),
     ];
     project.files = payload.files;
     project.description = payload.summary;
@@ -91,6 +116,8 @@ export const mockProjectService: ProjectService = {
         summary: `根据新提示词更新项目：${prompt.slice(0, 20)}`,
         files: payload.files,
         createdAt: now,
+        projectId: project.id,
+        ownerUserId: project.ownerUserId,
       },
       ...project.versions,
     ];
@@ -124,6 +151,8 @@ export const mockProjectService: ProjectService = {
         summary,
         files: project.files,
         createdAt: new Date().toISOString(),
+        projectId,
+        ownerUserId: project.ownerUserId,
       },
       ...project.versions,
     ];
@@ -138,7 +167,14 @@ export const mockProjectService: ProjectService = {
       return null;
     }
 
-    project.messages = [...project.messages, message];
+    project.messages = [
+      ...project.messages,
+      {
+        ...message,
+        projectId,
+        ownerUserId: project.ownerUserId,
+      },
+    ];
     project.updatedAt = new Date().toISOString();
     persist(projects);
     return project;
@@ -167,6 +203,8 @@ export const mockProjectService: ProjectService = {
         summary: `恢复到版本 ${version.versionNo}`,
         files: { ...version.files },
         createdAt: new Date().toISOString(),
+        projectId: project.id,
+        ownerUserId: project.ownerUserId,
       },
       ...project.versions,
     ];

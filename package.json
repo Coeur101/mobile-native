@@ -8,6 +8,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui:auth": "playwright test",
     "android:sync": "pnpm exec cap sync android",
     "android:open": "pnpm exec cap open android",
     "android:apk:debug": "pnpm build && pnpm android:sync && cd android && gradlew.bat assembleDebug"
@@ -16,6 +19,7 @@
     "@capacitor/android": "^8.0.0",
     "@capacitor/cli": "^8.0.0",
     "@capacitor/core": "^8.0.0",
+    "@supabase/supabase-js": "^2.100.0",
     "highlight.js": "^11.11.1",
     "lucide-react": "0.487.0",
     "motion": "^12.38.0",
@@ -26,12 +30,15 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "4.1.12",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
+    "jsdom": "^29.0.1",
     "tailwindcss": "4.1.12",
     "typescript": "^5.9.2",
-    "vite": "^7.1.2"
+    "vite": "^7.1.2",
+    "vitest": "^4.1.1"
   }
 }

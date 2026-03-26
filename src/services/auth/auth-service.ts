@@ -1,8 +1,30 @@
-import type { UserProfile } from "@/types";
+import type {
+  AuthStateSnapshot,
+  EmailOtpRequestResult,
+  EmailOtpVerificationResult,
+  PasswordRecoveryResult,
+  UserProfile,
+} from "@/types";
+
+export type AuthStateListener = () => void;
+
+export type EmailOtpPurpose = "login" | "register";
 
 export interface AuthService {
+  initialize(): Promise<void>;
   getCurrentUser(): UserProfile | null;
-  signInWithEmail(email: string): Promise<UserProfile>;
-  signInWithWechat(): Promise<UserProfile>;
+  getSnapshot(): AuthStateSnapshot;
+  subscribe(listener: AuthStateListener): () => void;
+  requestEmailOtp(email: string, purpose: EmailOtpPurpose): Promise<EmailOtpRequestResult>;
+  verifyEmailOtp(
+    email: string,
+    token: string,
+    purpose: EmailOtpPurpose,
+  ): Promise<EmailOtpVerificationResult>;
+  signInWithPassword(email: string, password: string): Promise<void>;
+  completeRegistration(password: string, nickname?: string): Promise<void>;
+  requestPasswordReset(email: string): Promise<PasswordRecoveryResult>;
+  completePasswordReset(password: string): Promise<void>;
+  clearPendingAction(): Promise<void>;
   signOut(): Promise<void>;
 }

@@ -4,9 +4,11 @@ import { useEffect } from "react";
 import { router } from "./router";
 import { useThemeStore, applyTheme } from "./stores/use-theme-store";
 import { ErrorBoundary } from "./components/ui/error-boundary";
+import { useAuthStore } from "./stores/use-auth-store";
 
 export default function App() {
   const mode = useThemeStore((s) => s.mode);
+  const initializeAuth = useAuthStore((s) => s.initialize);
 
   // 初始化和响应主题变化
   useEffect(() => {
@@ -20,6 +22,10 @@ export default function App() {
       return () => mql.removeEventListener("change", handler);
     }
   }, [mode]);
+
+  useEffect(() => {
+    void initializeAuth();
+  }, [initializeAuth]);
 
   return (
     <ErrorBoundary>

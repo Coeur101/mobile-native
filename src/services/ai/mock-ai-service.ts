@@ -1,5 +1,5 @@
 import type { AIService } from "./ai-service";
-import type { GeneratedProjectPayload, Project, ProjectFileMap, ProjectMessage, ThinkingStep } from "@/types";
+import type { GeneratedProjectPayload, Project, ProjectFileMap, ThinkingStep } from "@/types";
 
 /** 从用户提示词中提取简短项目名称（保留中文原文） */
 function deriveProjectName(value: string) {
@@ -157,7 +157,7 @@ export const mockAIService: AIService = {
     const isUpdate = !!project;
     const thinkingSteps = buildThinkingSteps(prompt, isUpdate);
 
-    const messages: ProjectMessage[] = [
+    const messages: GeneratedProjectPayload["messages"] = [
       {
         id: `${Date.now()}-assistant`,
         role: "assistant",
