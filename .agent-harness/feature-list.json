@@ -1,0 +1,161 @@
+{
+  "generatedAt": "2026-03-27T05:30:01.402Z",
+  "activeChanges": [
+    "integrate-free-email-and-wechat-auth",
+    "integrate-free-email-auth",
+    "otp-auth-and-supabase-user-profile",
+    "task-level-closed-loop-workflow"
+  ],
+  "currentFocus": {
+    "id": "TASK-019",
+    "change": "otp-auth-and-supabase-user-profile",
+    "phase": "delivery",
+    "title": "新增个人信息页并替换首页右上角入口",
+    "type": "feature",
+    "status": "todo",
+    "priority": "P0",
+    "scope": "默认头像、默认昵称、邮箱、主题切换与旧设置页职责收缩",
+    "acceptanceCriteria": [
+      "首页右上角入口改为用户信息入口",
+      "新增个人信息页展示头像、昵称、邮箱与主题切换",
+      "旧设置页收缩为非主入口的辅助设置区域",
+      "Playwright UI 覆盖主页到个人信息页导航"
+    ],
+    "functionalTestsRequired": false,
+    "uiTestsRequired": true,
+    "buildRequired": true,
+    "designReviewRequired": true,
+    "implementationReviewRequired": true,
+    "docsToUpdate": [
+      "src/pages/home/HomePage.tsx",
+      "src/pages/settings/SettingsPage.tsx",
+      "src/router.tsx",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+      "TASK.json"
+    ],
+    "commitRequired": true,
+    "commitRef": null,
+    "commitMessage": "feat: TASK-019 新增个人信息页入口与导航",
+    "pushRequired": false,
+    "artifacts": {
+      "functionalTests": [],
+      "uiTests": [],
+      "buildChecks": [
+        "pnpm build"
+      ],
+      "docs": [
+        "src/pages/home/HomePage.tsx",
+        "src/pages/settings/SettingsPage.tsx",
+        "src/router.tsx",
+        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "TASK.json"
+      ],
+      "commits": [],
+      "pushes": []
+    },
+    "blockers": [],
+    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+    "createdAt": "2026-03-27T09:12:00+08:00",
+    "updatedAt": "2026-03-27T09:12:00+08:00",
+    "mustRead": [
+      "openspec/changes/otp-auth-and-supabase-user-profile/proposal.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/.openspec.yaml",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/auth-entry-ui/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/project-data/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-auth/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-profile/spec.md",
+      "src/pages/home/HomePage.tsx",
+      "src/pages/settings/SettingsPage.tsx",
+      "src/router.tsx",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "TASK.json"
+    ],
+    "requiredChecks": [
+      "pnpm build"
+    ]
+  },
+  "nextQueue": [
+    {
+      "id": "TASK-019",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "priority": "P0",
+      "status": "todo",
+      "title": "新增个人信息页并替换首页右上角入口"
+    },
+    {
+      "id": "TASK-020",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "priority": "P0",
+      "status": "todo",
+      "title": "实现头像压缩存储与资料页密码安全流程"
+    },
+    {
+      "id": "TASK-021",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "priority": "P0",
+      "status": "todo",
+      "title": "完成资料模型与认证链路 implementation_review"
+    },
+    {
+      "id": "TASK-022",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "priority": "P0",
+      "status": "todo",
+      "title": "完成页面导航、个人信息交互与安全流程 implementation_review"
+    },
+    {
+      "id": "TASK-023",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "priority": "P0",
+      "status": "todo",
+      "title": "执行 change 所需验证并清理一次性测试产物"
+    },
+    {
+      "id": "TASK-024",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "priority": "P0",
+      "status": "todo",
+      "title": "同步主线文档与 specs 后关闭并归档 change"
+    }
+  ],
+  "repoBacklog": [
+    {
+      "id": "backlog:change:integrate-free-email-and-wechat-auth",
+      "kind": "stale_change",
+      "title": "活跃 change 缺少 TASK.json 任务映射：integrate-free-email-and-wechat-auth",
+      "source": "openspec/changes/integrate-free-email-and-wechat-auth",
+      "recommendation": "补齐 TASK.json、判断继续交付还是归档/废弃。"
+    },
+    {
+      "id": "backlog:mock-project-service",
+      "title": "项目数据仍以 mock service 为主",
+      "source": "src/services/project/mock-project-service.ts",
+      "recommendation": "为真实云端项目持久化建立新 change。",
+      "kind": "mock_boundary"
+    },
+    {
+      "id": "backlog:mock-ai-service",
+      "title": "AI 生成仍以 mock service 为主",
+      "source": "src/services/ai/mock-ai-service.ts",
+      "recommendation": "为真实模型接入建立新 change。",
+      "kind": "mock_boundary"
+    },
+    {
+      "id": "backlog:settings-local-only",
+      "kind": "local_only_boundary",
+      "title": "设置页仍依赖本地 mock settings",
+      "source": "src/pages/settings/SettingsPage.tsx",
+      "recommendation": "与个人信息页收缩一起评估是否拆出真实设置后端。"
+    }
+  ]
+}

@@ -14,3 +14,4 @@ source.zip
 playwright-report/
 test-results/
 .env
+.agent-harness/runtime/

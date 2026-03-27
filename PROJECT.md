@@ -1,5 +1,14 @@
 # AI Web Builder Mobile
 
+## Agent Harness
+
+- 新增 `scripts/agent-harness/*.mjs`，把 `OpenSpec + TASK.json + task logs + Playwright/Vitest/build` 串成当前 session 的可恢复上下文。
+- `pnpm agent:init` 负责生成 feature list 和初始化说明。
+- `pnpm agent:refresh` 负责生成当前 `session-brief.md`。
+- `pnpm agent:orchestrate` 负责输出当前 focus task、验证命令、后续队列和 repo backlog。
+- `pnpm agent:log` 负责补充 session 级 progress bridge，不替代 task log。
+- 这层 harness 复用现有状态源，不再引入第二套任务系统。
+
 ## 项目概览
 
 AI 原生移动端网页生成器。用户通过自然语言在 App 内创建、演化、预览并管理网页项目。当前处于 MVP 阶段，认证、云端数据和真实 AI 能力仍以 mock 边界预留接入位。

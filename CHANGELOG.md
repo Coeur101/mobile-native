@@ -1,5 +1,15 @@
 # AI Web Builder Mobile CHANGELOG
 
+## 2026-03-27 Agent Harness
+
+### Added
+- 新增 `scripts/agent-harness/init.mjs`、`refresh.mjs`、`orchestrate.mjs`、`log-progress.mjs` 与共享解析层 `shared.mjs`
+- 新增 `docs/agent-harness.md`，把 Anthropic 长时运行 agent harness 方法映射到当前仓库工具链
+- 新增 `pnpm agent:init`、`pnpm agent:refresh`、`pnpm agent:orchestrate`、`pnpm agent:log` 命令
+
+### Changed
+- 复用 `OpenSpec + TASK.json + task logs + Playwright/Vitest/build` 作为自编排的状态源、进度桥和验证门禁
+
 ## [未发布]
 
 ### 尝试中
