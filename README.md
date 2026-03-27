@@ -106,3 +106,11 @@ docs: 更新 README 中的开源协作说明
 - 设置：本地保存
 
 后续真实接入会通过 `src/services` 层逐步替换实现，而不是重写页面。
+
+## Chrome DevTools MCP
+
+- 项目现在同时支持 `Playwright` 自动化 UI 测试和 `Chrome DevTools MCP` 可视化浏览器调试。
+- `Playwright` 继续用于闭环回归、临时测试脚本和 user-facing task 的自动化门禁。
+- `Chrome DevTools MCP` 用于打开真实浏览器做交互验收、DOM / Network / Console 排查和页面问题定位。
+- 详细说明见 `docs/chrome-devtools-mcp.md`。
+- 由于 MCP 注册在 `C:\Users\Administrator\.codex\config.toml`，修改后需要重启 Codex 会话才会生效。

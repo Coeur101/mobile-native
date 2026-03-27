@@ -66,3 +66,12 @@
 ### 已回退
 
 - 暂无
+
+## 2026-03-27
+
+### Added
+- 接入 Chrome DevTools MCP 到 Codex 全局配置，补充真实浏览器可视化验收与调试能力。
+- 新增 `docs/chrome-devtools-mcp.md`，明确 Chrome MCP 与 Playwright 的职责边界和使用方式。
+
+### Changed
+- 明确项目 UI 验证采用双轨模式：Playwright 负责自动化闭环，Chrome DevTools MCP 负责人工验收与问题排查。

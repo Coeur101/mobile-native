@@ -206,3 +206,12 @@ PROJECT.md
 - 登录页不再展示“微信已可用”的误导入口，当前版本明确仅支持邮箱登录。
 - 认证配置需要通过 `.env` 注入 `VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY`、`VITE_SUPABASE_EMAIL_REDIRECT_TO`。
 - 免费优先 SMTP 接入说明见 `docs/auth-email-setup.md`，推荐使用 `Resend Free` 作为 Supabase 自定义 SMTP。
+
+## 2026-03-27 Chrome DevTools MCP 接入
+
+- 增加真实浏览器可视化验收与调试能力，补充 Playwright 之外的页面检查手段。
+- Playwright 继续负责自动化闭环、临时 UI 脚本与回归验证。
+- Chrome DevTools MCP 负责人工验收、交互检查、Console / Network / DOM 排查。
+- user-facing task 仍必须执行 Playwright UI 自动化验证，Chrome MCP 不替代 task 级门禁。
+- 当前 Codex MCP 注册位于 `C:\Users\Administrator\.codex\config.toml`，修改后需重启会话生效。
+- 详细说明见 `docs/chrome-devtools-mcp.md`。
