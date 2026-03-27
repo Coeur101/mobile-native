@@ -6,8 +6,10 @@ const orchestration = {
   generatedAt: state.generatedAt,
   currentFocus: state.currentFocus,
   whySelected: state.currentFocus
-    ? "继续当前最活跃 change 中最高优先级、最靠前的待办任务"
-    : "未发现待执行任务",
+    ? state.currentFocus.status === "in_progress"
+      ? "Continue the current in-progress task in the most active change."
+      : "Pick the highest-priority actionable task from the most active change."
+    : "No actionable tasks remain.",
   mustRead: state.currentFocus?.mustRead ?? [],
   mustVerify: state.currentFocus?.requiredChecks ?? [],
   nextQueue: state.nextQueue,
@@ -16,4 +18,3 @@ const orchestration = {
 
 writeJson(getHarnessFilePath("orchestration.json"), orchestration);
 console.log(JSON.stringify(orchestration, null, 2));
-

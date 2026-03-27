@@ -7,6 +7,7 @@ export const repoRoot = path.resolve(__dirname, "..", "..");
 export const harnessDir = path.join(repoRoot, ".agent-harness");
 const openspecChangesDir = path.join(repoRoot, "openspec", "changes");
 const taskLedgerPath = path.join(repoRoot, "TASK.json");
+const tmpDir = path.join(repoRoot, ".tmp");
 
 const priorityRank = {
   P0: 0,
@@ -22,6 +23,11 @@ const phaseRank = {
 };
 
 const completionStatus = new Set(["done", "docs_verified"]);
+const actionableStatus = new Set(["todo", "in_progress"]);
+const actionableStatusRank = {
+  in_progress: 0,
+  todo: 1,
+};
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -37,6 +43,14 @@ function exists(filePath) {
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
+}
+
+function removePath(targetPath) {
+  if (!exists(targetPath)) {
+    return;
+  }
+
+  fs.rmSync(targetPath, { recursive: true, force: true });
 }
 
 function walkFiles(dirPath, matcher, results = []) {
@@ -104,6 +118,14 @@ function compareTasks(a, b) {
   if (priorityDelta !== 0) return priorityDelta;
 
   return parseTaskNumber(a.id) - parseTaskNumber(b.id);
+}
+
+function compareActionableTasks(a, b) {
+  const statusDelta =
+    (actionableStatusRank[a.status] ?? 99) - (actionableStatusRank[b.status] ?? 99);
+  if (statusDelta !== 0) return statusDelta;
+
+  return compareTasks(a, b);
 }
 
 function getGitHead() {
@@ -188,9 +210,9 @@ function detectRepoBacklog(tasks, activeChanges) {
       backlog.push({
         id: `backlog:change:${changeName}`,
         kind: "stale_change",
-        title: `活跃 change 缺少 TASK.json 任务映射：${changeName}`,
+        title: `Active change missing TASK.json mapping: ${changeName}`,
         source: `openspec/changes/${changeName}`,
-        recommendation: "补齐 TASK.json、判断继续交付还是归档/废弃。",
+        recommendation: "Add TASK.json entries, then decide whether to continue delivery or archive the change.",
       });
     }
   }
@@ -198,15 +220,15 @@ function detectRepoBacklog(tasks, activeChanges) {
   const mockCandidates = [
     {
       id: "backlog:mock-project-service",
-      title: "项目数据仍以 mock service 为主",
+      title: "Project data still depends on a mock service",
       source: "src/services/project/mock-project-service.ts",
-      recommendation: "为真实云端项目持久化建立新 change。",
+      recommendation: "Create a new change to replace the project mock with a real persistence boundary.",
     },
     {
       id: "backlog:mock-ai-service",
-      title: "AI 生成仍以 mock service 为主",
+      title: "AI generation still depends on a mock service",
       source: "src/services/ai/mock-ai-service.ts",
-      recommendation: "为真实模型接入建立新 change。",
+      recommendation: "Create a new change to replace the AI mock with a real model integration.",
     },
   ];
 
@@ -224,9 +246,9 @@ function detectRepoBacklog(tasks, activeChanges) {
     backlog.push({
       id: "backlog:settings-local-only",
       kind: "local_only_boundary",
-      title: "设置页仍依赖本地 mock settings",
+      title: "Settings page still depends on local mock settings",
       source: "src/pages/settings/SettingsPage.tsx",
-      recommendation: "与个人信息页收缩一起评估是否拆出真实设置后端。",
+      recommendation: "Decide whether the profile/settings work should also introduce a real settings backend boundary.",
     });
   }
 
@@ -238,14 +260,14 @@ function getPreferredChange(tasks, activeChanges) {
   const candidates = activeChanges
     .map((changeName) => {
       const changeTasks = tasksByChange[changeName] ?? [];
-      const todoTasks = changeTasks.filter((task) => task.status === "todo");
-      if (todoTasks.length === 0) {
+      const actionableTasks = changeTasks.filter((task) => actionableStatus.has(task.status));
+      if (actionableTasks.length === 0) {
         return null;
       }
 
       return {
         changeName,
-        todoTasks,
+        actionableTasks,
         completedCount: changeTasks.filter((task) => completionStatus.has(task.status)).length,
         updatedAt: Math.max(...changeTasks.map((task) => parseDate(task.updatedAt))),
       };
@@ -283,8 +305,8 @@ export function loadHarnessState() {
   const activeChanges = getActiveChangeNames();
   const preferredChange = getPreferredChange(tasks, activeChanges);
   const nextQueue = preferredChange
-    ? [...preferredChange.todoTasks].sort(compareTasks)
-    : [...tasks.filter((task) => task.status === "todo")].sort(compareTasks);
+    ? [...preferredChange.actionableTasks].sort(compareActionableTasks)
+    : [...tasks.filter((task) => actionableStatus.has(task.status))].sort(compareActionableTasks);
   const currentFocus = nextQueue[0] ?? null;
   const recentCompleted = tasks
     .filter((task) => completionStatus.has(task.status))
@@ -344,4 +366,121 @@ export function writeText(filePath, value) {
 export function getHarnessFilePath(fileName) {
   return path.join(harnessDir, fileName);
 }
+
+
+export function loadTaskLedger() {
+  return readJson(taskLedgerPath);
+}
+
+export function saveTaskLedger(ledger) {
+  writeJson(taskLedgerPath, ledger);
+}
+
+export function updateTaskStatus(taskId, nextStatus) {
+  const ledger = loadTaskLedger();
+  const task = ledger.tasks.find((item) => item.id === taskId);
+  if (!task) {
+    throw new Error(`Task not found: ${taskId}`);
+  }
+
+  const previousStatus = task.status;
+  task.status = nextStatus;
+  task.updatedAt = new Date().toISOString();
+  ledger.updatedAt = task.updatedAt;
+  saveTaskLedger(ledger);
+
+  return {
+    ...task,
+    previousStatus,
+  };
+}
+
+export function cleanupTaskArtifacts() {
+  const removed = [];
+  const trackedTargets = [
+    path.join(repoRoot, "test-results"),
+    path.join(repoRoot, "playwright-report"),
+    path.join(tmpDir, "task-runs", "playwright"),
+    path.join(tmpDir, "task-runs", "vitest"),
+  ];
+
+  for (const targetPath of trackedTargets) {
+    if (!exists(targetPath)) {
+      continue;
+    }
+
+    removePath(targetPath);
+    removed.push(toRepoPath(targetPath));
+  }
+
+  if (!exists(tmpDir)) {
+    return removed;
+  }
+
+  for (const entry of fs.readdirSync(tmpDir, { withFileTypes: true })) {
+    if (!entry.isFile()) {
+      continue;
+    }
+
+    if (!/^playwright-.*\.(out|err)$/i.test(entry.name)) {
+      continue;
+    }
+
+    const fullPath = path.join(tmpDir, entry.name);
+    try {
+      fs.rmSync(fullPath, { force: true });
+      removed.push(toRepoPath(fullPath));
+    } catch {
+      // Ignore locked temp files.
+    }
+  }
+
+  return removed;
+}
+
+export function writeClaimedTask(task) {
+  writeJson(getHarnessFilePath("claimed-task.json"), {
+    claimedAt: new Date().toISOString(),
+    task,
+  });
+}
+
+export function appendHarnessProgress(entry) {
+  fs.appendFileSync(getHarnessFilePath("progress.jsonl"), JSON.stringify(entry) + "\n", "utf8");
+}
+
+export function appendTaskHistory(taskId, entry) {
+  const ledger = loadTaskLedger();
+  const task = ledger.tasks.find((item) => item.id === taskId);
+  if (!task) {
+    throw new Error(`Task not found: ${taskId}`);
+  }
+
+  if (!task.historyRef) {
+    return null;
+  }
+
+  const historyPath = fromRepoPath(task.historyRef);
+  ensureDir(path.dirname(historyPath));
+
+  const existingEntries = readJsonl(historyPath);
+  const eventId = `${taskId}-E${String(existingEntries.length + 1).padStart(3, "0")}`;
+  const historyEntry = {
+    eventId,
+    taskId,
+    timestamp: new Date().toISOString(),
+    actor: "codex",
+    ...entry,
+  };
+
+  fs.appendFileSync(historyPath, JSON.stringify(historyEntry) + "\n", "utf8");
+  return historyEntry;
+}
+
+
+
+
+
+
+
 

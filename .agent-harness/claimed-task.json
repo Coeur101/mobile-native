@@ -1,0 +1,75 @@
+{
+  "claimedAt": "2026-03-27T05:50:58.036Z",
+  "task": {
+    "id": "TASK-019",
+    "change": "otp-auth-and-supabase-user-profile",
+    "phase": "delivery",
+    "title": "新增个人信息页并替换首页右上角入口",
+    "type": "feature",
+    "status": "in_progress",
+    "priority": "P0",
+    "scope": "默认头像、默认昵称、邮箱、主题切换与旧设置页职责收缩",
+    "acceptanceCriteria": [
+      "首页右上角入口改为用户信息入口",
+      "新增个人信息页展示头像、昵称、邮箱与主题切换",
+      "旧设置页收缩为非主入口的辅助设置区域",
+      "Playwright UI 覆盖主页到个人信息页导航"
+    ],
+    "functionalTestsRequired": false,
+    "uiTestsRequired": true,
+    "buildRequired": true,
+    "designReviewRequired": true,
+    "implementationReviewRequired": true,
+    "docsToUpdate": [
+      "src/pages/home/HomePage.tsx",
+      "src/pages/settings/SettingsPage.tsx",
+      "src/router.tsx",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+      "TASK.json"
+    ],
+    "commitRequired": true,
+    "commitRef": null,
+    "commitMessage": "feat: TASK-019 新增个人信息页入口与导航",
+    "pushRequired": false,
+    "artifacts": {
+      "functionalTests": [],
+      "uiTests": [],
+      "buildChecks": [
+        "pnpm build"
+      ],
+      "docs": [
+        "src/pages/home/HomePage.tsx",
+        "src/pages/settings/SettingsPage.tsx",
+        "src/router.tsx",
+        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "TASK.json"
+      ],
+      "commits": [],
+      "pushes": []
+    },
+    "blockers": [],
+    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+    "createdAt": "2026-03-27T09:12:00+08:00",
+    "updatedAt": "2026-03-27T05:50:58.022Z",
+    "mustRead": [
+      "openspec/changes/otp-auth-and-supabase-user-profile/proposal.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/.openspec.yaml",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/auth-entry-ui/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/project-data/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-auth/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-profile/spec.md",
+      "src/pages/home/HomePage.tsx",
+      "src/pages/settings/SettingsPage.tsx",
+      "src/router.tsx",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "TASK.json"
+    ],
+    "requiredChecks": [
+      "pnpm build"
+    ]
+  }
+}

@@ -1,8 +1,8 @@
 # Session Brief
 
-Generated: 2026-03-27T05:30:01.402Z
+Generated: 2026-03-27T05:52:00.218Z
 Branch: master
-Commit: 5077d95
+Commit: cf1db5d
 
 ## Current Focus
 
@@ -43,15 +43,15 @@ Commit: 5077d95
 
 ## Recent Completed
 
-- TASK-017 收敛认证服务为 OTP-first 模型并预留安全验证码能力 (docs_verified)
 - TASK-018 重构登录页为 OTP-only 的移动端认证入口 (docs_verified)
+- TASK-017 收敛认证服务为 OTP-first 模型并预留安全验证码能力 (docs_verified)
 - TASK-016 调整本地持久化与会话恢复逻辑以 Supabase profile 为准 (docs_verified)
 - TASK-015 实现 Supabase 用户资料记录模型与默认资料生成逻辑 (docs_verified)
 - TASK-014 完成入口与页面信息架构 design_review 并记录结论 (done)
 
 ## Repo Backlog
 
-- 活跃 change 缺少 TASK.json 任务映射：integrate-free-email-and-wechat-auth: 补齐 TASK.json、判断继续交付还是归档/废弃。
-- 项目数据仍以 mock service 为主: 为真实云端项目持久化建立新 change。
-- AI 生成仍以 mock service 为主: 为真实模型接入建立新 change。
-- 设置页仍依赖本地 mock settings: 与个人信息页收缩一起评估是否拆出真实设置后端。
+- Active change missing TASK.json mapping: integrate-free-email-and-wechat-auth: Add TASK.json entries, then decide whether to continue delivery or archive the change.
+- Project data still depends on a mock service: Create a new change to replace the project mock with a real persistence boundary.
+- AI generation still depends on a mock service: Create a new change to replace the AI mock with a real model integration.
+- Settings page still depends on local mock settings: Decide whether the profile/settings work should also introduce a real settings backend boundary.

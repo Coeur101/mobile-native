@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-27T05:30:01.402Z",
+  "generatedAt": "2026-03-27T05:52:00.218Z",
   "activeChanges": [
     "integrate-free-email-and-wechat-auth",
     "integrate-free-email-auth",
@@ -12,7 +12,7 @@
     "phase": "delivery",
     "title": "新增个人信息页并替换首页右上角入口",
     "type": "feature",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "P0",
     "scope": "默认头像、默认昵称、邮箱、主题切换与旧设置页职责收缩",
     "acceptanceCriteria": [
@@ -58,7 +58,7 @@
     "blockers": [],
     "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
     "createdAt": "2026-03-27T09:12:00+08:00",
-    "updatedAt": "2026-03-27T09:12:00+08:00",
+    "updatedAt": "2026-03-27T05:50:58.022Z",
     "mustRead": [
       "openspec/changes/otp-auth-and-supabase-user-profile/proposal.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
@@ -84,7 +84,7 @@
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "delivery",
       "priority": "P0",
-      "status": "todo",
+      "status": "in_progress",
       "title": "新增个人信息页并替换首页右上角入口"
     },
     {
@@ -132,30 +132,30 @@
     {
       "id": "backlog:change:integrate-free-email-and-wechat-auth",
       "kind": "stale_change",
-      "title": "活跃 change 缺少 TASK.json 任务映射：integrate-free-email-and-wechat-auth",
+      "title": "Active change missing TASK.json mapping: integrate-free-email-and-wechat-auth",
       "source": "openspec/changes/integrate-free-email-and-wechat-auth",
-      "recommendation": "补齐 TASK.json、判断继续交付还是归档/废弃。"
+      "recommendation": "Add TASK.json entries, then decide whether to continue delivery or archive the change."
     },
     {
       "id": "backlog:mock-project-service",
-      "title": "项目数据仍以 mock service 为主",
+      "title": "Project data still depends on a mock service",
       "source": "src/services/project/mock-project-service.ts",
-      "recommendation": "为真实云端项目持久化建立新 change。",
+      "recommendation": "Create a new change to replace the project mock with a real persistence boundary.",
       "kind": "mock_boundary"
     },
     {
       "id": "backlog:mock-ai-service",
-      "title": "AI 生成仍以 mock service 为主",
+      "title": "AI generation still depends on a mock service",
       "source": "src/services/ai/mock-ai-service.ts",
-      "recommendation": "为真实模型接入建立新 change。",
+      "recommendation": "Create a new change to replace the AI mock with a real model integration.",
       "kind": "mock_boundary"
     },
     {
       "id": "backlog:settings-local-only",
       "kind": "local_only_boundary",
-      "title": "设置页仍依赖本地 mock settings",
+      "title": "Settings page still depends on local mock settings",
       "source": "src/pages/settings/SettingsPage.tsx",
-      "recommendation": "与个人信息页收缩一起评估是否拆出真实设置后端。"
+      "recommendation": "Decide whether the profile/settings work should also introduce a real settings backend boundary."
     }
   ]
 }

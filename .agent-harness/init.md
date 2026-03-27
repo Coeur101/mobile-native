@@ -1,9 +1,9 @@
 # Agent Harness Init
 
-Generated: 2026-03-27T05:28:37.621Z
+Generated: 2026-03-27T05:51:59.866Z
 Project: AI Web Builder Mobile
 Branch: master
-Commit: 5077d95
+Commit: cf1db5d
 
 ## Harness Mapping
 
@@ -29,7 +29,7 @@ Commit: 5077d95
 
 ## Repo Backlog Signals
 
-- 活跃 change 缺少 TASK.json 任务映射：integrate-free-email-and-wechat-auth (openspec/changes/integrate-free-email-and-wechat-auth)
-- 项目数据仍以 mock service 为主 (src/services/project/mock-project-service.ts)
-- AI 生成仍以 mock service 为主 (src/services/ai/mock-ai-service.ts)
-- 设置页仍依赖本地 mock settings (src/pages/settings/SettingsPage.tsx)
+- Active change missing TASK.json mapping: integrate-free-email-and-wechat-auth (openspec/changes/integrate-free-email-and-wechat-auth)
+- Project data still depends on a mock service (src/services/project/mock-project-service.ts)
+- AI generation still depends on a mock service (src/services/ai/mock-ai-service.ts)
+- Settings page still depends on local mock settings (src/pages/settings/SettingsPage.tsx)
