@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ArrowLeft, Download, FileCode2, MonitorSmartphone } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 import { PageTransition } from "@/components/ui/page-transition";
 import { CodeBlock } from "@/components/ui/code-block";
 import { buildPreviewDocument } from "@/lib/render-project";
-import { mockProjectService } from "@/services/project/mock-project-service";
+import { projectService } from "@/services/project";
 import { buttonTap } from "@/lib/animations";
 import type { Project } from "@/types";
 
@@ -18,8 +19,13 @@ export function PreviewPage() {
   useEffect(() => {
     async function loadProject() {
       if (!projectId) return;
-      const nextProject = await mockProjectService.getProjectById(projectId);
-      setProject(nextProject);
+      try {
+        const nextProject = await projectService.getProjectById(projectId);
+        setProject(nextProject);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Unable to load project preview.");
+        setProject(null);
+      }
     }
     void loadProject();
   }, [projectId]);

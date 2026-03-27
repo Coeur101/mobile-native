@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T09:36:38.725Z",
+  "updatedAt": "2026-03-27T09:50:07.641Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1425,7 +1425,7 @@
       "phase": "delivery",
       "title": "Implement real project service boundary",
       "type": "feature",
-      "status": "in_progress",
+      "status": "docs_verified",
       "priority": "P0",
       "scope": "Real ProjectService, unified service export, and project/version/message persistence contract",
       "acceptanceCriteria": [
@@ -1475,7 +1475,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:36:38.725Z"
+      "updatedAt": "2026-03-27T09:50:07.641Z"
     },
     {
       "id": "TASK-028",

@@ -21,7 +21,7 @@ import { PulsingDots } from "@/components/ui/pulsing-dots";
 import { ThoughtChain } from "@/components/ui/thought-chain";
 import { VersionPanel } from "@/components/ui/version-panel";
 import { promptTemplates } from "@/features/project/templates";
-import { mockProjectService } from "@/services/project/mock-project-service";
+import { projectService } from "@/services/project";
 import { buttonTap } from "@/lib/animations";
 import type { Project } from "@/types";
 
@@ -46,8 +46,13 @@ export function EditorPage() {
         setProject(null);
         return;
       }
-      const nextProject = await mockProjectService.getProjectById(projectId);
-      setProject(nextProject);
+      try {
+        const nextProject = await projectService.getProjectById(projectId);
+        setProject(nextProject);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Unable to load project.");
+        setProject(null);
+      }
     }
     void loadProject();
   }, [projectId]);
@@ -63,8 +68,8 @@ export function EditorPage() {
     setIsGenerating(true);
     try {
       const nextProject = project
-        ? await mockProjectService.continueProject(project.id, prompt)
-        : await mockProjectService.createProject(prompt);
+        ? await projectService.continueProject(project.id, prompt)
+        : await projectService.createProject(prompt);
 
       if (!nextProject) {
         toast.error("项目不存在，无法继续生成。");
@@ -77,6 +82,8 @@ export function EditorPage() {
       if (!projectId) {
         navigate(`/editor/${nextProject.id}`, { replace: true });
       }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to generate project.");
     } finally {
       setIsGenerating(false);
     }
@@ -86,7 +93,7 @@ export function EditorPage() {
     if (!project) return;
     setIsSaving(true);
     try {
-      const nextProject = await mockProjectService.createProjectVersion(
+      const nextProject = await projectService.createProjectVersion(
         project.id,
         "手动保存当前编辑版本",
       );
@@ -94,6 +101,8 @@ export function EditorPage() {
         setProject(nextProject);
         toast.success("已保存新版本快照。");
       }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to save project version.");
     } finally {
       setIsSaving(false);
     }
@@ -101,11 +110,15 @@ export function EditorPage() {
 
   const handleRestoreVersion = async (versionId: string) => {
     if (!project) return;
-    const restored = await mockProjectService.restoreProjectVersion(project.id, versionId);
-    if (restored) {
-      setProject(restored);
-      toast.success("已恢复到目标版本。");
-      setShowVersionPanel(false);
+    try {
+      const restored = await projectService.restoreProjectVersion(project.id, versionId);
+      if (restored) {
+        setProject(restored);
+        toast.success("已恢复到目标版本。");
+        setShowVersionPanel(false);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to restore project version.");
     }
   };
 
@@ -114,10 +127,16 @@ export function EditorPage() {
       setIsEditingName(false);
       return;
     }
-    const updated = await mockProjectService.updateProjectMeta(project.id, { name: editName.trim() });
-    if (updated) {
-      setProject(updated);
-      toast.success("项目名称已更新。");
+    try {
+      const updated = await projectService.updateProjectMeta(project.id, {
+        name: editName.trim(),
+      });
+      if (updated) {
+        setProject(updated);
+        toast.success("项目名称已更新。");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to rename project.");
     }
     setIsEditingName(false);
   };

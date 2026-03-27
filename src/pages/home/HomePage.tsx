@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { PageTransition } from "@/components/ui/page-transition";
 import { Dialog } from "@/components/ui/dialog";
 import { ProjectListSkeleton } from "@/components/ui/skeleton";
-import { mockProjectService } from "@/services/project/mock-project-service";
+import { projectService } from "@/services/project";
 import { SPRING_BOUNCY, buttonTap } from "@/lib/animations";
 import { useAuthStore } from "@/stores/use-auth-store";
 import type { Project, ProjectStatus } from "@/types";
@@ -41,7 +41,10 @@ export function HomePage() {
   async function loadProjects() {
     setIsLoading(true);
     try {
-      setProjects(await mockProjectService.listProjects());
+      setProjects(await projectService.listProjects());
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to load projects.");
+      setProjects([]);
     } finally {
       setIsLoading(false);
     }
@@ -52,9 +55,13 @@ export function HomePage() {
   }, []);
 
   const handleDelete = async (projectId: string) => {
-    await mockProjectService.deleteProject(projectId);
-    toast.success("Project deleted.");
-    await loadProjects();
+    try {
+      await projectService.deleteProject(projectId);
+      toast.success("Project deleted.");
+      await loadProjects();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to delete project.");
+    }
   };
 
   const filteredProjects = useMemo(() => {
