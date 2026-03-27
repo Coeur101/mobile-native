@@ -1,40 +1,20 @@
 # Session Brief
 
-Generated: 2026-03-27T09:07:19.076Z
+Generated: 2026-03-27T09:16:29.476Z
 Branch: master
-Commit: b24cfb5
-
-## Just Completed
-
-- Task: TASK-023
-- Status: docs_verified
-- Summary: Record change verification evidence and clean temporary test artifacts.
-- Verification: pnpm build; pnpm test -- tests/vitest/user-profile.test.ts tests/vitest/auth-storage.test.ts tests/vitest/profile-security.test.ts; .\\node_modules\\.bin\\playwright.cmd test tests/playwright/auth-smoke.spec.ts tests/playwright/profile-navigation.spec.ts tests/playwright/profile-security.spec.ts --headed --reporter=line --workers=1
+Commit: 22007c3
 
 ## Current Focus
 
-- Task: TASK-024
-- Title: 同步主线文档与 specs 后关闭并归档 change
-- Change: otp-auth-and-supabase-user-profile
-- Phase: closure
-- Status: in_progress
+- Task: None
+
+
+
+
 
 ## Must Read
 
-- openspec/changes/otp-auth-and-supabase-user-profile/proposal.md
-- openspec/changes/otp-auth-and-supabase-user-profile/design.md
-- openspec/changes/otp-auth-and-supabase-user-profile/tasks.md
-- openspec/changes/otp-auth-and-supabase-user-profile/.openspec.yaml
-- openspec/changes/otp-auth-and-supabase-user-profile/specs/auth-entry-ui/spec.md
-- openspec/changes/otp-auth-and-supabase-user-profile/specs/project-data/spec.md
-- openspec/changes/otp-auth-and-supabase-user-profile/specs/user-auth/spec.md
-- openspec/changes/otp-auth-and-supabase-user-profile/specs/user-profile/spec.md
-- openspec/specs/project-data/spec.md
-- openspec/specs/user-auth/spec.md
-- openspec/specs/auth-entry-ui/spec.md
-- openspec/specs/user-profile/spec.md
-- openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl
-- TASK.json
+- None
 
 ## Must Verify
 
@@ -42,8 +22,19 @@ Commit: b24cfb5
 
 ## Next Queue
 
-- TASK-024 [in_progress/closure/P0] 同步主线文档与 specs 后关闭并归档 change
+- None
 
-## Cleanup
+## Recent Completed
 
-- Removed tracked temp outputs: None
+- TASK-012 登记 OTP 认证与 Supabase 资料模型 change 的交付台账 (done)
+- TASK-013 完成认证与资料模型 design_review 并记录结论 (done)
+- TASK-014 完成入口与页面信息架构 design_review 并记录结论 (done)
+- TASK-015 实现 Supabase 用户资料记录模型与默认资料生成逻辑 (done)
+- TASK-016 调整本地持久化与会话恢复逻辑以 Supabase profile 为准 (done)
+
+## Repo Backlog
+
+- Active change missing TASK.json mapping: integrate-free-email-and-wechat-auth: Add TASK.json entries, then decide whether to continue delivery or archive the change.
+- Project data still depends on a mock service: Create a new change to replace the project mock with a real persistence boundary.
+- AI generation still depends on a mock service: Create a new change to replace the AI mock with a real model integration.
+- Settings page still depends on local mock settings: Decide whether the profile/settings work should also introduce a real settings backend boundary.

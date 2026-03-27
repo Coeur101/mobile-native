@@ -1,49 +1,42 @@
 # user-auth Specification
 
 ## Purpose
-TBD - created by archiving change mobile-friendly-email-auth-with-password-and-otp. Update Purpose after archive.
-## Requirements
-### Requirement: User can register with email verification and password setup
-The system MUST allow a new user to register by verifying an email address and setting a password in a mobile-friendly step flow.
+Define the OTP-first authentication flow and post-login password security enhancement model.
 
-#### Scenario: New user completes registration
-- **WHEN** a user enters a valid email, receives a verification code, successfully verifies the code, and sets a valid password
-- **THEN** the system MUST create the account and mark the email as verified
+## Requirements
+
+### Requirement: User can register with email verification without password setup
+The system MUST allow a new user to register by verifying an email address in a mobile-friendly OTP flow and completing account creation immediately after verification, without requiring password setup during registration.
+
+#### Scenario: New user completes OTP registration
+- **WHEN** a user enters a valid email, receives a verification code, and successfully verifies that code
+- **THEN** the system MUST create the account, mark the email as verified, and enter the authenticated area
 
 #### Scenario: Registration cannot skip verification
 - **WHEN** a user has not completed email verification
-- **THEN** the system MUST NOT finalize password-based account registration
+- **THEN** the system MUST NOT finalize account registration
 
-### Requirement: User can log in with either password or email verification code
-The system MUST support both password login and email verification-code login for the same email account.
-
-#### Scenario: User logs in with password
-- **WHEN** a registered user submits a valid email and correct password
-- **THEN** the system MUST sign the user in and enter the authenticated area
+### Requirement: User can log in with email verification code
+The system MUST use email verification code as the only login method exposed in the primary authentication flow.
 
 #### Scenario: User logs in with email verification code
 - **WHEN** a registered user requests a login code, submits the received valid code, and verification succeeds
 - **THEN** the system MUST sign the user in and enter the authenticated area
 
-#### Scenario: Invalid credentials are rejected
-- **WHEN** the submitted password or verification code is invalid
+#### Scenario: Invalid verification code is rejected
+- **WHEN** the submitted verification code is invalid
 - **THEN** the system MUST reject the login and show an actionable error state
 
 ### Requirement: Authentication flow must be mobile-friendly
-The system MUST present the email registration and login experience in a mobile-friendly, step-based interaction model with clear distinction between mode selection and action submission.
+The system MUST present the email registration and login experience in a mobile-friendly, step-based interaction model that centers on OTP verification and avoids exposing password login on the entry screen.
 
 #### Scenario: Mobile user enters authentication flow
 - **WHEN** a user opens the authentication screen on a mobile device
-- **THEN** the system MUST prioritize a progressive step flow instead of exposing all registration and login fields at once
+- **THEN** the system MUST prioritize a progressive OTP-based step flow instead of exposing password login controls
 
-#### Scenario: User chooses a login path
-- **WHEN** a user reaches the login entry step
-- **THEN** the system MUST allow the user to choose between password login and verification-code login through a dedicated mode-selection control
-
-#### Scenario: User reviews actions within one step
-- **WHEN** a specific auth step is active
-- **THEN** the system MUST present one clear primary action for completing that step
-- **AND** it MUST NOT render mode switching controls with the same interaction weight as the primary submit action
+#### Scenario: User chooses an auth path
+- **WHEN** a user reaches the entry screen
+- **THEN** the system MUST allow the user to choose between login and register paths without offering password login as a peer mode
 
 ### Requirement: Authenticated state must persist on the client for seven days
 The system MUST keep authenticated login information on the client for seven days unless the user explicitly signs out earlier.
@@ -60,21 +53,24 @@ The system MUST keep authenticated login information on the client for seven day
 - **WHEN** a signed-in user explicitly signs out
 - **THEN** the system MUST remove the local remembered auth state immediately
 
-### Requirement: Password recovery must be available
-The system MUST provide a password recovery entry point for users who choose password login.
-
-#### Scenario: User forgets password
-- **WHEN** a user selects the password recovery path
-- **THEN** the system MUST provide a recover-password flow tied to the user email
-
 ### Requirement: High-risk verification extension point must exist
-The system MUST preserve a design-compatible extension point for future high-risk verification using an additional email code.
+The auth model MUST support additional email-code verification for sensitive post-login account operations without reintroducing password login as a primary auth path.
 
-#### Scenario: High-risk verification is not enabled by default
+#### Scenario: Normal daily login remains OTP-only
 - **WHEN** a user performs a normal daily login
-- **THEN** the system MUST NOT require a second email-code challenge by default in this change
+- **THEN** the system MUST authenticate the user through the primary email-code flow only
 
-#### Scenario: Sensitive action requires stronger verification in the future
-- **WHEN** a future flow marks an action as high-risk
-- **THEN** the auth model MUST support inserting an additional email-code verification step without replacing the primary login modes
+#### Scenario: Sensitive profile security action requires stronger verification
+- **WHEN** a signed-in user starts a password setup or password reset action from the profile area
+- **THEN** the auth model MUST support inserting an additional email-code verification step before the password can be updated
 
+### Requirement: Password can be configured as an optional post-login security enhancement
+The system MUST treat password as an optional security enhancement that can be configured after sign-in, rather than as a required or primary login method.
+
+#### Scenario: User chooses not to configure a password
+- **WHEN** a newly registered or returning user signs in successfully through OTP and does not set a password
+- **THEN** the system MUST continue to allow normal future sign-in through OTP-only authentication
+
+#### Scenario: User configures a password after sign-in
+- **WHEN** a signed-in user completes the verified profile security flow to set a password
+- **THEN** the system MUST persist that password capability as account security state without changing the primary login path away from OTP

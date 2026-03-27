@@ -91,6 +91,40 @@ function parseDate(value) {
   return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
+function isLikelyMojibake(value) {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  const text = value.trim();
+  if (!text) {
+    return false;
+  }
+
+  const suspiciousChars = "鐧璁鍚鏂闂閿绗绔妯璇绱缁缂鍔閲椤轰韩浣犲緱鎵岃瘉鏍锋満";
+  let suspiciousCount = 0;
+  for (const char of text) {
+    if (suspiciousChars.includes(char)) {
+      suspiciousCount += 1;
+    }
+  }
+
+  return suspiciousCount >= 3 && suspiciousCount / text.length >= 0.25;
+}
+
+function toReadableTaskTitle(task) {
+  const title = task?.title;
+  if (!title) {
+    return "Title unavailable";
+  }
+
+  if (isLikelyMojibake(title)) {
+    return "Title unavailable (source text encoding corrupted)";
+  }
+
+  return title;
+}
+
 function readJsonl(filePath) {
   if (!exists(filePath)) {
     return [];
@@ -315,7 +349,7 @@ export function loadHarnessState() {
     .map((task) => ({
       id: task.id,
       change: task.change,
-      title: task.title,
+      title: toReadableTaskTitle(task),
       status: task.status,
       updatedAt: task.updatedAt,
       lastEvent: getRecentTaskEvent(task),
@@ -332,6 +366,7 @@ export function loadHarnessState() {
     currentFocus: currentFocus
       ? {
           ...currentFocus,
+          title: toReadableTaskTitle(currentFocus),
           mustRead: getMustRead(currentFocus, currentFocus.change),
           requiredChecks: [
             ...(currentFocus.artifacts?.functionalTests ?? []),
@@ -346,7 +381,7 @@ export function loadHarnessState() {
       phase: task.phase,
       priority: task.priority,
       status: task.status,
-      title: task.title,
+      title: toReadableTaskTitle(task),
     })),
     recentCompleted,
     repoBacklog,

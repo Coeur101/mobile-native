@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T09:07:19.072Z",
+  "updatedAt": "2026-03-27T09:11:53.224Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -652,8 +652,8 @@
       "implementationReviewRequired": false,
       "docsToUpdate": [
         "TASK.json",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-012.jsonl"
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-012.jsonl"
       ],
       "commitRequired": false,
       "commitRef": null,
@@ -665,16 +665,16 @@
         "buildChecks": [],
         "docs": [
           "TASK.json",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-012.jsonl"
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-012.jsonl"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-012.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-012.jsonl",
       "createdAt": "2026-03-27T09:05:00+08:00",
-      "updatedAt": "2026-03-27T09:25:00+08:00",
+      "updatedAt": "2026-03-27T09:11:53.224Z",
       "closedAt": "2026-03-27T09:25:00+08:00"
     },
     {
@@ -698,9 +698,9 @@
       "designReviewRequired": true,
       "implementationReviewRequired": false,
       "docsToUpdate": [
-        "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-013.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/design.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-013.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -712,18 +712,18 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-013.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/design.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-013.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-013.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-013.jsonl",
       "createdAt": "2026-03-27T09:06:00+08:00",
-      "updatedAt": "2026-03-27T09:40:00+08:00",
+      "updatedAt": "2026-03-27T09:11:53.224Z",
       "closedAt": "2026-03-27T09:40:00+08:00"
     },
     {
@@ -747,9 +747,9 @@
       "designReviewRequired": true,
       "implementationReviewRequired": false,
       "docsToUpdate": [
-        "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-014.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/design.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-014.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -761,18 +761,18 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-014.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/design.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-014.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-014.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-014.jsonl",
       "createdAt": "2026-03-27T09:07:00+08:00",
-      "updatedAt": "2026-03-27T09:52:00+08:00",
+      "updatedAt": "2026-03-27T09:11:53.224Z",
       "closedAt": "2026-03-27T09:52:00+08:00"
     },
     {
@@ -781,7 +781,7 @@
       "phase": "delivery",
       "title": "实现 Supabase 用户资料记录模型与默认资料生成逻辑",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "昵称、头像 base64、邮箱、密码状态字段与默认资料生成",
       "acceptanceCriteria": [
@@ -799,8 +799,8 @@
         "src/types/index.ts",
         "src/services/auth/supabase-auth-service.ts",
         "src/lib/supabase.ts",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-015.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-015.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": true,
@@ -817,17 +817,18 @@
           "src/types/index.ts",
           "src/services/auth/supabase-auth-service.ts",
           "src/lib/supabase.ts",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-015.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-015.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-015.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-015.jsonl",
       "createdAt": "2026-03-27T09:08:00+08:00",
-      "updatedAt": "2026-03-27T10:48:00+08:00"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-016",
@@ -835,7 +836,7 @@
       "phase": "delivery",
       "title": "调整本地持久化与会话恢复逻辑以 Supabase profile 为准",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "本地缓存退化为 cache，应用恢复时强制以后端 profile 为真值",
       "acceptanceCriteria": [
@@ -853,8 +854,8 @@
         "src/lib/local-db.ts",
         "src/stores/use-auth-store.ts",
         "src/services/auth/supabase-auth-service.ts",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-016.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-016.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": true,
@@ -871,17 +872,18 @@
           "src/lib/local-db.ts",
           "src/stores/use-auth-store.ts",
           "src/services/auth/supabase-auth-service.ts",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-016.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-016.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-016.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-016.jsonl",
       "createdAt": "2026-03-27T09:09:00+08:00",
-      "updatedAt": "2026-03-27T10:52:00+08:00"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-017",
@@ -889,7 +891,7 @@
       "phase": "delivery",
       "title": "收敛认证服务为 OTP-first 模型并预留安全验证码能力",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "统一 OTP 登录与注册完成逻辑，为资料页密码安全操作预留二次验证码",
       "acceptanceCriteria": [
@@ -907,8 +909,8 @@
         "src/services/auth/auth-service.ts",
         "src/services/auth/supabase-auth-service.ts",
         "src/services/auth/auth-config.ts",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-017.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-017.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json",
         "src/lib/local-db.ts",
         "tests/vitest/user-profile.test.ts"
@@ -929,8 +931,8 @@
           "src/services/auth/auth-service.ts",
           "src/services/auth/supabase-auth-service.ts",
           "src/services/auth/auth-config.ts",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-017.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-017.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json",
           "src/lib/local-db.ts",
           "tests/vitest/user-profile.test.ts"
@@ -939,9 +941,10 @@
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-017.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-017.jsonl",
       "createdAt": "2026-03-27T09:10:00+08:00",
-      "updatedAt": "2026-03-27T13:10:00+08:00"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-018",
@@ -949,7 +952,7 @@
       "phase": "delivery",
       "title": "重构登录页为 OTP-only 的移动端认证入口",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "移除密码登录主入口，保留 OTP 登录、注册与重置路径的单主 CTA 体验",
       "acceptanceCriteria": [
@@ -965,8 +968,8 @@
       "implementationReviewRequired": true,
       "docsToUpdate": [
         "src/pages/login/LoginPage.tsx",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-018.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-018.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json",
         "tests/playwright/auth-smoke.spec.ts"
       ],
@@ -984,8 +987,8 @@
         ],
         "docs": [
           "src/pages/login/LoginPage.tsx",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-018.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-018.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json",
           "tests/playwright/auth-smoke.spec.ts"
         ],
@@ -993,9 +996,10 @@
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-018.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-018.jsonl",
       "createdAt": "2026-03-27T09:11:00+08:00",
-      "updatedAt": "2026-03-27T05:50:57.990Z"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-019",
@@ -1003,7 +1007,7 @@
       "phase": "delivery",
       "title": "新增个人信息页并替换首页右上角入口",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "默认头像、默认昵称、邮箱、主题切换与旧设置页职责收缩",
       "acceptanceCriteria": [
@@ -1021,13 +1025,13 @@
         "src/pages/home/HomePage.tsx",
         "src/pages/settings/SettingsPage.tsx",
         "src/router.tsx",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": "feat: TASK-019 新增个人信息页入口与导航",
+      "commitRef": "da4344b",
+      "commitMessage": "feat: TASK-019 add profile entry and settings navigation",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -1039,17 +1043,20 @@
           "src/pages/home/HomePage.tsx",
           "src/pages/settings/SettingsPage.tsx",
           "src/router.tsx",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
-        "commits": [],
+        "commits": [
+          "da4344b feat: TASK-019 add profile entry and settings navigation"
+        ],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
       "createdAt": "2026-03-27T09:12:00+08:00",
-      "updatedAt": "2026-03-27T07:09:08.458Z"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-020",
@@ -1057,7 +1064,7 @@
       "phase": "delivery",
       "title": "实现头像压缩存储与资料页密码安全流程",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "头像上传压缩转 base64、设置密码与重置密码的邮箱验证码确认流程",
       "acceptanceCriteria": [
@@ -1075,8 +1082,8 @@
         "src/pages/settings/SettingsPage.tsx",
         "src/services/auth/supabase-auth-service.ts",
         "src/types/index.ts",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": true,
@@ -1093,17 +1100,20 @@
           "src/pages/settings/SettingsPage.tsx",
           "src/services/auth/supabase-auth-service.ts",
           "src/types/index.ts",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
-        "commits": [],
+        "commits": [
+          "82d6c9f feat: TASK-020 add profile avatar and password security"
+        ],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
       "createdAt": "2026-03-27T09:13:00+08:00",
-      "updatedAt": "2026-03-27T08:58:29.934Z"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-021",
@@ -1111,7 +1121,7 @@
       "phase": "closure",
       "title": "完成资料模型与认证链路 implementation_review",
       "type": "review",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "核对实现与 proposal、design、specs、TASK.json 与 task logs 的一致性",
       "acceptanceCriteria": [
@@ -1126,8 +1136,8 @@
       "designReviewRequired": false,
       "implementationReviewRequired": true,
       "docsToUpdate": [
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1139,17 +1149,18 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
       "createdAt": "2026-03-27T09:14:00+08:00",
-      "updatedAt": "2026-03-27T08:58:57.984Z"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-022",
@@ -1157,7 +1168,7 @@
       "phase": "closure",
       "title": "完成页面导航、个人信息交互与安全流程 implementation_review",
       "type": "review",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "核对 UI、数据流、验证码校验与旧设置收缩结果",
       "acceptanceCriteria": [
@@ -1172,8 +1183,8 @@
       "designReviewRequired": false,
       "implementationReviewRequired": true,
       "docsToUpdate": [
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1185,17 +1196,18 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
       "createdAt": "2026-03-27T09:15:00+08:00",
-      "updatedAt": "2026-03-27T09:00:17.372Z"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-023",
@@ -1203,7 +1215,7 @@
       "phase": "closure",
       "title": "执行 change 所需验证并清理一次性测试产物",
       "type": "verification",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "构建、功能测试、Playwright UI 测试、证据回写与临时产物清理",
       "acceptanceCriteria": [
@@ -1219,13 +1231,13 @@
       "implementationReviewRequired": true,
       "docsToUpdate": [
         "TASK.json",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "CHANGELOG.md"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": "test: TASK-023 记录资料与认证变更验证证据",
+      "commitRef": "22007c3",
+      "commitMessage": "test: TASK-023 record auth/profile verification evidence",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -1235,17 +1247,20 @@
         ],
         "docs": [
           "TASK.json",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "CHANGELOG.md"
         ],
-        "commits": [],
+        "commits": [
+          "22007c3 test: TASK-023 record auth/profile verification evidence"
+        ],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
       "createdAt": "2026-03-27T09:16:00+08:00",
-      "updatedAt": "2026-03-27T09:07:19.064Z"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     },
     {
       "id": "TASK-024",
@@ -1253,7 +1268,7 @@
       "phase": "closure",
       "title": "同步主线文档与 specs 后关闭并归档 change",
       "type": "closure",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "scope": "同步主 specs、确认无 blocker、关闭并归档 change",
       "acceptanceCriteria": [
@@ -1272,8 +1287,8 @@
         "openspec/specs/user-auth/spec.md",
         "openspec/specs/auth-entry-ui/spec.md",
         "openspec/specs/user-profile/spec.md",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
-        "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
+        "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1289,17 +1304,18 @@
           "openspec/specs/user-auth/spec.md",
           "openspec/specs/auth-entry-ui/spec.md",
           "openspec/specs/user-profile/spec.md",
-          "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
-          "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
+          "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
       "createdAt": "2026-03-27T09:17:00+08:00",
-      "updatedAt": "2026-03-27T09:07:19.072Z"
+      "updatedAt": "2026-03-27T09:11:53.224Z",
+      "closedAt": "2026-03-27T09:11:53.224Z"
     }
   ]
 }

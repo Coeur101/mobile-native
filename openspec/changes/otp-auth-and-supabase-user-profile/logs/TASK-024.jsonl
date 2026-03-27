@@ -1,1 +1,0 @@
-{"eventId":"TASK-024-E001","taskId":"TASK-024","timestamp":"2026-03-27T09:07:19.074Z","actor":"codex","step":"task_claimed","fromStatus":"todo","toStatus":"in_progress","summary":"Sync specs and close the otp-auth-and-supabase-user-profile change.","evidenceType":"task_progress","evidenceRef":"pnpm agent:advance","result":"success","blockers":[]}
