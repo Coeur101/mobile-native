@@ -1,5 +1,11 @@
 # AI Web Builder Mobile CHANGELOG
 
+## 2026-03-27 Real AI Boundary Verification
+
+### Verified
+- Replaced the runtime `mockAIService` dependency with a settings-driven OpenAI-compatible AI boundary for project creation and continuation.
+- Confirmed targeted verification with `pnpm test -- tests/vitest/ai-service.test.ts tests/vitest/project-service.test.ts` and `pnpm build`.
+
 ## 2026-03-27 Project Persistence Verification
 
 ### Verified

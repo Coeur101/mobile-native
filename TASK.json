@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T18:08:42.0000000+08:00",
+  "updatedAt": "2026-03-27T18:50:00+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1808,7 +1808,7 @@
       "phase": "delivery",
       "title": "Implement real AI service boundary",
       "type": "feature",
-      "status": "todo",
+      "status": "done",
       "priority": "P0",
       "scope": "OpenAI-compatible AI service, settings-backed configuration lookup, and project generation integration",
       "acceptanceCriteria": [
@@ -1823,13 +1823,12 @@
       "designReviewRequired": true,
       "implementationReviewRequired": true,
       "docsToUpdate": [
-        "src/services/ai/ai-service.ts",
         "src/services/ai/index.ts",
         "src/services/ai/openai-compatible-ai-service.ts",
         "src/services/project/supabase-project-service.ts",
         "src/services/settings/index.ts",
         "src/pages/settings/SettingsPage.tsx",
-        "src/pages/profile/UserProfilePage.tsx",
+        "src/lib/local-db.ts",
         "tests/vitest/ai-service.test.ts",
         "tests/vitest/project-service.test.ts",
         "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
@@ -1837,8 +1836,8 @@
         "TASK.json"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "61bd9e3",
+      "commitMessage": "feat: TASK-034 replace mock ai service boundary",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [
@@ -1849,26 +1848,28 @@
           "pnpm build"
         ],
         "docs": [
-          "src/services/ai/ai-service.ts",
           "src/services/ai/index.ts",
           "src/services/ai/openai-compatible-ai-service.ts",
           "src/services/project/supabase-project-service.ts",
           "src/services/settings/index.ts",
           "src/pages/settings/SettingsPage.tsx",
-          "src/pages/profile/UserProfilePage.tsx",
+          "src/lib/local-db.ts",
           "tests/vitest/ai-service.test.ts",
           "tests/vitest/project-service.test.ts",
           "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
           "openspec/changes/replace-mock-ai-service/tasks.md",
           "TASK.json"
         ],
-        "commits": [],
+        "commits": [
+          "61bd9e3 feat: TASK-034 replace mock ai service boundary"
+        ],
         "pushes": []
       },
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
       "createdAt": "2026-03-27T18:38:00+08:00",
-      "updatedAt": "2026-03-27T18:38:00+08:00"
+      "updatedAt": "2026-03-27T18:45:00+08:00",
+      "closedAt": "2026-03-27T18:45:00+08:00"
     },
     {
       "id": "TASK-035",
@@ -1876,7 +1877,7 @@
       "phase": "closure",
       "title": "Complete AI boundary implementation review",
       "type": "review",
-      "status": "todo",
+      "status": "done",
       "priority": "P0",
       "scope": "Verify implementation, tests, task ledger, and commit traceability for the AI boundary change",
       "acceptanceCriteria": [
@@ -1914,7 +1915,8 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-035.jsonl",
       "createdAt": "2026-03-27T18:39:00+08:00",
-      "updatedAt": "2026-03-27T18:39:00+08:00"
+      "updatedAt": "2026-03-27T18:48:30+08:00",
+      "closedAt": "2026-03-27T18:48:30+08:00"
     },
     {
       "id": "TASK-036",
@@ -1922,7 +1924,7 @@
       "phase": "closure",
       "title": "Run AI boundary verification and cleanup",
       "type": "verification",
-      "status": "todo",
+      "status": "docs_verified",
       "priority": "P0",
       "scope": "Vitest, build, evidence capture, and one-off verification artifact cleanup",
       "acceptanceCriteria": [
@@ -1966,7 +1968,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-036.jsonl",
       "createdAt": "2026-03-27T18:40:00+08:00",
-      "updatedAt": "2026-03-27T18:40:00+08:00"
+      "updatedAt": "2026-03-27T18:50:00+08:00"
     },
     {
       "id": "TASK-037",
