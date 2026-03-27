@@ -1,5 +1,11 @@
 # AI Web Builder Mobile CHANGELOG
 
+## 2026-03-27 Project Persistence Verification
+
+### Verified
+- Confirmed remote-backed project listing, legacy migration, version save and restore, and preview navigation with `pnpm test -- tests/vitest/project-service.test.ts`, headed Playwright coverage for `tests/playwright/project-persistence.spec.ts`, and `pnpm build`.
+- Removed one-off verification outputs after evidence capture, including `test-results`, `playwright-report`, `.tmp/task-runs/playwright`, and `.tmp/task-runs/vitest`.
+
 ## 2026-03-27 OTP Auth/Profile Verification
 
 ### Verified
