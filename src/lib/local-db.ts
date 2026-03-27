@@ -89,6 +89,7 @@ function getStoredAuthState(): PersistedAuthState {
     readJson<Partial<PersistedAuthState>>(LEGACY_AUTH_STATE_KEY);
 
   if (current) {
+    const pendingAction = current.pendingAction ?? null;
     return {
       profile: current.profile ?? null,
       session: current.session ?? null,
@@ -96,9 +97,10 @@ function getStoredAuthState(): PersistedAuthState {
       lastAuthMethod: current.lastAuthMethod ?? null,
       rememberStartedAt: current.rememberStartedAt ?? null,
       rememberUntil: current.rememberUntil ?? null,
-      pendingAction: current.pendingAction ?? null,
-      pendingActionEmail:
-        current.pendingActionEmail ?? current.lastSignInEmail ?? current.profile?.email ?? null,
+      pendingAction,
+      pendingActionEmail: pendingAction
+        ? current.pendingActionEmail ?? current.lastSignInEmail ?? current.profile?.email ?? null
+        : null,
     };
   }
 
@@ -267,7 +269,7 @@ function saveSettingsRecords(records: UserSettingsRecord[]) {
 }
 
 function toUserProfileRecord(profile: UserProfile): UserProfileRecord {
-  const updatedAt = profile.lastSignInAt ?? new Date().toISOString();
+  const updatedAt = profile.updatedAt ?? profile.lastSignInAt ?? new Date().toISOString();
   return {
     ...profile,
     createdAt: updatedAt,

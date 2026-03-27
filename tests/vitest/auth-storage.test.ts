@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from "vitest";
+﻿import { describe, expect, it, beforeEach } from "vitest";
 import { localDb } from "@/lib/local-db";
 import { hasRememberWindowExpired } from "@/services/auth/supabase-auth-service";
 import type { PersistedAuthState, Project, UserProfile } from "@/types";
@@ -7,9 +7,12 @@ const profile: UserProfile = {
   id: "user-1",
   email: "demo@example.com",
   nickname: "Demo",
+  avatarBase64: "data:image/svg+xml;base64,abc",
   provider: "email",
   emailVerified: true,
+  hasPassword: true,
   lastSignInAt: "2026-03-27T00:00:00.000Z",
+  updatedAt: "2026-03-27T00:00:00.000Z",
 };
 
 const authState: PersistedAuthState = {

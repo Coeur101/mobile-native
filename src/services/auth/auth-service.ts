@@ -21,7 +21,6 @@ export interface AuthService {
     token: string,
     purpose: EmailOtpPurpose,
   ): Promise<EmailOtpVerificationResult>;
-  signInWithPassword(email: string, password: string): Promise<void>;
   completeRegistration(password: string, nickname?: string): Promise<void>;
   requestPasswordReset(email: string): Promise<PasswordRecoveryResult>;
   completePasswordReset(password: string): Promise<void>;

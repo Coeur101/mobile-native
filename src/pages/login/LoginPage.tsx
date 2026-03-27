@@ -1,11 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  ArrowRight,
-  Check,
   ChevronRight,
-  KeyRound,
   Loader2,
   Mail,
   RotateCcw,
@@ -21,7 +18,6 @@ import { authService } from "@/services/auth";
 import { useAuthStore } from "@/stores/use-auth-store";
 
 type EntryMode = "login" | "register" | "reset_request";
-type LoginMethod = "otp" | "password";
 type OtpPurpose = "login" | "register" | null;
 
 const PANEL = { duration: 0.24, ease: EASE_SMOOTH };
@@ -43,7 +39,6 @@ export function LoginPage() {
     pendingEmail,
     pendingAction,
     pendingActionEmail,
-    lastAuthMethod,
     lastError,
     authConfigured,
     isLoading,
@@ -51,20 +46,12 @@ export function LoginPage() {
   } = useAuthStore();
 
   const [entryMode, setEntryMode] = useState<EntryMode>(
-    pendingAction === "complete_registration"
-      ? "register"
-      : pendingAction === "reset_password"
-        ? "reset_request"
-        : "login",
-  );
-  const [loginMethod, setLoginMethod] = useState<LoginMethod>(
-    lastAuthMethod === "password" ? "password" : "otp",
+    pendingAction === "reset_password" ? "reset_request" : "login",
   );
   const [email, setEmail] = useState(pendingActionEmail ?? pendingEmail ?? "");
   const [verificationCode, setVerificationCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [nickname, setNickname] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [otpPurpose, setOtpPurpose] = useState<OtpPurpose>(null);
   const [isEmailLoading, setIsEmailLoading] = useState(false);
@@ -73,7 +60,6 @@ export function LoginPage() {
   const [isResetLoading, setIsResetLoading] = useState(false);
   const [isClearingPendingAction, setIsClearingPendingAction] = useState(false);
 
-  const isRegistrationPasswordStep = pendingAction === "complete_registration";
   const isResetPasswordStep = pendingAction === "reset_password";
 
   useEffect(() => {
@@ -86,13 +72,10 @@ export function LoginPage() {
 
   useEffect(() => {
     if (pendingActionEmail) setEmail(pendingActionEmail);
-    if (pendingAction === "complete_registration") {
-      setEntryMode("register");
-      setOtpPurpose(null);
-    }
     if (pendingAction === "reset_password") {
       setEntryMode("reset_request");
       setOtpPurpose(null);
+      setVerificationCode("");
     }
   }, [pendingAction, pendingActionEmail]);
 
@@ -111,22 +94,47 @@ export function LoginPage() {
     : null;
 
   const stepMeta = (() => {
-    if (isRegistrationPasswordStep) {
-      return { label: "步骤 3 / 3", title: "设置登录密码", desc: "邮箱已经验证成功，现在只剩最后一步。", steps: ["填写邮箱", "验证邮箱", "设置密码"], active: 3 };
-    }
     if (isResetPasswordStep) {
-      return { label: "步骤 2 / 2", title: "设置新密码", desc: "邮件回流已经到位，现在完成设密即可。", steps: ["发送重置邮件", "设置新密码"], active: 2 };
+      return {
+        label: "步骤 2 / 2",
+        title: "设置新密码",
+        desc: "重置回流已完成，保存后将直接恢复登录状态。",
+      };
     }
+
     if (entryMode === "register") {
-      return { label: otpPurpose === "register" ? "步骤 2 / 3" : "步骤 1 / 3", title: otpPurpose === "register" ? "输入注册验证码" : "先验证你的邮箱", desc: otpPurpose === "register" ? "验证通过后才进入设密步骤。" : "移动端先做邮箱验证，再进入设密。", steps: ["填写邮箱", "验证邮箱", "设置密码"], active: otpPurpose === "register" ? 2 : 1 };
+      return otpPurpose === "register"
+        ? {
+            label: "步骤 2 / 2",
+            title: "输入注册验证码",
+            desc: "验证通过后直接创建账号并进入应用。",
+          }
+        : {
+            label: "步骤 1 / 2",
+            title: "先验证你的邮箱",
+            desc: "注册入口只保留邮箱验证码这一条路径。",
+          };
     }
+
     if (entryMode === "reset_request") {
-      return { label: "步骤 1 / 2", title: "发送密码重置邮件", desc: "我们会发送一封带回流链接的邮件。", steps: ["发送重置邮件", "设置新密码"], active: 1 };
+      return {
+        label: "步骤 1 / 2",
+        title: "发送密码重置邮件",
+        desc: "打开邮件中的回流链接后，再设置新密码。",
+      };
     }
-    if (loginMethod === "password") {
-      return { label: "密码登录", title: "用熟悉的密码快速返回", desc: "切换登录方式只负责导航，不再和提交动作混排。", steps: ["选择方式", "输入密码", "进入应用"], active: 2 };
-    }
-    return { label: otpPurpose === "login" ? "步骤 2 / 2" : "步骤 1 / 2", title: otpPurpose === "login" ? "输入登录验证码" : "用邮箱验证码快速登录", desc: otpPurpose === "login" ? "当前只保留这一件事：验证并进入应用。" : "先发送验证码，再完成校验。", steps: ["发送验证码", "验证登录"], active: otpPurpose === "login" ? 2 : 1 };
+
+    return otpPurpose === "login"
+      ? {
+          label: "步骤 2 / 2",
+          title: "输入登录验证码",
+          desc: "当前登录入口只保留邮箱验证码。",
+        }
+      : {
+          label: "步骤 1 / 2",
+          title: "邮箱验证码登录",
+          desc: "先发送验证码，再完成校验并进入应用。",
+        };
   })();
 
   const ensureValidEmail = (value: string) => {
@@ -141,14 +149,7 @@ export function LoginPage() {
     setOtpPurpose(null);
     setVerificationCode("");
     setPassword("");
-  };
-
-  const switchLoginMethod = (next: LoginMethod) => {
-    setLoginMethod(next);
-    setSubmitError(null);
-    setOtpPurpose(null);
-    setVerificationCode("");
-    setPassword("");
+    setConfirmPassword("");
   };
 
   const handleRequestOtp = async (purpose: Exclude<OtpPurpose, null>) => {
@@ -174,60 +175,23 @@ export function LoginPage() {
       setSubmitError("请先发送验证码。");
       return;
     }
+
     setIsVerifyLoading(true);
     setSubmitError(null);
     try {
-      const result = await authService.verifyEmailOtp(ensureValidEmail(targetEmail), verificationCode, otpPurpose);
-      if (result.status === "password_setup_required") {
-        toast.success(result.message);
-        setPassword("");
-        setConfirmPassword("");
-      } else {
-        toast.success(result.message);
-        navigate("/", { replace: true });
-      }
+      const result = await authService.verifyEmailOtp(
+        ensureValidEmail(targetEmail),
+        verificationCode,
+        otpPurpose,
+      );
+      toast.success(result.message);
+      navigate("/", { replace: true });
     } catch (error) {
       const message = error instanceof Error ? error.message : "验证码校验失败，请稍后重试。";
       setSubmitError(message);
       toast.error(message);
     } finally {
       setIsVerifyLoading(false);
-    }
-  };
-
-  const handlePasswordLogin = async () => {
-    setIsPasswordLoading(true);
-    setSubmitError(null);
-    try {
-      const error = validatePasswordPair(password);
-      if (error) throw new Error(error);
-      await authService.signInWithPassword(ensureValidEmail(email), password);
-      toast.success("密码登录成功，正在进入应用。");
-      navigate("/", { replace: true });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "密码登录失败，请稍后重试。";
-      setSubmitError(message);
-      toast.error(message);
-    } finally {
-      setIsPasswordLoading(false);
-    }
-  };
-
-  const handleCompleteRegistration = async () => {
-    setIsPasswordLoading(true);
-    setSubmitError(null);
-    try {
-      const error = validatePasswordPair(password, confirmPassword);
-      if (error) throw new Error(error);
-      await authService.completeRegistration(password, nickname);
-      toast.success("注册完成，已为你保留 7 天登录态。");
-      navigate("/", { replace: true });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "设置密码失败，请稍后重试。";
-      setSubmitError(message);
-      toast.error(message);
-    } finally {
-      setIsPasswordLoading(false);
     }
   };
 
@@ -270,7 +234,6 @@ export function LoginPage() {
     try {
       await authService.clearPendingAction();
       setEntryMode("login");
-      setLoginMethod("otp");
       setOtpPurpose(null);
       setVerificationCode("");
       setPassword("");
@@ -288,8 +251,9 @@ export function LoginPage() {
     onClick: () => void,
     loading: boolean,
     label: string,
-    icon: React.ReactNode,
+    icon: ReactNode,
     tone: "primary" | "success" | "sky" = "primary",
+    testId?: string,
   ) => {
     const toneClass =
       tone === "success"
@@ -300,7 +264,7 @@ export function LoginPage() {
     return (
       <motion.button
         type="button"
-        data-testid="primary-auth-action"
+        data-testid={testId}
         whileTap={buttonTap}
         onClick={onClick}
         disabled={loading || isLoading}
@@ -331,72 +295,46 @@ export function LoginPage() {
   ];
 
   const flowBody = () => {
-    if (isRegistrationPasswordStep) {
-      return (
-        <div className="space-y-4">
-          <div className="rounded-[22px] border border-emerald-200/60 bg-emerald-50/80 px-4 py-3 text-sm leading-6 text-emerald-900 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-300">
-            邮箱 <span className="font-medium">{targetEmail}</span> 已经验证成功，现在只剩设置密码这一件事。
-          </div>
-          <div className="space-y-3">
-            <Input value={nickname} onChange={(event) => setNickname(event.target.value)} placeholder="昵称（可选）" className="h-12 rounded-2xl bg-background" />
-            <Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="设置 8 位以上密码" autoComplete="new-password" className="h-12 rounded-2xl bg-background" />
-            <Input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder="再次输入密码" autoComplete="new-password" className="h-12 rounded-2xl bg-background" />
-          </div>
-          {primaryButton(() => void handleCompleteRegistration(), isPasswordLoading, "完成注册并进入应用", <ArrowRight className="h-4 w-4" />, "success")}
-          <button type="button" onClick={() => void handleClearPendingAction()} disabled={isClearingPendingAction} className="w-full text-center text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline">
-            放弃本次注册，返回登录
-          </button>
-        </div>
-      );
-    }
-
     if (isResetPasswordStep) {
       return (
         <div className="space-y-4">
           <div className="rounded-[22px] border border-sky-200/60 bg-sky-50/80 px-4 py-3 text-sm leading-6 text-sky-900 dark:border-sky-900/30 dark:bg-sky-950/20 dark:text-sky-300">
-            正在为 <span className="font-medium">{targetEmail}</span> 设置新密码。完成后会直接恢复登录状态。
+            正在为 <span className="font-medium">{targetEmail}</span> 设置新密码。完成后会恢复当前账号的登录状态。
           </div>
           <div className="space-y-3">
-            <Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="输入新密码" autoComplete="new-password" className="h-12 rounded-2xl bg-background" />
-            <Input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder="再次输入新密码" autoComplete="new-password" className="h-12 rounded-2xl bg-background" />
+            <Input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="输入新密码"
+              autoComplete="new-password"
+              className="h-12 rounded-2xl bg-background"
+            />
+            <Input
+              type="password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              placeholder="再次输入新密码"
+              autoComplete="new-password"
+              className="h-12 rounded-2xl bg-background"
+            />
           </div>
-          {primaryButton(() => void handleCompletePasswordReset(), isPasswordLoading, "保存新密码", <ShieldCheck className="h-4 w-4" />, "sky")}
-        </div>
-      );
-    }
-
-    if (entryMode === "login") {
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">选择登录方式</div>
-            <div className="grid grid-cols-2 gap-2 rounded-[22px] bg-background/80 p-1.5">
-              <button type="button" data-testid="login-method-otp" onClick={() => switchLoginMethod("otp")} className={`rounded-[18px] px-3 py-3 text-sm font-medium transition-all ${loginMethod === "otp" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>验证码登录</button>
-              <button type="button" data-testid="login-method-password" onClick={() => switchLoginMethod("password")} className={`rounded-[18px] px-3 py-3 text-sm font-medium transition-all ${loginMethod === "password" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>密码登录</button>
-            </div>
-          </div>
-          <Input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="输入邮箱地址" autoComplete="email" className="h-12 rounded-2xl bg-background" />
-          <AnimatePresence mode="wait">
-            {loginMethod === "password" ? (
-              <motion.div key="password" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={PANEL} className="space-y-3">
-                <Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="输入登录密码" autoComplete="current-password" className="h-12 rounded-2xl bg-background" />
-                {primaryButton(() => void handlePasswordLogin(), isPasswordLoading, "使用密码登录", <KeyRound className="h-4 w-4" />)}
-                <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-                  <button type="button" onClick={() => switchEntryMode("reset_request")} className="underline-offset-2 hover:text-foreground hover:underline">忘记密码</button>
-                  <span>也可以切回验证码方式</span>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div key="otp" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={PANEL} className="space-y-3">
-                {otpPurpose === "login" ? <Input value={verificationCode} onChange={(event) => setVerificationCode(event.target.value)} placeholder="输入邮箱中的 6 位验证码" inputMode="numeric" className="h-12 rounded-2xl bg-background" /> : null}
-                {otpPurpose === "login" ? primaryButton(() => void handleVerifyCode(), isVerifyLoading, "验证并登录", <ShieldCheck className="h-4 w-4" />) : primaryButton(() => void handleRequestOtp("login"), isEmailLoading, "发送登录验证码", <Mail className="h-4 w-4" />)}
-                <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-                  {otpPurpose === "login" ? <button type="button" onClick={() => void handleRequestOtp("login")} className="underline-offset-2 hover:text-foreground hover:underline">重新发送验证码</button> : <span>验证码会发送到你填写的邮箱。</span>}
-                  <span>若未收到邮件，请检查垃圾箱或稍后重试。</span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {primaryButton(
+            () => void handleCompletePasswordReset(),
+            isPasswordLoading,
+            "保存新密码",
+            <ShieldCheck className="h-4 w-4" />,
+            "sky",
+            "complete-password-reset",
+          )}
+          <button
+            type="button"
+            onClick={() => void handleClearPendingAction()}
+            disabled={isClearingPendingAction}
+            className="w-full text-center text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+          >
+            放弃本次重置，返回登录
+          </button>
         </div>
       );
     }
@@ -404,12 +342,90 @@ export function LoginPage() {
     if (entryMode === "register") {
       return (
         <div className="space-y-4">
-          <Input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="注册邮箱地址" autoComplete="email" className="h-12 rounded-2xl bg-background" />
-          {otpPurpose === "register" ? <Input value={verificationCode} onChange={(event) => setVerificationCode(event.target.value)} placeholder="输入注册验证码" inputMode="numeric" className="h-12 rounded-2xl bg-background" /> : null}
-          {otpPurpose === "register" ? primaryButton(() => void handleVerifyCode(), isVerifyLoading, "验证邮箱，进入设密步骤", <ShieldCheck className="h-4 w-4" />) : primaryButton(() => void handleRequestOtp("register"), isEmailLoading, "发送注册验证码", <Mail className="h-4 w-4" />)}
+          <Input
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="注册邮箱地址"
+            autoComplete="email"
+            className="h-12 rounded-2xl bg-background"
+          />
+          {otpPurpose === "register" ? (
+            <Input
+              value={verificationCode}
+              onChange={(event) => setVerificationCode(event.target.value)}
+              placeholder="输入注册验证码"
+              inputMode="numeric"
+              className="h-12 rounded-2xl bg-background"
+            />
+          ) : null}
+          {otpPurpose === "register"
+            ? primaryButton(
+                () => void handleVerifyCode(),
+                isVerifyLoading,
+                "验证邮箱并创建账号",
+                <ShieldCheck className="h-4 w-4" />,
+                "success",
+                "verify-register-otp",
+              )
+            : primaryButton(
+                () => void handleRequestOtp("register"),
+                isEmailLoading,
+                "发送注册验证码",
+                <Mail className="h-4 w-4" />,
+                "success",
+                "request-register-otp",
+              )}
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-            <span>验证通过后再设置密码，注册流程会自动继续。</span>
-            <button type="button" onClick={() => switchEntryMode("login")} className="underline-offset-2 hover:text-foreground hover:underline">已有账号，返回登录</button>
+            {otpPurpose === "register" ? (
+              <button
+                type="button"
+                onClick={() => void handleRequestOtp("register")}
+                className="underline-offset-2 hover:text-foreground hover:underline"
+              >
+                重新发送验证码
+              </button>
+            ) : (
+              <span>注册成功后会自动生成默认昵称与头像。</span>
+            )}
+            <button
+              type="button"
+              onClick={() => switchEntryMode("login")}
+              className="underline-offset-2 hover:text-foreground hover:underline"
+            >
+              已有账号，返回登录
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (entryMode === "reset_request") {
+      return (
+        <div className="space-y-4">
+          <Input
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="输入需要重置密码的邮箱"
+            autoComplete="email"
+            className="h-12 rounded-2xl bg-background"
+          />
+          {primaryButton(
+            () => void handleRequestPasswordReset(),
+            isResetLoading,
+            "发送重置邮件",
+            <RotateCcw className="h-4 w-4" />,
+            "primary",
+            "request-password-reset",
+          )}
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
+            <span>收到邮件后打开回流链接，再继续设置新密码。</span>
+            <button
+              type="button"
+              onClick={() => switchEntryMode("login")}
+              className="underline-offset-2 hover:text-foreground hover:underline"
+            >
+              返回登录
+            </button>
           </div>
         </div>
       );
@@ -417,11 +433,58 @@ export function LoginPage() {
 
     return (
       <div className="space-y-4">
-        <Input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="输入需要重置密码的邮箱" autoComplete="email" className="h-12 rounded-2xl bg-background" />
-        {primaryButton(() => void handleRequestPasswordReset(), isResetLoading, "发送重置邮件", <RotateCcw className="h-4 w-4" />)}
+        <Input
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="输入邮箱地址"
+          autoComplete="email"
+          className="h-12 rounded-2xl bg-background"
+        />
+        {otpPurpose === "login" ? (
+          <Input
+            value={verificationCode}
+            onChange={(event) => setVerificationCode(event.target.value)}
+            placeholder="输入邮箱中的 6 位验证码"
+            inputMode="numeric"
+            className="h-12 rounded-2xl bg-background"
+          />
+        ) : null}
+        {otpPurpose === "login"
+          ? primaryButton(
+              () => void handleVerifyCode(),
+              isVerifyLoading,
+              "验证并登录",
+              <ShieldCheck className="h-4 w-4" />,
+              "primary",
+              "verify-login-otp",
+            )
+          : primaryButton(
+              () => void handleRequestOtp("login"),
+              isEmailLoading,
+              "发送登录验证码",
+              <Mail className="h-4 w-4" />,
+              "primary",
+              "request-login-otp",
+            )}
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-          <span>收到邮件后点击链接，会自动回到当前登录页继续设密。</span>
-          <button type="button" onClick={() => switchEntryMode("login")} className="underline-offset-2 hover:text-foreground hover:underline">返回登录</button>
+          {otpPurpose === "login" ? (
+            <button
+              type="button"
+              onClick={() => void handleRequestOtp("login")}
+              className="underline-offset-2 hover:text-foreground hover:underline"
+            >
+              重新发送验证码
+            </button>
+          ) : (
+            <span>验证码会发送到你填写的邮箱。</span>
+          )}
+          <button
+            type="button"
+            onClick={() => switchEntryMode("reset_request")}
+            className="underline-offset-2 hover:text-foreground hover:underline"
+          >
+            忘记密码
+          </button>
         </div>
       </div>
     );
@@ -447,6 +510,7 @@ export function LoginPage() {
                 <span className="rounded-full bg-background/80 px-2.5 py-1">{stepMeta.label}</span>
                 {rememberedUntilLabel ? <span>登录状态保持至 {rememberedUntilLabel}</span> : null}
               </div>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{stepMeta.desc}</p>
             </div>
             <motion.div
               initial={{ scale: 0.92, opacity: 0 }}
@@ -460,13 +524,15 @@ export function LoginPage() {
           </div>
         </section>
 
-        {!isRegistrationPasswordStep && !isResetPasswordStep ? (
+        {!isResetPasswordStep ? (
           <section className="space-y-2">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">选择入口</p>
               </div>
-              <div className="rounded-full bg-background/80 px-3 py-1 text-[11px] text-muted-foreground">{entryMode === "login" ? "登录中" : entryMode === "register" ? "注册中" : "重置中"}</div>
+              <div className="rounded-full bg-background/80 px-3 py-1 text-[11px] text-muted-foreground">
+                {entryMode === "login" ? "登录中" : entryMode === "register" ? "注册中" : "重置中"}
+              </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
               {entryCards.map((item) => {
@@ -490,8 +556,14 @@ export function LoginPage() {
                         <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">{item.eyebrow}</p>
                         <h2 className="mt-1 text-sm font-semibold text-foreground">{item.title}</h2>
                       </div>
-                      <div className={`mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border ${active ? "border-primary/25 bg-primary text-primary-foreground" : "border-border bg-background text-muted-foreground group-hover:text-foreground"}`}>
-                        {active ? <Check className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                      <div
+                        className={`mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border ${
+                          active
+                            ? "border-primary/25 bg-primary text-primary-foreground"
+                            : "border-border bg-background text-muted-foreground group-hover:text-foreground"
+                        }`}
+                      >
+                        <ChevronRight className="h-3.5 w-3.5" />
                       </div>
                     </div>
                   </motion.button>
@@ -507,13 +579,13 @@ export function LoginPage() {
               <div className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">当前操作</div>
               <div className="mt-1 text-lg font-semibold text-foreground">{stepMeta.title}</div>
             </div>
-            <div className="rounded-full bg-accent px-3 py-1 text-xs text-accent-foreground">安全验证</div>
+            <div className="rounded-full bg-accent px-3 py-1 text-xs text-accent-foreground">安全认证</div>
           </div>
 
           <div className="mt-4">
             <AnimatePresence mode="wait">
               <motion.div
-                key={`${entryMode}-${loginMethod}-${pendingAction}-${otpPurpose}`}
+                key={`${entryMode}-${pendingAction}-${otpPurpose}`}
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -538,16 +610,14 @@ export function LoginPage() {
           </div>
         </section>
 
-        <div className="space-y-3">
-          {!authConfigured ? (
-            <section className="rounded-[24px] border border-amber-200/60 bg-amber-50/80 px-4 py-3 text-sm leading-6 text-amber-900 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-300">
-              <div className="font-medium">邮箱认证尚未配置完成</div>
-              <div className="mt-2">请先配置 `VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY`、`VITE_SUPABASE_EMAIL_REDIRECT_TO`。</div>
-              <div className="mt-1">密码重置回流可选配置：`VITE_SUPABASE_PASSWORD_RESET_REDIRECT_TO`。</div>
-              <div className="mt-2 break-all text-xs">当前登录回调：{authConfig.emailRedirectTo}</div>
-            </section>
-          ) : null}
-        </div>
+        {!authConfigured ? (
+          <section className="rounded-[24px] border border-amber-200/60 bg-amber-50/80 px-4 py-3 text-sm leading-6 text-amber-900 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-300">
+            <div className="font-medium">邮箱认证尚未配置完成</div>
+            <div className="mt-2">请先配置 `VITE_SUPABASE_URL`、`VITE_SUPABASE_ANON_KEY`、`VITE_SUPABASE_EMAIL_REDIRECT_TO`。</div>
+            <div className="mt-1">密码重置回流可选配置：`VITE_SUPABASE_PASSWORD_RESET_REDIRECT_TO`。</div>
+            <div className="mt-2 break-all text-xs">当前登录回调：{authConfig.emailRedirectTo}</div>
+          </section>
+        ) : null}
       </div>
     </PageTransition>
   );

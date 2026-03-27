@@ -1,4 +1,4 @@
-import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import type { AuthChangeEvent, Session, SupabaseClient } from "@supabase/supabase-js";
 import { localDb } from "@/lib/local-db";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
 import type {
@@ -16,6 +16,22 @@ import { authConfig, getAuthConfigurationError } from "./auth-config";
 
 export const AUTH_REMEMBER_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
 
+type ProfileMetadata = {
+  full_name?: string;
+  avatar_base64?: string;
+  has_password?: boolean;
+  profile_email?: string;
+  profile_updated_at?: string;
+};
+
+const DEFAULT_AVATAR_PALETTES = [
+  ["#F97316", "#FB7185"],
+  ["#0EA5E9", "#6366F1"],
+  ["#10B981", "#14B8A6"],
+  ["#8B5CF6", "#EC4899"],
+  ["#F59E0B", "#EF4444"],
+];
+
 function toAuthSession(session: Session): AuthSession {
   return {
     accessToken: session.access_token,
@@ -24,26 +40,169 @@ function toAuthSession(session: Session): AuthSession {
   };
 }
 
-function buildNickname(email: string): string {
+export function buildNickname(email: string): string {
   const [name] = email.split("@");
   return name || "Email User";
 }
 
-function toUserProfile(session: Session): UserProfile {
-  const email = session.user.email ?? "";
+function getProfileMetadata(session: Session): ProfileMetadata {
+  const metadata = session.user.user_metadata;
+  if (!metadata || typeof metadata !== "object") {
+    return {};
+  }
+
+  return {
+    full_name: typeof metadata.full_name === "string" ? metadata.full_name : undefined,
+    avatar_base64:
+      typeof metadata.avatar_base64 === "string" ? metadata.avatar_base64 : undefined,
+    has_password:
+      typeof metadata.has_password === "boolean" ? metadata.has_password : undefined,
+    profile_email:
+      typeof metadata.profile_email === "string" ? metadata.profile_email : undefined,
+    profile_updated_at:
+      typeof metadata.profile_updated_at === "string"
+        ? metadata.profile_updated_at
+        : undefined,
+  };
+}
+
+function hashSeed(value: string) {
+  let hash = 0;
+  for (const char of value) {
+    hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  }
+  return hash;
+}
+
+function buildAvatarInitials(email: string, nickname: string) {
+  const seed = nickname.trim() || buildNickname(email);
+  const parts = seed
+    .split(/[\s_-]+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const initials = parts.length > 1 ? `${parts[0][0]}${parts[1][0]}` : seed.slice(0, 2);
+  return initials.toUpperCase();
+}
+
+function encodeBase64(value: string) {
+  if (typeof btoa === "function") {
+    let binary = "";
+    for (const byte of new TextEncoder().encode(value)) {
+      binary += String.fromCharCode(byte);
+    }
+    return btoa(binary);
+  }
+
+  const nodeBuffer = (globalThis as typeof globalThis & {
+    Buffer?: { from(input: string, encoding: string): { toString(encoding: string): string } };
+  }).Buffer;
+  if (nodeBuffer) {
+    return nodeBuffer.from(value, "utf8").toString("base64");
+  }
+
+  throw new Error("No base64 encoder available.");
+}
+
+export function buildDefaultAvatarDataUrl(email: string, nickname = buildNickname(email)) {
+  const palette =
+    DEFAULT_AVATAR_PALETTES[hashSeed(email.toLowerCase()) % DEFAULT_AVATAR_PALETTES.length];
+  const initials = buildAvatarInitials(email, nickname);
+  const svg = [
+    '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none">',
+    `<defs><linearGradient id="avatar-gradient" x1="8" y1="8" x2="88" y2="88" gradientUnits="userSpaceOnUse"><stop stop-color="${palette[0]}"/><stop offset="1" stop-color="${palette[1]}"/></linearGradient></defs>`,
+    '<rect width="96" height="96" rx="28" fill="url(#avatar-gradient)"/>',
+    '<circle cx="48" cy="38" r="18" fill="rgba(255,255,255,0.24)"/>',
+    '<path d="M22 80c4-14 14-22 26-22s22 8 26 22" fill="rgba(255,255,255,0.18)"/>',
+    `<text x="48" y="56" text-anchor="middle" fill="white" font-size="24" font-family="Arial, sans-serif" font-weight="700">${initials}</text>`,
+    "</svg>",
+  ].join("");
+
+  return `data:image/svg+xml;base64,${encodeBase64(svg)}`;
+}
+
+function buildProfileUpdatedAt(session: Session) {
+  return session.user.updated_at ?? session.user.last_sign_in_at ?? new Date().toISOString();
+}
+
+export function buildUserProfileFromSession(session: Session): UserProfile {
+  const metadata = getProfileMetadata(session);
+  const email = metadata.profile_email ?? session.user.email ?? "";
+  const nickname =
+    typeof metadata.full_name === "string" && metadata.full_name.trim()
+      ? metadata.full_name.trim()
+      : buildNickname(email);
 
   return {
     id: session.user.id,
     email,
-    nickname:
-      typeof session.user.user_metadata?.full_name === "string" &&
-      session.user.user_metadata.full_name.trim()
-        ? session.user.user_metadata.full_name.trim()
-        : buildNickname(email),
+    nickname,
+    avatarBase64:
+      typeof metadata.avatar_base64 === "string" && metadata.avatar_base64.trim()
+        ? metadata.avatar_base64
+        : buildDefaultAvatarDataUrl(email, nickname),
     provider: "email",
     emailVerified: Boolean(session.user.email_confirmed_at),
+    hasPassword: metadata.has_password === true,
     lastSignInAt: session.user.last_sign_in_at ?? null,
+    updatedAt: metadata.profile_updated_at ?? buildProfileUpdatedAt(session),
   };
+}
+
+function buildDesiredProfileMetadata(
+  session: Session,
+  overrides: Partial<ProfileMetadata> = {},
+): Required<ProfileMetadata> {
+  const profile = buildUserProfileFromSession(session);
+  return {
+    full_name: overrides.full_name ?? profile.nickname,
+    avatar_base64: overrides.avatar_base64 ?? profile.avatarBase64,
+    has_password: overrides.has_password ?? profile.hasPassword,
+    profile_email: overrides.profile_email ?? profile.email,
+    profile_updated_at: overrides.profile_updated_at ?? profile.updatedAt,
+  };
+}
+
+function getProfileMetadataPatch(
+  current: ProfileMetadata,
+  desired: Required<ProfileMetadata>,
+): ProfileMetadata {
+  const patch: ProfileMetadata = {};
+
+  if (current.full_name !== desired.full_name) patch.full_name = desired.full_name;
+  if (current.avatar_base64 !== desired.avatar_base64) {
+    patch.avatar_base64 = desired.avatar_base64;
+  }
+  if (current.has_password !== desired.has_password) patch.has_password = desired.has_password;
+  if (current.profile_email !== desired.profile_email) patch.profile_email = desired.profile_email;
+  if (current.profile_updated_at !== desired.profile_updated_at) {
+    patch.profile_updated_at = desired.profile_updated_at;
+  }
+
+  return patch;
+}
+
+async function syncRemoteProfile(
+  client: SupabaseClient,
+  session: Session,
+  overrides: Partial<ProfileMetadata> = {},
+) {
+  const current = getProfileMetadata(session);
+  const desired = buildDesiredProfileMetadata(session, overrides);
+  const patch = getProfileMetadataPatch(current, desired);
+
+  if (Object.keys(patch).length === 0) {
+    return session;
+  }
+
+  const { data, error } = await client.auth.updateUser({
+    data: patch,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data.user ? ({ ...session, user: data.user } as Session) : session;
 }
 
 function getRememberWindow(now = Date.now()) {
@@ -122,7 +281,9 @@ export function createSupabaseAuthService(): AuthService {
     profile: persisted.profile,
     session: persisted.session,
     isLoading: true,
-    isAuthenticated: Boolean(persisted.profile && persisted.session && !persisted.pendingAction),
+    // Cached profile data can be shown as a fallback, but auth truth is
+    // established only after Supabase session/profile reconciliation.
+    isAuthenticated: false,
     pendingEmail: persisted.lastSignInEmail,
     pendingAction: persisted.pendingAction,
     pendingActionEmail: persisted.pendingActionEmail,
@@ -232,7 +393,7 @@ export function createSupabaseAuthService(): AuthService {
 
     const nextPersisted: PersistedAuthState = session
       ? {
-          profile: toUserProfile(session),
+          profile: buildUserProfileFromSession(session),
           session: toAuthSession(session),
           lastSignInEmail: session.user.email ?? previousPersisted.lastSignInEmail,
           lastAuthMethod: options.lastAuthMethod ?? previousPersisted.lastAuthMethod,
@@ -366,13 +527,14 @@ export function createSupabaseAuthService(): AuthService {
           data: { session },
           error,
         } = await client.auth.getSession();
+        const resolvedSession = session ? await syncRemoteProfile(client, session) : session;
 
-        syncSession(session, {
+        syncSession(resolvedSession, {
           errorMessage: callbackResult.errorMessage ?? error?.message ?? null,
           pendingAction: callbackResult.pendingAction ?? localDb.getAuthState().pendingAction,
           pendingActionEmail:
             callbackResult.pendingAction === "reset_password"
-              ? session?.user.email ?? localDb.getAuthState().pendingActionEmail
+              ? resolvedSession?.user.email ?? localDb.getAuthState().pendingActionEmail
               : localDb.getAuthState().pendingActionEmail,
           lastAuthMethod: localDb.getAuthState().lastAuthMethod,
         });
@@ -469,11 +631,11 @@ export function createSupabaseAuthService(): AuthService {
       const normalizedToken = token.trim();
 
       if (!normalizedEmail) {
-        throw new Error("缺少待验证邮箱。");
+        throw new Error("??????????");
       }
 
       if (!normalizedToken) {
-        throw new Error("请输入邮箱验证码。");
+        throw new Error("?????????");
       }
 
       const client = getSupabaseBrowserClient();
@@ -498,20 +660,17 @@ export function createSupabaseAuthService(): AuthService {
         throw new Error(error.message);
       }
 
-      if (purpose === "register") {
-        syncSession(session, {
-          pendingAction: "complete_registration",
-          pendingActionEmail: normalizedEmail,
-          lastAuthMethod: "password",
-        });
-        return {
-          status: "password_setup_required",
-          email: normalizedEmail,
-          message: "邮箱验证成功，请继续设置登录密码。",
-        };
-      }
+      const resolvedSession = session
+        ? await syncRemoteProfile(client, session, {
+            profile_email: normalizedEmail,
+            full_name: buildNickname(normalizedEmail),
+            avatar_base64: buildDefaultAvatarDataUrl(normalizedEmail),
+            has_password: false,
+            profile_updated_at: new Date().toISOString(),
+          })
+        : session;
 
-      syncSession(session, {
+      syncSession(resolvedSession, {
         pendingAction: null,
         pendingActionEmail: null,
         refreshRememberWindow: true,
@@ -521,44 +680,11 @@ export function createSupabaseAuthService(): AuthService {
       return {
         status: "authenticated",
         email: normalizedEmail,
-        message: "验证码验证成功，正在进入应用。",
+        message:
+          purpose === "register"
+            ? "????????????????????"
+            : "???????????????",
       };
-    },
-
-    async signInWithPassword(email: string, password: string) {
-      const normalizedEmail = email.trim().toLowerCase();
-      if (!normalizedEmail) {
-        throw new Error("请输入邮箱地址。");
-      }
-      validatePassword(password);
-
-      const client = getSupabaseBrowserClient();
-      if (!client) {
-        throw new Error(getAuthConfigurationError());
-      }
-
-      const {
-        data: { session },
-        error,
-      } = await client.auth.signInWithPassword({
-        email: normalizedEmail,
-        password: password.trim(),
-      });
-
-      if (error) {
-        setSnapshot({
-          lastError: error.message,
-          pendingEmail: normalizedEmail,
-        });
-        throw new Error(error.message);
-      }
-
-      syncSession(session, {
-        pendingAction: null,
-        pendingActionEmail: null,
-        refreshRememberWindow: true,
-        lastAuthMethod: "password",
-      });
     },
 
     async completeRegistration(password: string, nickname?: string) {
@@ -572,7 +698,11 @@ export function createSupabaseAuthService(): AuthService {
       const trimmedNickname = nickname?.trim();
       const { error } = await client.auth.updateUser({
         password: password.trim(),
-        data: trimmedNickname ? { full_name: trimmedNickname } : undefined,
+        data: {
+          ...(trimmedNickname ? { full_name: trimmedNickname } : {}),
+          has_password: true,
+          profile_updated_at: new Date().toISOString(),
+        },
       });
 
       if (error) {
@@ -582,8 +712,15 @@ export function createSupabaseAuthService(): AuthService {
       const {
         data: { session },
       } = await client.auth.getSession();
+      const resolvedSession = session
+        ? await syncRemoteProfile(client, session, {
+            ...(trimmedNickname ? { full_name: trimmedNickname } : {}),
+            has_password: true,
+            profile_updated_at: new Date().toISOString(),
+          })
+        : session;
 
-      syncSession(session, {
+      syncSession(resolvedSession, {
         pendingAction: null,
         pendingActionEmail: null,
         refreshRememberWindow: true,
@@ -641,6 +778,10 @@ export function createSupabaseAuthService(): AuthService {
 
       const { error } = await client.auth.updateUser({
         password: password.trim(),
+        data: {
+          has_password: true,
+          profile_updated_at: new Date().toISOString(),
+        },
       });
 
       if (error) {
@@ -650,8 +791,14 @@ export function createSupabaseAuthService(): AuthService {
       const {
         data: { session },
       } = await client.auth.getSession();
+      const resolvedSession = session
+        ? await syncRemoteProfile(client, session, {
+            has_password: true,
+            profile_updated_at: new Date().toISOString(),
+          })
+        : session;
 
-      syncSession(session, {
+      syncSession(resolvedSession, {
         pendingAction: null,
         pendingActionEmail: null,
         refreshRememberWindow: true,

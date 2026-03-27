@@ -1,6 +1,6 @@
 export type AuthProvider = "email";
 export type AuthMethod = "otp" | "password";
-export type PendingAuthAction = "complete_registration" | "reset_password" | null;
+export type PendingAuthAction = "reset_password" | null;
 
 export type ProjectStatus = "draft" | "active" | "archived";
 
@@ -63,9 +63,12 @@ export interface UserProfile {
   id: string;
   email: string;
   nickname: string;
+  avatarBase64: string;
   provider: AuthProvider;
   emailVerified: boolean;
+  hasPassword: boolean;
   lastSignInAt: string | null;
+  updatedAt: string;
 }
 
 export interface UserProfileRecord extends UserProfile {
@@ -111,7 +114,7 @@ export interface EmailOtpRequestResult {
 }
 
 export interface EmailOtpVerificationResult {
-  status: "authenticated" | "password_setup_required";
+  status: "authenticated";
   email: string;
   message: string;
 }
