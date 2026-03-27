@@ -6,10 +6,8 @@ export type ProjectStatus = "draft" | "active" | "archived";
 
 export type ProjectFileMap = Record<string, string>;
 
-/** 思维链步骤状态 */
 export type ThinkingStepStatus = "pending" | "loading" | "success" | "error";
 
-/** 思维链单步 */
 export interface ThinkingStep {
   id: string;
   title: string;
@@ -25,7 +23,6 @@ export interface ProjectMessage {
   createdAt: string;
   projectId: string;
   ownerUserId: string;
-  /** AI 回复的思维链步骤 */
   thinkingSteps?: ThinkingStep[];
   metadata?: Record<string, string | number | boolean | null>;
 }
@@ -76,6 +73,11 @@ export interface UserProfileRecord extends UserProfile {
   updatedAt: string;
 }
 
+export interface UserProfileUpdateInput {
+  nickname?: string;
+  avatarBase64?: string;
+}
+
 export interface AuthSession {
   accessToken: string;
   refreshToken: string;
@@ -120,6 +122,11 @@ export interface EmailOtpVerificationResult {
 }
 
 export interface PasswordRecoveryResult {
+  email: string;
+  message: string;
+}
+
+export interface PasswordSecurityOtpResult {
   email: string;
   message: string;
 }

@@ -57,7 +57,7 @@ export function SettingsPage() {
             <div>
               <h1 className="text-lg font-semibold text-foreground">Advanced Settings</h1>
               <p className="text-xs text-muted-foreground">
-                Theme and account summary now live on the profile page.
+                Theme, password security, and account summary now live on the profile page.
               </p>
             </div>
           </div>

@@ -1,15 +1,16 @@
 import type { AuthChangeEvent, Session, SupabaseClient } from "@supabase/supabase-js";
 import { localDb } from "@/lib/local-db";
-import { getSupabaseBrowserClient } from "@/lib/supabase";
-import type {
+import { getSupabaseBrowserClient } from "@/lib/supabase";import type {
   AuthMethod,
   AuthSession,
   AuthStateSnapshot,
   EmailOtpVerificationResult,
   PasswordRecoveryResult,
+  PasswordSecurityOtpResult,
   PendingAuthAction,
   PersistedAuthState,
   UserProfile,
+  UserProfileUpdateInput,
 } from "@/types";
 import type { AuthService, AuthStateListener, EmailOtpPurpose } from "./auth-service";
 import { authConfig, getAuthConfigurationError } from "./auth-config";
@@ -257,13 +258,19 @@ function hasAuthCallbackQuery(): boolean {
   return params.has("code") || params.has("error_description") || params.has("error");
 }
 
-function validatePassword(password: string, label = "密码") {
+function validatePassword(password: string, label = "Password") {
   if (!password.trim()) {
-    throw new Error(`请输入${label}。`);
+    throw new Error(`${label} is required.`);
   }
 
   if (password.trim().length < 8) {
-    throw new Error(`${label}至少需要 8 位字符。`);
+    throw new Error(`${label} must be at least 8 characters.`);
+  }
+}
+
+function validateVerificationCode(code: string, label = "Verification code") {
+  if (!code.trim()) {
+    throw new Error(`${label} is required.`);
   }
 }
 
@@ -728,6 +735,136 @@ export function createSupabaseAuthService(): AuthService {
       });
     },
 
+    async updateProfile(updates: UserProfileUpdateInput): Promise<UserProfile> {
+      const client = getSupabaseBrowserClient();
+      if (!client) {
+        throw new Error(getAuthConfigurationError());
+      }
+
+      const {
+        data: { session },
+        error,
+      } = await client.auth.getSession();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!session) {
+        throw new Error("Authenticated session is required.");
+      }
+
+      const nextUpdatedAt = new Date().toISOString();
+      const trimmedNickname = updates.nickname?.trim();
+      const trimmedAvatar = updates.avatarBase64?.trim();
+      const resolvedSession = await syncRemoteProfile(client, session, {
+        ...(trimmedNickname ? { full_name: trimmedNickname } : {}),
+        ...(trimmedAvatar ? { avatar_base64: trimmedAvatar } : {}),
+        profile_updated_at: nextUpdatedAt,
+      });
+
+      syncSession(resolvedSession, {
+        pendingAction: null,
+        pendingActionEmail: null,
+        lastAuthMethod: localDb.getAuthState().lastAuthMethod,
+      });
+
+      if (!snapshot.profile) {
+        throw new Error("Profile update did not return a user profile.");
+      }
+
+      return snapshot.profile;
+    },
+
+    async requestPasswordReauthentication(): Promise<PasswordSecurityOtpResult> {
+      const client = getSupabaseBrowserClient();
+      if (!client) {
+        throw new Error(getAuthConfigurationError());
+      }
+
+      const {
+        data: { session },
+        error: sessionError,
+      } = await client.auth.getSession();
+
+      if (sessionError) {
+        throw new Error(sessionError.message);
+      }
+
+      if (!session?.user.email) {
+        throw new Error("Authenticated email is required.");
+      }
+
+      const { error } = await client.auth.reauthenticate();
+
+      if (error) {
+        setSnapshot({
+          lastError: error.message,
+          pendingEmail: session.user.email,
+        });
+        throw new Error(error.message);
+      }
+
+      setSnapshot({
+        pendingEmail: session.user.email,
+        lastError: null,
+      });
+
+      return {
+        email: session.user.email,
+        message: "A verification code has been sent to your email.",
+      };
+    },
+
+    async updatePasswordWithNonce(password: string, nonce: string) {
+      validatePassword(password, "New password");
+      validateVerificationCode(nonce, "Verification code");
+
+      const client = getSupabaseBrowserClient();
+      if (!client) {
+        throw new Error(getAuthConfigurationError());
+      }
+
+      const nextUpdatedAt = new Date().toISOString();
+      const { error } = await client.auth.updateUser({
+        password: password.trim(),
+        nonce: nonce.trim(),
+        data: {
+          has_password: true,
+          profile_updated_at: nextUpdatedAt,
+        },
+      });
+
+      if (error) {
+        setSnapshot({
+          lastError: error.message,
+        });
+        throw new Error(error.message);
+      }
+
+      const {
+        data: { session },
+        error: sessionError,
+      } = await client.auth.getSession();
+
+      if (sessionError) {
+        throw new Error(sessionError.message);
+      }
+
+      const resolvedSession = session
+        ? await syncRemoteProfile(client, session, {
+            has_password: true,
+            profile_updated_at: nextUpdatedAt,
+          })
+        : session;
+
+      syncSession(resolvedSession, {
+        pendingAction: null,
+        pendingActionEmail: null,
+        refreshRememberWindow: true,
+        lastAuthMethod: "password",
+      });
+    },
     async requestPasswordReset(email: string): Promise<PasswordRecoveryResult> {
       const normalizedEmail = email.trim().toLowerCase();
       if (!normalizedEmail) {

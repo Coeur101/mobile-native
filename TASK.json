@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T07:09:08.480Z",
+  "updatedAt": "2026-03-27T08:37:46.421Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1057,7 +1057,7 @@
       "phase": "delivery",
       "title": "实现头像压缩存储与资料页密码安全流程",
       "type": "feature",
-      "status": "in_progress",
+      "status": "docs_verified",
       "priority": "P0",
       "scope": "头像上传压缩转 base64、设置密码与重置密码的邮箱验证码确认流程",
       "acceptanceCriteria": [
@@ -1103,7 +1103,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
       "createdAt": "2026-03-27T09:13:00+08:00",
-      "updatedAt": "2026-03-27T07:09:08.480Z"
+      "updatedAt": "2026-03-27T08:37:46.406Z"
     },
     {
       "id": "TASK-021",
@@ -1111,7 +1111,7 @@
       "phase": "closure",
       "title": "完成资料模型与认证链路 implementation_review",
       "type": "review",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "P0",
       "scope": "核对实现与 proposal、design、specs、TASK.json 与 task logs 的一致性",
       "acceptanceCriteria": [
@@ -1149,7 +1149,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
       "createdAt": "2026-03-27T09:14:00+08:00",
-      "updatedAt": "2026-03-27T09:14:00+08:00"
+      "updatedAt": "2026-03-27T08:37:46.421Z"
     },
     {
       "id": "TASK-022",

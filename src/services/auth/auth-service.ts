@@ -3,7 +3,9 @@ import type {
   EmailOtpRequestResult,
   EmailOtpVerificationResult,
   PasswordRecoveryResult,
+  PasswordSecurityOtpResult,
   UserProfile,
+  UserProfileUpdateInput,
 } from "@/types";
 
 export type AuthStateListener = () => void;
@@ -21,6 +23,9 @@ export interface AuthService {
     token: string,
     purpose: EmailOtpPurpose,
   ): Promise<EmailOtpVerificationResult>;
+  updateProfile(updates: UserProfileUpdateInput): Promise<UserProfile>;
+  requestPasswordReauthentication(): Promise<PasswordSecurityOtpResult>;
+  updatePasswordWithNonce(password: string, nonce: string): Promise<void>;
   completeRegistration(password: string, nickname?: string): Promise<void>;
   requestPasswordReset(email: string): Promise<PasswordRecoveryResult>;
   completePasswordReset(password: string): Promise<void>;
