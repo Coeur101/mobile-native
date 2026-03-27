@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T09:11:53.224Z",
+  "updatedAt": "2026-03-27T09:29:07.464Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1316,6 +1316,372 @@
       "createdAt": "2026-03-27T09:17:00+08:00",
       "updatedAt": "2026-03-27T09:11:53.224Z",
       "closedAt": "2026-03-27T09:11:53.224Z"
+    },
+    {
+      "id": "TASK-025",
+      "change": "replace-mock-project-service",
+      "phase": "definition",
+      "title": "????????? change ?????",
+      "type": "init",
+      "status": "in_progress",
+      "priority": "P0",
+      "scope": "OpenSpec proposal/design/spec/tasks?TASK.json ?????????",
+      "acceptanceCriteria": [
+        "???? replace-mock-project-service ? proposal?design?tasks ? project-data delta spec",
+        "TASK.json ?? change ?? definition/delivery/closure ????",
+        "?? definition task ??????? task history ??",
+        "harness ???? change ??????????? backlog"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/changes/replace-mock-project-service/proposal.md",
+        "openspec/changes/replace-mock-project-service/design.md",
+        "openspec/changes/replace-mock-project-service/tasks.md",
+        "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/replace-mock-project-service/proposal.md",
+          "openspec/changes/replace-mock-project-service/design.md",
+          "openspec/changes/replace-mock-project-service/tasks.md",
+          "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-025.jsonl",
+      "createdAt": "2026-03-27T09:29:07.464Z",
+      "updatedAt": "2026-03-27T09:29:07.464Z"
+    },
+    {
+      "id": "TASK-026",
+      "change": "replace-mock-project-service",
+      "phase": "definition",
+      "title": "??????????? design_review",
+      "type": "review",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "?? proposal?design?spec delta ????????",
+      "acceptanceCriteria": [
+        "??? change ???????????????? AI ????",
+        "????????????legacy ??????????",
+        "?? design_review ???????",
+        "???????????? delivery"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": true,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/changes/replace-mock-project-service/design.md",
+        "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
+        "openspec/changes/replace-mock-project-service/logs/TASK-026.jsonl",
+        "openspec/changes/replace-mock-project-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/replace-mock-project-service/design.md",
+          "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
+          "openspec/changes/replace-mock-project-service/logs/TASK-026.jsonl",
+          "openspec/changes/replace-mock-project-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-026.jsonl",
+      "createdAt": "2026-03-27T09:29:07.464Z",
+      "updatedAt": "2026-03-27T09:29:07.464Z"
+    },
+    {
+      "id": "TASK-027",
+      "change": "replace-mock-project-service",
+      "phase": "delivery",
+      "title": "????????????? mockProjectService ??",
+      "type": "feature",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "?? ProjectService??????????/??/???????",
+      "acceptanceCriteria": [
+        "?? CRUD???????????????????",
+        "???????? mockProjectService",
+        "??????????????",
+        "?? build ???????????? commit"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": false,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "src/services/project/project-service.ts",
+        "src/services/project/mock-project-service.ts",
+        "src/lib/local-db.ts",
+        "src/types/index.ts",
+        "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
+        "openspec/changes/replace-mock-project-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": "feat: TASK-027 replace mock project service boundary",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/project-service.test.ts"
+        ],
+        "uiTests": [],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/services/project/project-service.ts",
+          "src/services/project/mock-project-service.ts",
+          "src/lib/local-db.ts",
+          "src/types/index.ts",
+          "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
+          "openspec/changes/replace-mock-project-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
+      "createdAt": "2026-03-27T09:29:07.464Z",
+      "updatedAt": "2026-03-27T09:29:07.464Z"
+    },
+    {
+      "id": "TASK-028",
+      "change": "replace-mock-project-service",
+      "phase": "delivery",
+      "title": "?????????????????????",
+      "type": "feature",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "Home/Editor/Preview ???loading/error/empty ???legacy ????",
+      "acceptanceCriteria": [
+        "????????????????????????????",
+        "?? legacy ??????????????",
+        "???? loading?empty?error ??",
+        "??????? commit ??"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "src/pages/home/HomePage.tsx",
+        "src/pages/editor/EditorPage.tsx",
+        "src/pages/preview/PreviewPage.tsx",
+        "src/lib/local-db.ts",
+        "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
+        "openspec/changes/replace-mock-project-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": "feat: TASK-028 wire remote project flows and migration",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/project-migration.test.ts"
+        ],
+        "uiTests": [
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/project-persistence.spec.ts --headed --reporter=line --workers=1"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/pages/home/HomePage.tsx",
+          "src/pages/editor/EditorPage.tsx",
+          "src/pages/preview/PreviewPage.tsx",
+          "src/lib/local-db.ts",
+          "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
+          "openspec/changes/replace-mock-project-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
+      "createdAt": "2026-03-27T09:29:07.464Z",
+      "updatedAt": "2026-03-27T09:29:07.464Z"
+    },
+    {
+      "id": "TASK-029",
+      "change": "replace-mock-project-service",
+      "phase": "closure",
+      "title": "????????? implementation_review",
+      "type": "review",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "?????spec????????????????",
+      "acceptanceCriteria": [
+        "????????????? proposal?design ? spec",
+        "?? TASK.json?task logs????????????",
+        "?? implementation_review ???????",
+        "??????????????????"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/changes/replace-mock-project-service/logs/TASK-029.jsonl",
+        "openspec/changes/replace-mock-project-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/replace-mock-project-service/logs/TASK-029.jsonl",
+          "openspec/changes/replace-mock-project-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-029.jsonl",
+      "createdAt": "2026-03-27T09:29:07.464Z",
+      "updatedAt": "2026-03-27T09:29:07.464Z"
+    },
+    {
+      "id": "TASK-030",
+      "change": "replace-mock-project-service",
+      "phase": "closure",
+      "title": "???????????????????",
+      "type": "verification",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "build?Vitest?Playwright????????????",
+      "acceptanceCriteria": [
+        "?????? change ?????????? UI ??",
+        "??????? TASK.json ? task logs",
+        "??????????test-results?report?trace?video ???",
+        "???? verification commit"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "TASK.json",
+        "openspec/changes/replace-mock-project-service/logs/TASK-030.jsonl",
+        "openspec/changes/replace-mock-project-service/tasks.md",
+        "CHANGELOG.md"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": "test: TASK-030 record project persistence verification evidence",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/project-service.test.ts tests/vitest/project-migration.test.ts"
+        ],
+        "uiTests": [
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/project-persistence.spec.ts --headed --reporter=line --workers=1"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "TASK.json",
+          "openspec/changes/replace-mock-project-service/logs/TASK-030.jsonl",
+          "openspec/changes/replace-mock-project-service/tasks.md",
+          "CHANGELOG.md"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-030.jsonl",
+      "createdAt": "2026-03-27T09:29:07.464Z",
+      "updatedAt": "2026-03-27T09:29:07.464Z"
+    },
+    {
+      "id": "TASK-031",
+      "change": "replace-mock-project-service",
+      "phase": "closure",
+      "title": "???? project-data spec ???????? change",
+      "type": "closure",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "??? specs???? blocker?????? change",
+      "acceptanceCriteria": [
+        "?? project-data spec ??? change ??????",
+        "?? task ?? blocker ??????",
+        "????????????? archive",
+        "??????? task log"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/specs/project-data/spec.md",
+        "openspec/changes/replace-mock-project-service/logs/TASK-031.jsonl",
+        "openspec/changes/replace-mock-project-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/specs/project-data/spec.md",
+          "openspec/changes/replace-mock-project-service/logs/TASK-031.jsonl",
+          "openspec/changes/replace-mock-project-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-031.jsonl",
+      "createdAt": "2026-03-27T09:29:07.464Z",
+      "updatedAt": "2026-03-27T09:29:07.464Z"
     }
   ]
 }

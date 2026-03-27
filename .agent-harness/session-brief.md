@@ -1,20 +1,26 @@
 # Session Brief
 
-Generated: 2026-03-27T09:20:21.169Z
+Generated: 2026-03-27T09:29:24.873Z
 Branch: master
-Commit: 18e86af
+Commit: b352399
 
 ## Current Focus
 
-- Task: None
-
-
-
-
+- Task: TASK-025
+- Title: ????????? change ?????
+- Change: replace-mock-project-service
+- Phase: definition
+- Why selected: active in-progress change with highest-priority pending task
 
 ## Must Read
 
-- None
+- openspec/changes/replace-mock-project-service/proposal.md
+- openspec/changes/replace-mock-project-service/design.md
+- openspec/changes/replace-mock-project-service/tasks.md
+- openspec/changes/replace-mock-project-service/.openspec.yaml
+- openspec/changes/replace-mock-project-service/specs/project-data/spec.md
+- TASK.json
+- openspec/changes/replace-mock-project-service/logs/TASK-025.jsonl
 
 ## Must Verify
 
@@ -22,7 +28,13 @@ Commit: 18e86af
 
 ## Next Queue
 
-- None
+- TASK-025 [definition/P0] ????????? change ?????
+- TASK-026 [definition/P0] ??????????? design_review
+- TASK-027 [delivery/P0] ????????????? mockProjectService ??
+- TASK-028 [delivery/P0] ?????????????????????
+- TASK-029 [closure/P0] ????????? implementation_review
+- TASK-030 [closure/P0] ???????????????????
+- TASK-031 [closure/P0] ???? project-data spec ???????? change
 
 ## Recent Completed
 
