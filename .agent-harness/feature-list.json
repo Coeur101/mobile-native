@@ -1,5 +1,7 @@
 {
-  "generatedAt": "2026-03-27T05:52:00.218Z",
+  "generatedAt": "2026-03-27T07:09:08.486Z",
+  "project": "AI Web Builder Mobile",
+  "workflowVersion": "project-lifecycle-v3",
   "activeChanges": [
     "integrate-free-email-and-wechat-auth",
     "integrate-free-email-auth",
@@ -7,36 +9,36 @@
     "task-level-closed-loop-workflow"
   ],
   "currentFocus": {
-    "id": "TASK-019",
+    "id": "TASK-020",
     "change": "otp-auth-and-supabase-user-profile",
     "phase": "delivery",
-    "title": "新增个人信息页并替换首页右上角入口",
+    "title": "实现头像压缩存储与资料页密码安全流程",
     "type": "feature",
     "status": "in_progress",
     "priority": "P0",
-    "scope": "默认头像、默认昵称、邮箱、主题切换与旧设置页职责收缩",
+    "scope": "头像上传压缩转 base64、设置密码与重置密码的邮箱验证码确认流程",
     "acceptanceCriteria": [
-      "首页右上角入口改为用户信息入口",
-      "新增个人信息页展示头像、昵称、邮箱与主题切换",
-      "旧设置页收缩为非主入口的辅助设置区域",
-      "Playwright UI 覆盖主页到个人信息页导航"
+      "头像上传后先压缩再转 base64 存入 profile",
+      "资料页根据 has_password 展示设置密码或重置密码",
+      "密码安全操作前必须通过邮箱验证码确认",
+      "功能验证、UI 自动化、清理与独立 commit 全部留痕"
     ],
-    "functionalTestsRequired": false,
+    "functionalTestsRequired": true,
     "uiTestsRequired": true,
     "buildRequired": true,
     "designReviewRequired": true,
     "implementationReviewRequired": true,
     "docsToUpdate": [
-      "src/pages/home/HomePage.tsx",
       "src/pages/settings/SettingsPage.tsx",
-      "src/router.tsx",
-      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "src/services/auth/supabase-auth-service.ts",
+      "src/types/index.ts",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
       "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
       "TASK.json"
     ],
     "commitRequired": true,
     "commitRef": null,
-    "commitMessage": "feat: TASK-019 新增个人信息页入口与导航",
+    "commitMessage": "feat: TASK-020 交付资料安全与头像存储流程",
     "pushRequired": false,
     "artifacts": {
       "functionalTests": [],
@@ -45,10 +47,10 @@
         "pnpm build"
       ],
       "docs": [
-        "src/pages/home/HomePage.tsx",
         "src/pages/settings/SettingsPage.tsx",
-        "src/router.tsx",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+        "src/services/auth/supabase-auth-service.ts",
+        "src/types/index.ts",
+        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
         "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
         "TASK.json"
       ],
@@ -56,9 +58,9 @@
       "pushes": []
     },
     "blockers": [],
-    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
-    "createdAt": "2026-03-27T09:12:00+08:00",
-    "updatedAt": "2026-03-27T05:50:58.022Z",
+    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
+    "createdAt": "2026-03-27T09:13:00+08:00",
+    "updatedAt": "2026-03-27T07:09:08.480Z",
     "mustRead": [
       "openspec/changes/otp-auth-and-supabase-user-profile/proposal.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
@@ -68,10 +70,10 @@
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/project-data/spec.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-auth/spec.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-profile/spec.md",
-      "src/pages/home/HomePage.tsx",
       "src/pages/settings/SettingsPage.tsx",
-      "src/router.tsx",
-      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "src/services/auth/supabase-auth-service.ts",
+      "src/types/index.ts",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
       "TASK.json"
     ],
     "requiredChecks": [
@@ -80,19 +82,11 @@
   },
   "nextQueue": [
     {
-      "id": "TASK-019",
-      "change": "otp-auth-and-supabase-user-profile",
-      "phase": "delivery",
-      "priority": "P0",
-      "status": "in_progress",
-      "title": "新增个人信息页并替换首页右上角入口"
-    },
-    {
       "id": "TASK-020",
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "delivery",
       "priority": "P0",
-      "status": "todo",
+      "status": "in_progress",
       "title": "实现头像压缩存储与资料页密码安全流程"
     },
     {
@@ -156,6 +150,291 @@
       "title": "Settings page still depends on local mock settings",
       "source": "src/pages/settings/SettingsPage.tsx",
       "recommendation": "Decide whether the profile/settings work should also introduce a real settings backend boundary."
+    }
+  ],
+  "features": [
+    {
+      "id": "TASK-001",
+      "change": "task-level-closed-loop-workflow",
+      "phase": "closure",
+      "title": "初始化 task 级闭环工作流编排",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/task-level-closed-loop-workflow/logs/TASK-001.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-002",
+      "change": "task-level-closed-loop-workflow",
+      "phase": "closure",
+      "title": "将工作流扩展为全项目三阶段生命周期",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/task-level-closed-loop-workflow/logs/TASK-002.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-003",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "搭建 Supabase 邮箱认证基础层",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-003.jsonl",
+      "requiredChecks": [
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-004",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "交付真实邮箱 OTP 登录体验",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-004.jsonl",
+      "requiredChecks": [
+        "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts",
+        "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-005",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "清理登录面上的微信与 mock 认证漂移",
+      "status": "done",
+      "priority": "P1",
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-005.jsonl",
+      "requiredChecks": [
+        "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-006",
+      "change": "integrate-free-email-auth",
+      "phase": "delivery",
+      "title": "记录验证证据并清理临时测试产物",
+      "status": "docs_verified",
+      "priority": "P0",
+      "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-006.jsonl",
+      "requiredChecks": [
+        "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts",
+        "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-007",
+      "change": "task-level-closed-loop-workflow",
+      "phase": "closure",
+      "title": "收紧 task 级独立提交闭环规则并同步中文治理文档",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/task-level-closed-loop-workflow/logs/TASK-007.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-008",
+      "change": "mobile-friendly-email-auth-with-password-and-otp",
+      "phase": "delivery",
+      "title": "实现移动端邮箱注册、双模式登录、密码重置与 7 天会话恢复",
+      "status": "docs_verified",
+      "priority": "P0",
+      "historyRef": "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-008.jsonl",
+      "requiredChecks": [
+        "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts",
+        "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-009",
+      "change": "mobile-friendly-email-auth-with-password-and-otp",
+      "phase": "delivery",
+      "title": "记录认证验证证据、同步文档并清理临时测试产物",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/mobile-friendly-email-auth-with-password-and-otp/logs/TASK-009.jsonl",
+      "requiredChecks": [
+        "pnpm test -- .tmp/task-runs/vitest/auth-email.test.ts",
+        "pnpm test:ui:auth -- .tmp/task-runs/playwright/auth-email.spec.ts",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-010",
+      "change": "redesign-login-page-interaction-ui",
+      "phase": "delivery",
+      "title": "压缩登录页信息层并清理演示性测试文案",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-010.jsonl",
+      "requiredChecks": [
+        "pnpm test:ui:auth -- .tmp/task-runs/playwright/login-redesign.spec.ts",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-011",
+      "change": "redesign-login-page-interaction-ui",
+      "phase": "closure",
+      "title": "记录登录页重构验证证据并完成归档前收口",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/archive/2026-03-26-redesign-login-page-interaction-ui/logs/TASK-011.jsonl",
+      "requiredChecks": [
+        "pnpm test:ui:auth -- .tmp/task-runs/playwright/login-redesign.spec.ts",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-012",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "definition",
+      "title": "登记 OTP 认证与 Supabase 资料模型 change 的交付台账",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-012.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-013",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "definition",
+      "title": "完成认证与资料模型 design_review 并记录结论",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-013.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-014",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "definition",
+      "title": "完成入口与页面信息架构 design_review 并记录结论",
+      "status": "done",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-014.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-015",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "title": "实现 Supabase 用户资料记录模型与默认资料生成逻辑",
+      "status": "docs_verified",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-015.jsonl",
+      "requiredChecks": [
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-016",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "title": "调整本地持久化与会话恢复逻辑以 Supabase profile 为准",
+      "status": "docs_verified",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-016.jsonl",
+      "requiredChecks": [
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-017",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "title": "收敛认证服务为 OTP-first 模型并预留安全验证码能力",
+      "status": "docs_verified",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-017.jsonl",
+      "requiredChecks": [
+        ".\\node_modules\\.bin\\vitest.cmd run tests\\vitest\\auth-storage.test.ts tests\\vitest\\user-profile.test.ts --reporter=verbose",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-018",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "title": "重构登录页为 OTP-only 的移动端认证入口",
+      "status": "docs_verified",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-018.jsonl",
+      "requiredChecks": [
+        ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/auth-smoke.spec.ts --reporter=line",
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-019",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "title": "新增个人信息页并替换首页右上角入口",
+      "status": "docs_verified",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
+      "requiredChecks": [
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-020",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "delivery",
+      "title": "实现头像压缩存储与资料页密码安全流程",
+      "status": "in_progress",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
+      "requiredChecks": [
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-021",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "title": "完成资料模型与认证链路 implementation_review",
+      "status": "todo",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-022",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "title": "完成页面导航、个人信息交互与安全流程 implementation_review",
+      "status": "todo",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
+      "requiredChecks": []
+    },
+    {
+      "id": "TASK-023",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "title": "执行 change 所需验证并清理一次性测试产物",
+      "status": "todo",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+      "requiredChecks": [
+        "pnpm build"
+      ]
+    },
+    {
+      "id": "TASK-024",
+      "change": "otp-auth-and-supabase-user-profile",
+      "phase": "closure",
+      "title": "同步主线文档与 specs 后关闭并归档 change",
+      "status": "todo",
+      "priority": "P0",
+      "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
+      "requiredChecks": []
     }
   ]
 }

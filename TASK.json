@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T05:50:58.022Z",
+  "updatedAt": "2026-03-27T07:09:08.480Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1003,7 +1003,7 @@
       "phase": "delivery",
       "title": "新增个人信息页并替换首页右上角入口",
       "type": "feature",
-      "status": "in_progress",
+      "status": "docs_verified",
       "priority": "P0",
       "scope": "默认头像、默认昵称、邮箱、主题切换与旧设置页职责收缩",
       "acceptanceCriteria": [
@@ -1049,7 +1049,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-019.jsonl",
       "createdAt": "2026-03-27T09:12:00+08:00",
-      "updatedAt": "2026-03-27T05:50:58.022Z"
+      "updatedAt": "2026-03-27T07:09:08.458Z"
     },
     {
       "id": "TASK-020",
@@ -1057,7 +1057,7 @@
       "phase": "delivery",
       "title": "实现头像压缩存储与资料页密码安全流程",
       "type": "feature",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "P0",
       "scope": "头像上传压缩转 base64、设置密码与重置密码的邮箱验证码确认流程",
       "acceptanceCriteria": [
@@ -1103,7 +1103,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
       "createdAt": "2026-03-27T09:13:00+08:00",
-      "updatedAt": "2026-03-27T09:13:00+08:00"
+      "updatedAt": "2026-03-27T07:09:08.480Z"
     },
     {
       "id": "TASK-021",
