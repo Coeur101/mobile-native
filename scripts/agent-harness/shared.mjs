@@ -101,6 +101,10 @@ function isLikelyMojibake(value) {
     return false;
   }
 
+  if ((text.match(/\?/g) ?? []).length >= 3) {
+    return true;
+  }
+
   const suspiciousChars = "鐧璁鍚鏂闂閿绗绔妯璇绱缁缂鍔閲椤轰韩浣犲緱鎵岃瘉鏍锋満";
   let suspiciousCount = 0;
   for (const char of text) {
@@ -257,16 +261,22 @@ function detectRepoBacklog(tasks, activeChanges) {
       title: "Project data still depends on a mock service",
       source: "src/services/project/mock-project-service.ts",
       recommendation: "Create a new change to replace the project mock with a real persistence boundary.",
+      changeHint: "replace-mock-project-service",
     },
     {
       id: "backlog:mock-ai-service",
       title: "AI generation still depends on a mock service",
       source: "src/services/ai/mock-ai-service.ts",
       recommendation: "Create a new change to replace the AI mock with a real model integration.",
+      changeHint: "replace-mock-ai-service",
     },
   ];
 
   for (const item of mockCandidates) {
+    if (item.changeHint && activeChanges.includes(item.changeHint)) {
+      continue;
+    }
+
     if (exists(path.join(repoRoot, item.source))) {
       backlog.push({
         ...item,

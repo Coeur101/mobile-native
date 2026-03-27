@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T09:29:07.464Z",
+  "updatedAt": "2026-03-27T09:36:38.725Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1321,16 +1321,16 @@
       "id": "TASK-025",
       "change": "replace-mock-project-service",
       "phase": "definition",
-      "title": "????????? change ?????",
+      "title": "Register project persistence change ledger",
       "type": "init",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
-      "scope": "OpenSpec proposal/design/spec/tasks?TASK.json ?????????",
+      "scope": "OpenSpec proposal/design/spec/tasks, TASK.json mapping, and traceable task history setup",
       "acceptanceCriteria": [
-        "???? replace-mock-project-service ? proposal?design?tasks ? project-data delta spec",
-        "TASK.json ?? change ?? definition/delivery/closure ????",
-        "?? definition task ??????? task history ??",
-        "harness ???? change ??????????? backlog"
+        "The repository contains proposal, design, tasks, and project-data delta spec for replace-mock-project-service",
+        "TASK.json maps definition, delivery, and closure tasks for this change",
+        "The first definition task has an append-only task history entry point",
+        "The harness no longer treats this change as an unmapped active change"
       ],
       "functionalTestsRequired": false,
       "uiTestsRequired": false,
@@ -1365,22 +1365,23 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-025.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:29:07.464Z"
+      "updatedAt": "2026-03-27T09:36:38.725Z",
+      "closedAt": "2026-03-27T09:36:38.725Z"
     },
     {
       "id": "TASK-026",
       "change": "replace-mock-project-service",
       "phase": "definition",
-      "title": "??????????? design_review",
+      "title": "Complete project persistence design review",
       "type": "review",
-      "status": "todo",
+      "status": "done",
       "priority": "P0",
-      "scope": "?? proposal?design?spec delta ????????",
+      "scope": "Review proposal, design, and project-data spec delta for scope and consistency",
       "acceptanceCriteria": [
-        "??? change ???????????????? AI ????",
-        "????????????legacy ??????????",
-        "?? design_review ???????",
-        "???????????? delivery"
+        "The change remains scoped to project persistence and does not replace the AI generation service",
+        "Remote source of truth, local cache, legacy migration, and error-state decisions are coherent",
+        "The design review records conclusions and residual risks",
+        "No blocking design gap remains before delivery starts"
       ],
       "functionalTestsRequired": false,
       "uiTestsRequired": false,
@@ -1415,22 +1416,23 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-026.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:29:07.464Z"
+      "updatedAt": "2026-03-27T09:36:38.725Z",
+      "closedAt": "2026-03-27T09:36:38.725Z"
     },
     {
       "id": "TASK-027",
       "change": "replace-mock-project-service",
       "phase": "delivery",
-      "title": "????????????? mockProjectService ??",
+      "title": "Implement real project service boundary",
       "type": "feature",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "P0",
-      "scope": "?? ProjectService??????????/??/???????",
+      "scope": "Real ProjectService, unified service export, and project/version/message persistence contract",
       "acceptanceCriteria": [
-        "?? CRUD???????????????????",
-        "???????? mockProjectService",
-        "??????????????",
-        "?? build ???????????? commit"
+        "Project CRUD, versioning, and message persistence run through a real backing boundary",
+        "Pages no longer depend directly on mockProjectService",
+        "Project records are scoped to the authenticated user",
+        "Build and functional verification evidence is recorded with an independent commit"
       ],
       "functionalTestsRequired": true,
       "uiTestsRequired": false,
@@ -1473,22 +1475,22 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:29:07.464Z"
+      "updatedAt": "2026-03-27T09:36:38.725Z"
     },
     {
       "id": "TASK-028",
       "change": "replace-mock-project-service",
       "phase": "delivery",
-      "title": "?????????????????????",
+      "title": "Wire remote project flows and local migration",
       "type": "feature",
       "status": "todo",
       "priority": "P0",
-      "scope": "Home/Editor/Preview ???loading/error/empty ???legacy ????",
+      "scope": "Home, Editor, Preview flows, loading/error/empty states, and legacy local project migration",
       "acceptanceCriteria": [
-        "????????????????????????????",
-        "?? legacy ??????????????",
-        "???? loading?empty?error ??",
-        "??????? commit ??"
+        "Home, Editor, and Preview use the new project service for remote-backed project flows",
+        "Legacy local projects are migrated only for the current authenticated user",
+        "The UI covers loading, empty, and error states for async project access",
+        "Interaction verification and independent commit evidence are recorded"
       ],
       "functionalTestsRequired": true,
       "uiTestsRequired": true,
@@ -1533,22 +1535,22 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:29:07.464Z"
+      "updatedAt": "2026-03-27T09:35:55.371Z"
     },
     {
       "id": "TASK-029",
       "change": "replace-mock-project-service",
       "phase": "closure",
-      "title": "????????? implementation_review",
+      "title": "Complete project persistence implementation review",
       "type": "review",
       "status": "todo",
       "priority": "P0",
-      "scope": "?????spec????????????????",
+      "scope": "Verify implementation, spec, ledger, verification evidence, and commit traceability",
       "acceptanceCriteria": [
-        "????????????? proposal?design ? spec",
-        "?? TASK.json?task logs????????????",
-        "?? implementation_review ???????",
-        "??????????????????"
+        "The project persistence implementation matches proposal, design, and spec",
+        "TASK.json, task logs, commits, and verification evidence are consistent",
+        "The implementation review records conclusions and residual risks",
+        "No unreported deviation remains before final verification and archive"
       ],
       "functionalTestsRequired": false,
       "uiTestsRequired": false,
@@ -1579,22 +1581,22 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-029.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:29:07.464Z"
+      "updatedAt": "2026-03-27T09:35:55.371Z"
     },
     {
       "id": "TASK-030",
       "change": "replace-mock-project-service",
       "phase": "closure",
-      "title": "???????????????????",
+      "title": "Run project persistence verification and cleanup",
       "type": "verification",
       "status": "todo",
       "priority": "P0",
-      "scope": "build?Vitest?Playwright????????????",
+      "scope": "Build, Vitest, Playwright, evidence capture, and one-off artifact cleanup",
       "acceptanceCriteria": [
-        "?????? change ?????????? UI ??",
-        "??????? TASK.json ? task logs",
-        "??????????test-results?report?trace?video ???",
-        "???? verification commit"
+        "Build, functional tests, and UI tests for this change are executed and recorded",
+        "Verification evidence is written back to TASK.json and task logs",
+        "One-off test outputs such as test-results, report, trace, and video are removed after capture",
+        "An independent verification commit is recorded"
       ],
       "functionalTestsRequired": true,
       "uiTestsRequired": true,
@@ -1633,22 +1635,22 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-030.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:29:07.464Z"
+      "updatedAt": "2026-03-27T09:35:55.371Z"
     },
     {
       "id": "TASK-031",
       "change": "replace-mock-project-service",
       "phase": "closure",
-      "title": "???? project-data spec ???????? change",
+      "title": "Sync main project-data spec and archive change",
       "type": "closure",
       "status": "todo",
       "priority": "P0",
-      "scope": "??? specs???? blocker?????? change",
+      "scope": "Sync main specs, confirm no blockers, and archive the change",
       "acceptanceCriteria": [
-        "?? project-data spec ??? change ??????",
-        "?? task ?? blocker ??????",
-        "????????????? archive",
-        "??????? task log"
+        "The main project-data spec stays aligned with the implemented change",
+        "All tasks have no blocker and traceable evidence",
+        "Archive runs only after closure docs are synced",
+        "The archive result is recorded in the task log"
       ],
       "functionalTestsRequired": false,
       "uiTestsRequired": false,
@@ -1681,7 +1683,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-031.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:29:07.464Z"
+      "updatedAt": "2026-03-27T09:35:55.371Z"
     }
   ]
 }
