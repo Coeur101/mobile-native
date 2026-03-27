@@ -1,8 +1,8 @@
 # Session Brief
 
-Generated: 2026-03-27T09:16:29.476Z
+Generated: 2026-03-27T09:20:21.169Z
 Branch: master
-Commit: 22007c3
+Commit: 18e86af
 
 ## Current Focus
 
@@ -34,7 +34,6 @@ Commit: 22007c3
 
 ## Repo Backlog
 
-- Active change missing TASK.json mapping: integrate-free-email-and-wechat-auth: Add TASK.json entries, then decide whether to continue delivery or archive the change.
 - Project data still depends on a mock service: Create a new change to replace the project mock with a real persistence boundary.
 - AI generation still depends on a mock service: Create a new change to replace the AI mock with a real model integration.
 - Settings page still depends on local mock settings: Decide whether the profile/settings work should also introduce a real settings backend boundary.

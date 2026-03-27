@@ -1,18 +1,11 @@
 {
-  "generatedAt": "2026-03-27T09:12:49.110Z",
+  "generatedAt": "2026-03-27T09:20:21.188Z",
   "currentFocus": null,
   "whySelected": "No actionable tasks remain.",
   "mustRead": [],
   "mustVerify": [],
   "nextQueue": [],
   "repoBacklog": [
-    {
-      "id": "backlog:change:integrate-free-email-and-wechat-auth",
-      "kind": "stale_change",
-      "title": "Active change missing TASK.json mapping: integrate-free-email-and-wechat-auth",
-      "source": "openspec/changes/integrate-free-email-and-wechat-auth",
-      "recommendation": "Add TASK.json entries, then decide whether to continue delivery or archive the change."
-    },
     {
       "id": "backlog:mock-project-service",
       "title": "Project data still depends on a mock service",
