@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-27T10:15:16.119Z",
+  "generatedAt": "2026-03-27T10:54:24.835Z",
   "activeChanges": [
     "integrate-free-email-auth",
     "task-level-closed-loop-workflow"
@@ -7,14 +7,6 @@
   "currentFocus": null,
   "nextQueue": [],
   "repoBacklog": [
-    {
-      "id": "backlog:mock-ai-service",
-      "title": "AI generation still depends on a mock service",
-      "source": "src/services/ai/mock-ai-service.ts",
-      "recommendation": "Create a new change to replace the AI mock with a real model integration.",
-      "changeHint": "replace-mock-ai-service",
-      "kind": "mock_boundary"
-    },
     {
       "id": "backlog:settings-local-only",
       "kind": "local_only_boundary",
