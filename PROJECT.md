@@ -224,3 +224,9 @@ PROJECT.md
 - user-facing task 仍必须执行 Playwright UI 自动化验证，Chrome MCP 不替代 task 级门禁。
 - 当前 Codex MCP 注册位于 `C:\Users\Administrator\.codex\config.toml`，修改后需重启会话生效。
 - 详细说明见 `docs/chrome-devtools-mcp.md`。
+## 2026-03-27 Project Persistence Update
+
+- `src/services/project` now exports a Supabase-backed project service as the default project boundary for authenticated users.
+- Home, Editor, and Preview no longer rely on direct `mockProjectService` imports for user project CRUD, version restore, or preview loading flows.
+- `src/lib/local-db.ts` keeps project data only as per-user cache plus one-time legacy migration material, not as the authoritative record.
+- Verification for this change uses `pnpm test -- tests/vitest/project-service.test.ts`, headed Playwright on `tests/playwright/project-persistence.spec.ts`, and `pnpm build`, followed by artifact cleanup.

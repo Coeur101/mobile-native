@@ -18,4 +18,4 @@
 ## 4. Closure
 
 - [x] 4.1 Complete the `implementation_review` and confirm implementation, spec, ledger, verification evidence, and commit history remain aligned.
-- [ ] 4.2 Sync `openspec/specs/project-data/spec.md`, `docs/PRD.md`, `PROJECT.md`, and `TASK.json`, then archive the change.
+- [x] 4.2 Sync `openspec/specs/project-data/spec.md`, `docs/PRD.md`, `PROJECT.md`, and `TASK.json`, then archive the change.

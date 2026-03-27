@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T18:05:13.6755034+08:00",
+  "updatedAt": "2026-03-27T18:08:42.0000000+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1338,10 +1338,10 @@
       "designReviewRequired": false,
       "implementationReviewRequired": false,
       "docsToUpdate": [
-        "openspec/changes/replace-mock-project-service/proposal.md",
-        "openspec/changes/replace-mock-project-service/design.md",
-        "openspec/changes/replace-mock-project-service/tasks.md",
-        "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/proposal.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/design.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/specs/project-data/spec.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1353,17 +1353,17 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/replace-mock-project-service/proposal.md",
-          "openspec/changes/replace-mock-project-service/design.md",
-          "openspec/changes/replace-mock-project-service/tasks.md",
-          "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/proposal.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/design.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/specs/project-data/spec.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-025.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-025.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
       "updatedAt": "2026-03-27T09:36:38.725Z",
       "closedAt": "2026-03-27T09:36:38.725Z"
@@ -1389,10 +1389,10 @@
       "designReviewRequired": true,
       "implementationReviewRequired": false,
       "docsToUpdate": [
-        "openspec/changes/replace-mock-project-service/design.md",
-        "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
-        "openspec/changes/replace-mock-project-service/logs/TASK-026.jsonl",
-        "openspec/changes/replace-mock-project-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/design.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/specs/project-data/spec.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-026.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1404,17 +1404,17 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/replace-mock-project-service/design.md",
-          "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
-          "openspec/changes/replace-mock-project-service/logs/TASK-026.jsonl",
-          "openspec/changes/replace-mock-project-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/design.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/specs/project-data/spec.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-026.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-026.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-026.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
       "updatedAt": "2026-03-27T09:36:38.725Z",
       "closedAt": "2026-03-27T09:36:38.725Z"
@@ -1444,8 +1444,8 @@
         "src/services/project/mock-project-service.ts",
         "src/lib/local-db.ts",
         "src/types/index.ts",
-        "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
-        "openspec/changes/replace-mock-project-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-027.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": true,
@@ -1465,8 +1465,8 @@
           "src/services/project/mock-project-service.ts",
           "src/lib/local-db.ts",
           "src/types/index.ts",
-          "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
-          "openspec/changes/replace-mock-project-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-027.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
           "TASK.json"
         ],
         "commits": [
@@ -1475,7 +1475,7 @@
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-027.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
       "updatedAt": "2026-03-27T09:58:15.543Z",
       "closedAt": "2026-03-27T09:58:15.543Z"
@@ -1505,8 +1505,8 @@
         "src/pages/editor/EditorPage.tsx",
         "src/pages/preview/PreviewPage.tsx",
         "src/lib/local-db.ts",
-        "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
-        "openspec/changes/replace-mock-project-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-028.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": true,
@@ -1528,8 +1528,8 @@
           "src/pages/editor/EditorPage.tsx",
           "src/pages/preview/PreviewPage.tsx",
           "src/lib/local-db.ts",
-          "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
-          "openspec/changes/replace-mock-project-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-028.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
           "TASK.json"
         ],
         "commits": [
@@ -1538,7 +1538,7 @@
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-028.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
       "updatedAt": "2026-03-27T18:05:13.6755034+08:00",
       "closedAt": "2026-03-27T18:05:13.6755034+08:00"
@@ -1564,8 +1564,8 @@
       "designReviewRequired": false,
       "implementationReviewRequired": true,
       "docsToUpdate": [
-        "openspec/changes/replace-mock-project-service/logs/TASK-029.jsonl",
-        "openspec/changes/replace-mock-project-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-029.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1577,15 +1577,15 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/replace-mock-project-service/logs/TASK-029.jsonl",
-          "openspec/changes/replace-mock-project-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-029.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-029.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-029.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
       "updatedAt": "2026-03-27T18:05:13.6755034+08:00",
       "closedAt": "2026-03-27T18:05:13.6755034+08:00"
@@ -1596,7 +1596,7 @@
       "phase": "closure",
       "title": "Run project persistence verification and cleanup",
       "type": "verification",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "Build, Vitest, Playwright, evidence capture, and one-off artifact cleanup",
       "acceptanceCriteria": [
@@ -1612,12 +1612,12 @@
       "implementationReviewRequired": true,
       "docsToUpdate": [
         "TASK.json",
-        "openspec/changes/replace-mock-project-service/logs/TASK-030.jsonl",
-        "openspec/changes/replace-mock-project-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-030.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
         "CHANGELOG.md"
       ],
       "commitRequired": true,
-      "commitRef": null,
+      "commitRef": "f7c02b2",
       "commitMessage": "test: TASK-030 record project persistence verification evidence",
       "pushRequired": false,
       "artifacts": {
@@ -1632,17 +1632,20 @@
         ],
         "docs": [
           "TASK.json",
-          "openspec/changes/replace-mock-project-service/logs/TASK-030.jsonl",
-          "openspec/changes/replace-mock-project-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-030.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
           "CHANGELOG.md"
         ],
-        "commits": [],
+        "commits": [
+          "f7c02b2 test: TASK-030 record project persistence verification evidence"
+        ],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-030.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-030.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T18:05:13.6755034+08:00"
+      "updatedAt": "2026-03-27T18:08:42.0000000+08:00",
+      "closedAt": "2026-03-27T18:08:42.0000000+08:00"
     },
     {
       "id": "TASK-031",
@@ -1650,7 +1653,7 @@
       "phase": "closure",
       "title": "Sync main project-data spec and archive change",
       "type": "closure",
-      "status": "todo",
+      "status": "done",
       "priority": "P0",
       "scope": "Sync main specs, confirm no blockers, and archive the change",
       "acceptanceCriteria": [
@@ -1666,8 +1669,10 @@
       "implementationReviewRequired": true,
       "docsToUpdate": [
         "openspec/specs/project-data/spec.md",
-        "openspec/changes/replace-mock-project-service/logs/TASK-031.jsonl",
-        "openspec/changes/replace-mock-project-service/tasks.md",
+        "docs/PRD.md",
+        "PROJECT.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-031.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1680,17 +1685,20 @@
         "buildChecks": [],
         "docs": [
           "openspec/specs/project-data/spec.md",
-          "openspec/changes/replace-mock-project-service/logs/TASK-031.jsonl",
-          "openspec/changes/replace-mock-project-service/tasks.md",
+          "docs/PRD.md",
+          "PROJECT.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-031.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-project-service/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-031.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-project-service/logs/TASK-031.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T18:05:13.6755034+08:00"
+      "updatedAt": "2026-03-27T18:08:42.0000000+08:00",
+      "closedAt": "2026-03-27T18:08:42.0000000+08:00"
     }
   ]
 }

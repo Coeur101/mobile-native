@@ -100,3 +100,9 @@
 - 用户与项目数据已建立明确归属边界，为后续 Supabase 表配置和 RLS 迁移做准备。
 - 微信登录不在本次变更范围内，产品描述和 UI 不应再暗示“已支持真实微信登录”。
 - 免费优先部署要求与 SMTP 建议见 `docs/auth-email-setup.md`。
+## 2026-03-27 Project Persistence Update
+
+- Authenticated project records now run through a Supabase-backed project service boundary instead of treating local storage as the source of truth.
+- Home, Editor, and Preview load project data asynchronously from the remote-backed service and explicitly handle loading, empty, missing, and error states.
+- Legacy local projects are migrated once per authenticated user, and local project storage is now cache plus migration material only.
+- AI generation remains on the existing mock service in this milestone; replacing `mockAIService` stays in a separate backlog item.

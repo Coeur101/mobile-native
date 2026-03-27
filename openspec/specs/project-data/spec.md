@@ -17,26 +17,52 @@ The system MUST define a Supabase-backed user profile record for each authentica
 - **THEN** the system MUST resolve the current user's identity against the Supabase-backed profile record before treating local profile data as current
 
 ### Requirement: Project records must be owned by the authenticated user
-The system MUST define a project table model where each project is associated with the current authenticated user.
+The system MUST persist authenticated user project records in the configured backing data store and treat that backing record as the authoritative source for project CRUD operations.
 
 #### Scenario: User creates a project
 - **WHEN** an authenticated user creates a project
-- **THEN** the project record MUST carry a reference to that authenticated user
+- **THEN** the system MUST write the project record to the configured backing store with a reference to that authenticated user
+- **AND** the created project returned to the app MUST include the persisted ownership and identifier fields
 
 #### Scenario: User loads project list
 - **WHEN** the app requests the current user's project list
-- **THEN** the project data model MUST support filtering by the authenticated user's identity
+- **THEN** the system MUST query the backing store filtered by the authenticated user's identity
+- **AND** the system MUST NOT surface unrelated local-only residue as another user's active project data
+
+#### Scenario: User updates or deletes a project
+- **WHEN** an authenticated user renames, edits, or deletes a project
+- **THEN** the system MUST apply that mutation against the authoritative backing store instead of only mutating local cache state
 
 ### Requirement: Project versions and messages must align to the project model
-The system MUST define project version and project message records that attach to the configured project record.
+The system MUST persist project version snapshots and project messages as records attached to the authoritative project record so history survives app restarts and authenticated session restoration.
 
 #### Scenario: Project version is created
 - **WHEN** a user saves a new version snapshot for a project
-- **THEN** the version record MUST reference the parent project record
+- **THEN** the system MUST persist the version record with a reference to the parent project record in the backing store
 
 #### Scenario: Project conversation is stored
 - **WHEN** the app stores project-related conversation or generation history
-- **THEN** the message record MUST reference the parent project record
+- **THEN** the system MUST persist the message record with a reference to the parent project record in the backing store
+
+#### Scenario: User restores a historical version
+- **WHEN** the user restores a previous project version
+- **THEN** the system MUST update the current project state from that version
+- **AND** preserve an auditable restoration record in the same authoritative model
+
+### Requirement: Local project cache must not be the source of truth for authenticated users
+The system MUST treat locally persisted project data as cache or migration material only, not as the authoritative project record for an authenticated user.
+
+#### Scenario: Remote and local project state differ
+- **WHEN** the locally cached project snapshot differs from the authoritative backing record
+- **THEN** the system MUST prefer the remote project state and refresh the local cache from that authoritative result
+
+#### Scenario: Legacy local projects are migrated for the current user
+- **WHEN** an authenticated user has legacy local projects that have not yet been migrated
+- **THEN** the system MUST migrate only the current user's eligible project records into the configured backing store before marking them as migrated
+
+#### Scenario: Another user's local residue exists on the device
+- **WHEN** the device still contains local project data from a different user identity
+- **THEN** the system MUST NOT merge or expose those records inside the current authenticated user's remote-backed project list
 
 ### Requirement: User settings must have a configured user-level record
 The system MUST support a user-level preferences record scoped to the authenticated user, while keeping personal identity data separate from generic app preferences.
