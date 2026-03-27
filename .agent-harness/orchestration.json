@@ -1,147 +1,17 @@
 {
-  "generatedAt": "2026-03-27T09:29:24.909Z",
-  "currentFocus": {
-    "id": "TASK-025",
-    "change": "replace-mock-project-service",
-    "phase": "definition",
-    "title": "????????? change ?????",
-    "type": "init",
-    "status": "in_progress",
-    "priority": "P0",
-    "scope": "OpenSpec proposal/design/spec/tasks?TASK.json ?????????",
-    "acceptanceCriteria": [
-      "???? replace-mock-project-service ? proposal?design?tasks ? project-data delta spec",
-      "TASK.json ?? change ?? definition/delivery/closure ????",
-      "?? definition task ??????? task history ??",
-      "harness ???? change ??????????? backlog"
-    ],
-    "functionalTestsRequired": false,
-    "uiTestsRequired": false,
-    "buildRequired": false,
-    "designReviewRequired": false,
-    "implementationReviewRequired": false,
-    "docsToUpdate": [
-      "openspec/changes/replace-mock-project-service/proposal.md",
-      "openspec/changes/replace-mock-project-service/design.md",
-      "openspec/changes/replace-mock-project-service/tasks.md",
-      "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
-      "TASK.json"
-    ],
-    "commitRequired": false,
-    "commitRef": null,
-    "commitMessage": null,
-    "pushRequired": false,
-    "artifacts": {
-      "functionalTests": [],
-      "uiTests": [],
-      "buildChecks": [],
-      "docs": [
-        "openspec/changes/replace-mock-project-service/proposal.md",
-        "openspec/changes/replace-mock-project-service/design.md",
-        "openspec/changes/replace-mock-project-service/tasks.md",
-        "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
-        "TASK.json"
-      ],
-      "commits": [],
-      "pushes": []
-    },
-    "blockers": [],
-    "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-025.jsonl",
-    "createdAt": "2026-03-27T09:29:07.464Z",
-    "updatedAt": "2026-03-27T09:29:07.464Z",
-    "mustRead": [
-      "openspec/changes/replace-mock-project-service/proposal.md",
-      "openspec/changes/replace-mock-project-service/design.md",
-      "openspec/changes/replace-mock-project-service/tasks.md",
-      "openspec/changes/replace-mock-project-service/.openspec.yaml",
-      "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
-      "TASK.json",
-      "openspec/changes/replace-mock-project-service/logs/TASK-025.jsonl"
-    ],
-    "requiredChecks": []
-  },
-  "whySelected": "Continue the current in-progress task in the most active change.",
-  "mustRead": [
-    "openspec/changes/replace-mock-project-service/proposal.md",
-    "openspec/changes/replace-mock-project-service/design.md",
-    "openspec/changes/replace-mock-project-service/tasks.md",
-    "openspec/changes/replace-mock-project-service/.openspec.yaml",
-    "openspec/changes/replace-mock-project-service/specs/project-data/spec.md",
-    "TASK.json",
-    "openspec/changes/replace-mock-project-service/logs/TASK-025.jsonl"
-  ],
+  "generatedAt": "2026-03-27T10:15:16.095Z",
+  "currentFocus": null,
+  "whySelected": "No actionable tasks remain.",
+  "mustRead": [],
   "mustVerify": [],
-  "nextQueue": [
-    {
-      "id": "TASK-025",
-      "change": "replace-mock-project-service",
-      "phase": "definition",
-      "priority": "P0",
-      "status": "in_progress",
-      "title": "????????? change ?????"
-    },
-    {
-      "id": "TASK-026",
-      "change": "replace-mock-project-service",
-      "phase": "definition",
-      "priority": "P0",
-      "status": "todo",
-      "title": "??????????? design_review"
-    },
-    {
-      "id": "TASK-027",
-      "change": "replace-mock-project-service",
-      "phase": "delivery",
-      "priority": "P0",
-      "status": "todo",
-      "title": "????????????? mockProjectService ??"
-    },
-    {
-      "id": "TASK-028",
-      "change": "replace-mock-project-service",
-      "phase": "delivery",
-      "priority": "P0",
-      "status": "todo",
-      "title": "?????????????????????"
-    },
-    {
-      "id": "TASK-029",
-      "change": "replace-mock-project-service",
-      "phase": "closure",
-      "priority": "P0",
-      "status": "todo",
-      "title": "????????? implementation_review"
-    },
-    {
-      "id": "TASK-030",
-      "change": "replace-mock-project-service",
-      "phase": "closure",
-      "priority": "P0",
-      "status": "todo",
-      "title": "???????????????????"
-    },
-    {
-      "id": "TASK-031",
-      "change": "replace-mock-project-service",
-      "phase": "closure",
-      "priority": "P0",
-      "status": "todo",
-      "title": "???? project-data spec ???????? change"
-    }
-  ],
+  "nextQueue": [],
   "repoBacklog": [
-    {
-      "id": "backlog:mock-project-service",
-      "title": "Project data still depends on a mock service",
-      "source": "src/services/project/mock-project-service.ts",
-      "recommendation": "Create a new change to replace the project mock with a real persistence boundary.",
-      "kind": "mock_boundary"
-    },
     {
       "id": "backlog:mock-ai-service",
       "title": "AI generation still depends on a mock service",
       "source": "src/services/ai/mock-ai-service.ts",
       "recommendation": "Create a new change to replace the AI mock with a real model integration.",
+      "changeHint": "replace-mock-ai-service",
       "kind": "mock_boundary"
     },
     {
