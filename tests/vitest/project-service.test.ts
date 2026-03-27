@@ -311,6 +311,27 @@ describe("createSupabaseProjectService", () => {
     expect(db.project_messages).toHaveLength(2);
   });
 
+  it("does not persist project rows when the AI service rejects the request", async () => {
+    const db: FakeDatabase = {
+      projects: [],
+      project_versions: [],
+      project_messages: [],
+    };
+    const service = createSupabaseProjectService({
+      client: createFakeClient(db),
+      aiService: {
+        generateProjectFromPrompt: async () => {
+          throw new Error("请先完成 AI 设置。");
+        },
+      },
+    });
+
+    await expect(service.createProject("生成一个工作台")).rejects.toThrow("请先完成 AI 设置。");
+    expect(db.projects).toHaveLength(0);
+    expect(db.project_versions).toHaveLength(0);
+    expect(db.project_messages).toHaveLength(0);
+  });
+
   it("migrates local legacy projects into the remote backing store once", async () => {
     const localProject: Project = {
       id: "legacy-project",

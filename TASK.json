@@ -1699,6 +1699,332 @@
       "createdAt": "2026-03-27T09:29:07.464Z",
       "updatedAt": "2026-03-27T18:08:42.0000000+08:00",
       "closedAt": "2026-03-27T18:08:42.0000000+08:00"
+    },
+    {
+      "id": "TASK-032",
+      "change": "replace-mock-ai-service",
+      "phase": "definition",
+      "title": "Register AI generation boundary change ledger",
+      "type": "init",
+      "status": "done",
+      "priority": "P0",
+      "scope": "OpenSpec proposal/design/spec/tasks, TASK.json mapping, and traceable task history setup",
+      "acceptanceCriteria": [
+        "The repository contains proposal, design, tasks, and project-data delta spec for replace-mock-ai-service",
+        "TASK.json maps definition, delivery, and closure tasks for this change",
+        "The first definition task has an append-only task history entry point",
+        "The harness no longer treats this change as an unmapped active change"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/changes/replace-mock-ai-service/proposal.md",
+        "openspec/changes/replace-mock-ai-service/design.md",
+        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/replace-mock-ai-service/proposal.md",
+          "openspec/changes/replace-mock-ai-service/design.md",
+          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-032.jsonl",
+      "createdAt": "2026-03-27T18:30:00+08:00",
+      "updatedAt": "2026-03-27T18:34:00+08:00",
+      "closedAt": "2026-03-27T18:34:00+08:00"
+    },
+    {
+      "id": "TASK-033",
+      "change": "replace-mock-ai-service",
+      "phase": "definition",
+      "title": "Complete AI generation boundary design review",
+      "type": "review",
+      "status": "done",
+      "priority": "P0",
+      "scope": "Review proposal, design, and project-data spec delta for scope and consistency",
+      "acceptanceCriteria": [
+        "The change remains scoped to replacing the runtime mock AI dependency, not remote settings persistence",
+        "Configuration lookup, request contract, and failure handling decisions are coherent",
+        "The design review records conclusions and residual risks",
+        "No blocking design gap remains before delivery starts"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": true,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/changes/replace-mock-ai-service/design.md",
+        "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
+        "openspec/changes/replace-mock-ai-service/logs/TASK-033.jsonl",
+        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/replace-mock-ai-service/design.md",
+          "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
+          "openspec/changes/replace-mock-ai-service/logs/TASK-033.jsonl",
+          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-033.jsonl",
+      "createdAt": "2026-03-27T18:35:00+08:00",
+      "updatedAt": "2026-03-27T18:37:00+08:00",
+      "closedAt": "2026-03-27T18:37:00+08:00"
+    },
+    {
+      "id": "TASK-034",
+      "change": "replace-mock-ai-service",
+      "phase": "delivery",
+      "title": "Implement real AI service boundary",
+      "type": "feature",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "OpenAI-compatible AI service, settings-backed configuration lookup, and project generation integration",
+      "acceptanceCriteria": [
+        "Runtime project generation no longer depends on mockAIService",
+        "AI requests resolve model, base URL, and API key from the current settings service",
+        "Invalid configuration and invalid provider output fail with actionable Chinese errors",
+        "Targeted tests and build evidence can be recorded with an independent implementation commit"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": false,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "src/services/ai/ai-service.ts",
+        "src/services/ai/index.ts",
+        "src/services/ai/openai-compatible-ai-service.ts",
+        "src/services/project/supabase-project-service.ts",
+        "src/services/settings/index.ts",
+        "src/pages/settings/SettingsPage.tsx",
+        "src/pages/profile/UserProfilePage.tsx",
+        "tests/vitest/ai-service.test.ts",
+        "tests/vitest/project-service.test.ts",
+        "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
+        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/ai-service.test.ts tests/vitest/project-service.test.ts"
+        ],
+        "uiTests": [],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/services/ai/ai-service.ts",
+          "src/services/ai/index.ts",
+          "src/services/ai/openai-compatible-ai-service.ts",
+          "src/services/project/supabase-project-service.ts",
+          "src/services/settings/index.ts",
+          "src/pages/settings/SettingsPage.tsx",
+          "src/pages/profile/UserProfilePage.tsx",
+          "tests/vitest/ai-service.test.ts",
+          "tests/vitest/project-service.test.ts",
+          "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
+          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
+      "createdAt": "2026-03-27T18:38:00+08:00",
+      "updatedAt": "2026-03-27T18:38:00+08:00"
+    },
+    {
+      "id": "TASK-035",
+      "change": "replace-mock-ai-service",
+      "phase": "closure",
+      "title": "Complete AI boundary implementation review",
+      "type": "review",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "Verify implementation, tests, task ledger, and commit traceability for the AI boundary change",
+      "acceptanceCriteria": [
+        "The AI boundary implementation matches proposal, design, and spec intent",
+        "Tests, TASK.json, task logs, and commit evidence are consistent",
+        "Residual risks are documented with no unreported deviation before final verification",
+        "The review confirms runtime mock AI usage has been removed"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/changes/replace-mock-ai-service/logs/TASK-035.jsonl",
+        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/replace-mock-ai-service/logs/TASK-035.jsonl",
+          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-035.jsonl",
+      "createdAt": "2026-03-27T18:39:00+08:00",
+      "updatedAt": "2026-03-27T18:39:00+08:00"
+    },
+    {
+      "id": "TASK-036",
+      "change": "replace-mock-ai-service",
+      "phase": "closure",
+      "title": "Run AI boundary verification and cleanup",
+      "type": "verification",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "Vitest, build, evidence capture, and one-off verification artifact cleanup",
+      "acceptanceCriteria": [
+        "Targeted functional tests and build checks are executed and recorded",
+        "Verification evidence is written back to TASK.json and task logs",
+        "One-off test outputs such as test-results, report, trace, and video are removed after capture",
+        "An independent verification commit is recorded"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": false,
+      "buildRequired": true,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "TASK.json",
+        "openspec/changes/replace-mock-ai-service/logs/TASK-036.jsonl",
+        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "CHANGELOG.md"
+      ],
+      "commitRequired": true,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/ai-service.test.ts tests/vitest/project-service.test.ts"
+        ],
+        "uiTests": [],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "TASK.json",
+          "openspec/changes/replace-mock-ai-service/logs/TASK-036.jsonl",
+          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "CHANGELOG.md"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-036.jsonl",
+      "createdAt": "2026-03-27T18:40:00+08:00",
+      "updatedAt": "2026-03-27T18:40:00+08:00"
+    },
+    {
+      "id": "TASK-037",
+      "change": "replace-mock-ai-service",
+      "phase": "closure",
+      "title": "Sync main spec, refresh harness, and archive AI change",
+      "type": "closure",
+      "status": "todo",
+      "priority": "P0",
+      "scope": "Sync main specs, update docs/harness outputs, confirm no blockers, and archive the change",
+      "acceptanceCriteria": [
+        "The main project-data spec stays aligned with the implemented AI boundary",
+        "All tasks have no blocker and traceable evidence",
+        "Harness backlog is refreshed after the runtime mock AI dependency is removed",
+        "The archive result is recorded in the task log"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/specs/project-data/spec.md",
+        "docs/PRD.md",
+        "PROJECT.md",
+        ".agent-harness/orchestration.json",
+        ".agent-harness/feature-list.json",
+        ".agent-harness/session-brief.md",
+        "openspec/changes/replace-mock-ai-service/logs/TASK-037.jsonl",
+        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/specs/project-data/spec.md",
+          "docs/PRD.md",
+          "PROJECT.md",
+          ".agent-harness/orchestration.json",
+          ".agent-harness/feature-list.json",
+          ".agent-harness/session-brief.md",
+          "openspec/changes/replace-mock-ai-service/logs/TASK-037.jsonl",
+          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-037.jsonl",
+      "createdAt": "2026-03-27T18:41:00+08:00",
+      "updatedAt": "2026-03-27T18:41:00+08:00"
     }
   ]
 }

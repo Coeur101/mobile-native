@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { localDb } from "@/lib/local-db";
-import { mockAIService } from "@/services/ai/mock-ai-service";
+import { aiService as defaultAIService } from "@/services/ai";
 import type { AIService } from "@/services/ai/ai-service";
 import type {
   Project,
@@ -348,7 +348,7 @@ async function touchProject(client: SupabaseClient, projectId: string) {
 export function createSupabaseProjectService(
   dependencies: ProjectServiceDependencies = {},
 ): ProjectService {
-  const aiService = dependencies.aiService ?? mockAIService;
+  const aiService = dependencies.aiService ?? defaultAIService;
 
   return {
     async listProjects() {
