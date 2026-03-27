@@ -12,5 +12,5 @@
 ## 3. Verification and Closure
 
 - [x] 3.1 Complete the `implementation_review` and confirm implementation, tests, docs, and ledger entries remain aligned.
-- [ ] 3.2 Run targeted verification and build checks, clean one-off artifacts after evidence capture, and record an independent verification commit.
-- [ ] 3.3 Sync main specs/docs, refresh harness state, and archive the change.
+- [x] 3.2 Run targeted verification and build checks, clean one-off artifacts after evidence capture, and record an independent verification commit.
+- [x] 3.3 Sync main specs/docs, refresh harness state, and archive the change.

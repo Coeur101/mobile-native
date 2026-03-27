@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T18:50:00+08:00",
+  "updatedAt": "2026-03-27T18:53:00+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1721,10 +1721,10 @@
       "designReviewRequired": false,
       "implementationReviewRequired": false,
       "docsToUpdate": [
-        "openspec/changes/replace-mock-ai-service/proposal.md",
-        "openspec/changes/replace-mock-ai-service/design.md",
-        "openspec/changes/replace-mock-ai-service/tasks.md",
-        "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/proposal.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/design.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/specs/project-data/spec.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1736,17 +1736,17 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/replace-mock-ai-service/proposal.md",
-          "openspec/changes/replace-mock-ai-service/design.md",
-          "openspec/changes/replace-mock-ai-service/tasks.md",
-          "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/proposal.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/design.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/specs/project-data/spec.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-032.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-032.jsonl",
       "createdAt": "2026-03-27T18:30:00+08:00",
       "updatedAt": "2026-03-27T18:34:00+08:00",
       "closedAt": "2026-03-27T18:34:00+08:00"
@@ -1772,10 +1772,10 @@
       "designReviewRequired": true,
       "implementationReviewRequired": false,
       "docsToUpdate": [
-        "openspec/changes/replace-mock-ai-service/design.md",
-        "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
-        "openspec/changes/replace-mock-ai-service/logs/TASK-033.jsonl",
-        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/design.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/specs/project-data/spec.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-033.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1787,17 +1787,17 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/replace-mock-ai-service/design.md",
-          "openspec/changes/replace-mock-ai-service/specs/project-data/spec.md",
-          "openspec/changes/replace-mock-ai-service/logs/TASK-033.jsonl",
-          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/design.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/specs/project-data/spec.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-033.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-033.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-033.jsonl",
       "createdAt": "2026-03-27T18:35:00+08:00",
       "updatedAt": "2026-03-27T18:37:00+08:00",
       "closedAt": "2026-03-27T18:37:00+08:00"
@@ -1831,8 +1831,8 @@
         "src/lib/local-db.ts",
         "tests/vitest/ai-service.test.ts",
         "tests/vitest/project-service.test.ts",
-        "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
-        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-034.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": true,
@@ -1856,8 +1856,8 @@
           "src/lib/local-db.ts",
           "tests/vitest/ai-service.test.ts",
           "tests/vitest/project-service.test.ts",
-          "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
-          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-034.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
           "TASK.json"
         ],
         "commits": [
@@ -1866,7 +1866,7 @@
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-034.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-034.jsonl",
       "createdAt": "2026-03-27T18:38:00+08:00",
       "updatedAt": "2026-03-27T18:45:00+08:00",
       "closedAt": "2026-03-27T18:45:00+08:00"
@@ -1892,8 +1892,8 @@
       "designReviewRequired": false,
       "implementationReviewRequired": true,
       "docsToUpdate": [
-        "openspec/changes/replace-mock-ai-service/logs/TASK-035.jsonl",
-        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-035.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -1905,15 +1905,15 @@
         "uiTests": [],
         "buildChecks": [],
         "docs": [
-          "openspec/changes/replace-mock-ai-service/logs/TASK-035.jsonl",
-          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-035.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-035.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-035.jsonl",
       "createdAt": "2026-03-27T18:39:00+08:00",
       "updatedAt": "2026-03-27T18:48:30+08:00",
       "closedAt": "2026-03-27T18:48:30+08:00"
@@ -1924,7 +1924,7 @@
       "phase": "closure",
       "title": "Run AI boundary verification and cleanup",
       "type": "verification",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "Vitest, build, evidence capture, and one-off verification artifact cleanup",
       "acceptanceCriteria": [
@@ -1940,13 +1940,13 @@
       "implementationReviewRequired": true,
       "docsToUpdate": [
         "TASK.json",
-        "openspec/changes/replace-mock-ai-service/logs/TASK-036.jsonl",
-        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-036.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
         "CHANGELOG.md"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "e99c1c6",
+      "commitMessage": "test: TASK-036 record ai boundary verification evidence",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [
@@ -1958,17 +1958,20 @@
         ],
         "docs": [
           "TASK.json",
-          "openspec/changes/replace-mock-ai-service/logs/TASK-036.jsonl",
-          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-036.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
           "CHANGELOG.md"
         ],
-        "commits": [],
+        "commits": [
+          "e99c1c6 test: TASK-036 record ai boundary verification evidence"
+        ],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-036.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-036.jsonl",
       "createdAt": "2026-03-27T18:40:00+08:00",
-      "updatedAt": "2026-03-27T18:50:00+08:00"
+      "updatedAt": "2026-03-27T18:51:00+08:00",
+      "closedAt": "2026-03-27T18:51:00+08:00"
     },
     {
       "id": "TASK-037",
@@ -1976,7 +1979,7 @@
       "phase": "closure",
       "title": "Sync main spec, refresh harness, and archive AI change",
       "type": "closure",
-      "status": "todo",
+      "status": "done",
       "priority": "P0",
       "scope": "Sync main specs, update docs/harness outputs, confirm no blockers, and archive the change",
       "acceptanceCriteria": [
@@ -1997,8 +2000,8 @@
         ".agent-harness/orchestration.json",
         ".agent-harness/feature-list.json",
         ".agent-harness/session-brief.md",
-        "openspec/changes/replace-mock-ai-service/logs/TASK-037.jsonl",
-        "openspec/changes/replace-mock-ai-service/tasks.md",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-037.jsonl",
+        "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
         "TASK.json"
       ],
       "commitRequired": false,
@@ -2016,17 +2019,18 @@
           ".agent-harness/orchestration.json",
           ".agent-harness/feature-list.json",
           ".agent-harness/session-brief.md",
-          "openspec/changes/replace-mock-ai-service/logs/TASK-037.jsonl",
-          "openspec/changes/replace-mock-ai-service/tasks.md",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-037.jsonl",
+          "openspec/changes/archive/2026-03-27-replace-mock-ai-service/tasks.md",
           "TASK.json"
         ],
         "commits": [],
         "pushes": []
       },
       "blockers": [],
-      "historyRef": "openspec/changes/replace-mock-ai-service/logs/TASK-037.jsonl",
+      "historyRef": "openspec/changes/archive/2026-03-27-replace-mock-ai-service/logs/TASK-037.jsonl",
       "createdAt": "2026-03-27T18:41:00+08:00",
-      "updatedAt": "2026-03-27T18:41:00+08:00"
+      "updatedAt": "2026-03-27T18:53:00+08:00",
+      "closedAt": "2026-03-27T18:53:00+08:00"
     }
   ]
 }

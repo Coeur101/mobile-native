@@ -230,3 +230,9 @@ PROJECT.md
 - Home, Editor, and Preview no longer rely on direct `mockProjectService` imports for user project CRUD, version restore, or preview loading flows.
 - `src/lib/local-db.ts` keeps project data only as per-user cache plus one-time legacy migration material, not as the authoritative record.
 - Verification for this change uses `pnpm test -- tests/vitest/project-service.test.ts`, headed Playwright on `tests/playwright/project-persistence.spec.ts`, and `pnpm build`, followed by artifact cleanup.
+
+## 2026-03-27 AI Boundary Update
+
+- `src/services/ai` now exports a real OpenAI-compatible AI service as the default generation boundary for project creation and continuation.
+- Runtime generation no longer imports `mockAIService`; invalid settings or malformed provider output now fail with actionable Chinese errors before project persistence mutates data.
+- Verification for this change uses `pnpm test -- tests/vitest/ai-service.test.ts tests/vitest/project-service.test.ts` and `pnpm build`.

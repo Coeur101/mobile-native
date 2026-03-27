@@ -106,3 +106,9 @@
 - Home, Editor, and Preview load project data asynchronously from the remote-backed service and explicitly handle loading, empty, missing, and error states.
 - Legacy local projects are migrated once per authenticated user, and local project storage is now cache plus migration material only.
 - AI generation remains on the existing mock service in this milestone; replacing `mockAIService` stays in a separate backlog item.
+
+## 2026-03-27 AI Boundary Update
+
+- Project creation and continuation now use a settings-driven OpenAI-compatible AI boundary instead of a bundled runtime mock.
+- AI generation fails closed when the model name, Base URL, API key, or returned file payload is invalid.
+- The settings page now exposes explicit local AI configuration fields for model, Base URL, and API key.
