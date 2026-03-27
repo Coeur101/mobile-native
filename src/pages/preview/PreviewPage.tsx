@@ -24,13 +24,15 @@ export function PreviewPage() {
         setIsLoadingProject(false);
         return;
       }
+
       setIsLoadingProject(true);
       setLoadError(null);
+
       try {
         const nextProject = await projectService.getProjectById(projectId);
         setProject(nextProject);
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Unable to load project preview.";
+        const message = error instanceof Error ? error.message : "加载项目预览失败。";
         toast.error(message);
         setLoadError(message);
         setProject(null);
@@ -38,6 +40,7 @@ export function PreviewPage() {
         setIsLoadingProject(false);
       }
     }
+
     void loadProject();
   }, [projectId]);
 
@@ -49,7 +52,7 @@ export function PreviewPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${project.name || "project"}.html`;
+    link.download = `${project.name || "项目预览"}.html`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -58,7 +61,7 @@ export function PreviewPage() {
     return (
       <PageTransition className="flex min-h-screen items-center justify-center bg-[#0C0A09] px-6 text-white">
         <div className="text-center">
-          <p className="text-sm text-white/70">Loading project preview...</p>
+          <p className="text-sm text-white/70">正在加载项目预览...</p>
         </div>
       </PageTransition>
     );
@@ -71,14 +74,14 @@ export function PreviewPage() {
           data-testid="preview-load-error"
           className="w-full max-w-md rounded-[28px] border border-white/10 bg-white/5 p-8 text-center"
         >
-          <h1 className="text-xl font-semibold text-white">Unable to load preview</h1>
+          <h1 className="text-xl font-semibold text-white">加载预览失败</h1>
           <p className="mt-2 text-sm text-white/70">{loadError}</p>
           <button
             type="button"
             onClick={() => navigate("/")}
             className="mt-5 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#0C0A09]"
           >
-            Back to Projects
+            返回项目列表
           </button>
         </div>
       </PageTransition>
@@ -92,16 +95,14 @@ export function PreviewPage() {
           data-testid="preview-project-missing"
           className="w-full max-w-md rounded-[28px] border border-white/10 bg-white/5 p-8 text-center"
         >
-          <h1 className="text-xl font-semibold text-white">Project not found</h1>
-          <p className="mt-2 text-sm text-white/70">
-            The requested preview is not available for the current account.
-          </p>
+          <h1 className="text-xl font-semibold text-white">项目不存在</h1>
+          <p className="mt-2 text-sm text-white/70">当前账号下没有可用的预览内容。</p>
           <button
             type="button"
             onClick={() => navigate("/")}
             className="mt-5 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#0C0A09]"
           >
-            Back to Projects
+            返回项目列表
           </button>
         </div>
       </PageTransition>
@@ -110,9 +111,8 @@ export function PreviewPage() {
 
   return (
     <PageTransition className="flex min-h-screen flex-col bg-[#0C0A09] text-white">
-      {/* Header — 纯图标 */}
       <header className="border-b border-white/8 bg-[#0C0A09]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 h-14">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <motion.button
               type="button"
@@ -127,7 +127,6 @@ export function PreviewPage() {
           </div>
 
           <div className="flex items-center gap-1.5">
-            {/* 模式切换 — 图标按钮组 */}
             <div className="flex items-center rounded-full border border-white/10 bg-white/5 p-1">
               <button
                 type="button"
@@ -135,7 +134,7 @@ export function PreviewPage() {
                 className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200 ${
                   mode === "preview" ? "bg-white text-[#0C0A09] shadow-sm" : "text-white/60 hover:text-white"
                 }`}
-                title="预览"
+                title="预览模式"
               >
                 <MonitorSmartphone className="h-4 w-4" />
               </button>
@@ -145,7 +144,7 @@ export function PreviewPage() {
                 className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200 ${
                   mode === "code" ? "bg-white text-[#0C0A09] shadow-sm" : "text-white/60 hover:text-white"
                 }`}
-                title="代码"
+                title="代码模式"
               >
                 <FileCode2 className="h-4 w-4" />
               </button>
@@ -164,7 +163,6 @@ export function PreviewPage() {
         </div>
       </header>
 
-      {/* 内容区 */}
       <main className="flex-1 p-4">
         <AnimatePresence mode="wait">
           {mode === "preview" ? (

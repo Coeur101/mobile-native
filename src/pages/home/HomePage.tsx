@@ -12,16 +12,16 @@ import { useAuthStore } from "@/stores/use-auth-store";
 import type { Project, ProjectStatus } from "@/types";
 
 const STATUS_LABELS: Record<"all" | ProjectStatus, string> = {
-  all: "All",
-  draft: "Draft",
-  active: "Active",
-  archived: "Archived",
+  all: "全部",
+  draft: "草稿",
+  active: "进行中",
+  archived: "已归档",
 };
 
 function getDisplayInitials(name: string) {
   const source = name.trim();
   if (!source) {
-    return "U";
+    return "我";
   }
 
   const parts = source.split(/[\s_-]+/).filter(Boolean);
@@ -45,7 +45,7 @@ export function HomePage() {
     try {
       setProjects(await projectService.listProjects());
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unable to load projects.";
+      const message = error instanceof Error ? error.message : "加载项目失败。";
       setLoadError(message);
       toast.error(message);
       setProjects([]);
@@ -61,10 +61,10 @@ export function HomePage() {
   const handleDelete = async (projectId: string) => {
     try {
       await projectService.deleteProject(projectId);
-      toast.success("Project deleted.");
+      toast.success("项目已删除。");
       await loadProjects();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unable to delete project.");
+      toast.error(error instanceof Error ? error.message : "删除项目失败。");
     }
   };
 
@@ -87,7 +87,7 @@ export function HomePage() {
     return result;
   }, [projects, searchQuery, statusFilter]);
 
-  const profileLabel = profile?.nickname?.trim() || profile?.email || "Profile";
+  const profileLabel = profile?.nickname?.trim() || profile?.email || "个人资料";
 
   return (
     <PageTransition className="min-h-screen bg-background">
@@ -100,7 +100,7 @@ export function HomePage() {
             >
               <Plus className="h-4 w-4" />
             </div>
-            <h1 className="text-lg font-semibold text-foreground">Projects</h1>
+            <h1 className="text-lg font-semibold text-foreground">我的项目</h1>
           </div>
           <motion.button
             type="button"
@@ -133,7 +133,7 @@ export function HomePage() {
               type="text"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search projects"
+              placeholder="搜索项目"
               className="w-full rounded-2xl border border-border bg-input-background py-2.5 pl-10 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground transition-all focus:border-primary/40 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]"
             />
           </div>
@@ -169,7 +169,7 @@ export function HomePage() {
             data-testid="project-load-error"
             className="rounded-[28px] border border-destructive/20 bg-card p-10 text-center"
           >
-            <h2 className="text-xl font-semibold text-foreground">Unable to load projects</h2>
+            <h2 className="text-xl font-semibold text-foreground">加载项目失败</h2>
             <p className="mt-2 text-sm text-muted-foreground">{loadError}</p>
             <motion.button
               type="button"
@@ -177,7 +177,7 @@ export function HomePage() {
               onClick={() => void loadProjects()}
               className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
             >
-              Retry
+              重试
             </motion.button>
           </motion.div>
         ) : (
@@ -193,16 +193,16 @@ export function HomePage() {
                 <div className="animate-float mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent">
                   <Plus className="h-8 w-8 text-primary" />
                 </div>
-                <h2 className="text-xl font-semibold text-foreground">No projects yet</h2>
+                <h2 className="text-xl font-semibold text-foreground">还没有项目</h2>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Start a new project to generate your first mobile web app workspace.
+                  新建一个项目，生成你的第一个移动端网页工作区。
                 </p>
                 <motion.button
                   type="button"
                   whileTap={buttonTap}
                   onClick={() => navigate("/editor")}
                   className="mt-5 inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:opacity-90"
-                  title="Create project"
+                  title="创建项目"
                 >
                   <Plus className="h-5 w-5" />
                 </motion.button>
@@ -216,9 +216,7 @@ export function HomePage() {
                 className="rounded-[28px] border border-dashed border-border bg-card p-10 text-center"
               >
                 <Search className="mx-auto mb-3 h-8 w-8 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">
-                  No projects match the current search and filter.
-                </p>
+                <p className="text-sm text-muted-foreground">当前筛选条件下没有匹配的项目。</p>
               </motion.div>
             ) : (
               <motion.div
@@ -248,19 +246,19 @@ export function HomePage() {
                         <div className="text-lg font-semibold text-foreground">
                           {project.messages.length}
                         </div>
-                        Messages
+                        消息
                       </div>
                       <div>
                         <div className="text-lg font-semibold text-foreground">
                           {project.versions.length}
                         </div>
-                        Versions
+                        版本
                       </div>
                       <div>
                         <div className="text-lg font-semibold text-foreground">
-                          {new Date(project.updatedAt).toLocaleDateString("en-US")}
+                          {new Date(project.updatedAt).toLocaleDateString("zh-CN")}
                         </div>
-                        Updated
+                        更新时间
                       </div>
                     </div>
                     <div className="mt-5 flex gap-2">
@@ -270,7 +268,7 @@ export function HomePage() {
                         whileTap={buttonTap}
                         onClick={() => navigate(`/editor/${project.id}`)}
                         className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:opacity-90"
-                        title="Edit project"
+                        title="编辑项目"
                       >
                         <Pencil className="h-4 w-4" />
                       </motion.button>
@@ -280,7 +278,7 @@ export function HomePage() {
                         whileTap={buttonTap}
                         onClick={() => navigate(`/preview/${project.id}`)}
                         className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-secondary hover:text-primary"
-                        title="Preview project"
+                        title="预览项目"
                       >
                         <Eye className="h-4 w-4" />
                       </motion.button>
@@ -290,7 +288,7 @@ export function HomePage() {
                         whileTap={buttonTap}
                         onClick={() => setDeleteTarget(project)}
                         className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-destructive/20 text-destructive transition-colors hover:bg-destructive/5"
-                        title="Delete project"
+                        title="删除项目"
                       >
                         <Trash2 className="h-4 w-4" />
                       </motion.button>
@@ -306,10 +304,10 @@ export function HomePage() {
       <Dialog
         open={deleteTarget !== null}
         onClose={() => setDeleteTarget(null)}
-        title="Delete project"
-        description={`This action will permanently delete "${deleteTarget?.name ?? ""}".`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        title="删除项目"
+        description={`删除后将无法恢复「${deleteTarget?.name ?? ""}」。`}
+        confirmLabel="确认删除"
+        cancelLabel="取消"
         destructive
         onConfirm={() => {
           if (deleteTarget) {
@@ -327,7 +325,7 @@ export function HomePage() {
         onClick={() => navigate("/editor")}
         className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-transform"
         style={{ background: "var(--gradient-brand)" }}
-        title="Create project"
+        title="创建项目"
       >
         <Plus className="h-6 w-6" />
       </motion.button>

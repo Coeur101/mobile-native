@@ -46,7 +46,7 @@ type ProjectMigrationRecord = {
 const defaultFiles = (): ProjectFileMap => ({
   "index.html": "<div id=\"app\"></div>",
   "style.css": "body { font-family: system-ui, sans-serif; }",
-  "main.js": "document.getElementById('app').innerHTML = '<h1>Hello</h1>';",
+  "main.js": "document.getElementById('app').innerHTML = '<h1>你好，世界</h1>';",
 });
 
 const defaultAuthState = (): PersistedAuthState => ({

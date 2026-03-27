@@ -111,7 +111,7 @@ function mapMessageRow(row: ProjectMessageRow): ProjectMessage {
 function requireCurrentUserId() {
   const userId = localDb.getUser()?.id;
   if (!userId) {
-    throw new Error("An authenticated user is required to access project data.");
+    throw new Error("需要先登录后才能访问项目数据。");
   }
 
   return userId;
@@ -120,7 +120,7 @@ function requireCurrentUserId() {
 function requireClient(override?: SupabaseClient | null) {
   const client = override ?? getSupabaseBrowserClient();
   if (!client) {
-    throw new Error("Supabase project persistence is not configured.");
+    throw new Error("尚未配置 Supabase 项目持久化能力。");
   }
 
   return client;
@@ -407,7 +407,7 @@ export function createSupabaseProjectService(
           {
             id: nextVersionId(projectId, 1),
             versionNo: 1,
-            summary: "Initial generated version",
+            summary: "首次根据需求生成的版本",
             files: payload.files,
             createdAt: now,
             projectId,
@@ -518,7 +518,7 @@ export function createSupabaseProjectService(
       const { error: versionError } = await client.from("project_versions").insert({
         id: nextVersionId(project.id, nextVersionNo),
         version_no: nextVersionNo,
-        summary: `Updated from prompt: ${prompt.slice(0, 48)}`,
+        summary: `根据新需求更新：${prompt.slice(0, 48)}`,
         files: payload.files,
         created_at: now,
         project_id: project.id,
@@ -641,7 +641,7 @@ export function createSupabaseProjectService(
       const { error: versionError } = await client.from("project_versions").insert({
         id: nextVersionId(project.id, nextVersionNo),
         version_no: nextVersionNo,
-        summary: `Restored to version ${version.versionNo}`,
+        summary: `恢复到版本 ${version.versionNo}`,
         files: version.files,
         created_at: now,
         project_id: project.id,

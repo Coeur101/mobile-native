@@ -1,14 +1,13 @@
 import type { AIService } from "./ai-service";
 import type { GeneratedProjectPayload, Project, ProjectFileMap, ThinkingStep } from "@/types";
 
-/** 从用户提示词中提取简短项目名称（保留中文原文） */
 function deriveProjectName(value: string) {
   const trimmed = value.trim().slice(0, 20);
   return trimmed || "演示项目";
 }
 
 function buildFiles(prompt: string, project?: Project): ProjectFileMap {
-  const title = prompt.slice(0, 24);
+  const title = prompt.slice(0, 24) || "演示页面";
   const existingStyles = project?.files["style.css"] ?? "";
 
   return {
@@ -22,7 +21,7 @@ function buildFiles(prompt: string, project?: Project): ProjectFileMap {
   <body>
     <main class="shell">
       <section class="hero">
-        <span class="badge">Mock AI 生成</span>
+        <span class="badge">AI 演示生成</span>
         <h1>${title}</h1>
         <p>${prompt}</p>
         <button id="actionButton">添加一个演示事项</button>
@@ -30,9 +29,9 @@ function buildFiles(prompt: string, project?: Project): ProjectFileMap {
       <section class="panel">
         <h2>当前能力</h2>
         <ul id="list">
-          <li>结构化文件预览</li>
-          <li>本地版本快照</li>
-          <li>后续可接入真实 AI 与 Supabase</li>
+          <li>结构化页面文件输出</li>
+          <li>版本快照与历史恢复</li>
+          <li>支持继续补充需求并迭代页面</li>
         </ul>
       </section>
     </main>
@@ -45,7 +44,7 @@ function buildFiles(prompt: string, project?: Project): ProjectFileMap {
     radial-gradient(circle at top right, rgba(20, 184, 166, 0.12), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   color: #0f172a;
-  font-family: "Segoe UI", "PingFang SC", sans-serif;
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 .hero,
 .panel {
@@ -101,60 +100,65 @@ const button = document.getElementById("actionButton");
 if (button && list) {
   button.addEventListener("click", () => {
     const item = document.createElement("li");
-    item.textContent = "来自演示模式的新事项：${title}";
+    item.textContent = "新增演示事项：${title}";
     list.appendChild(item);
   });
 }`,
   };
 }
 
-/** 生成 mock 思维链步骤 */
 function buildThinkingSteps(prompt: string, isUpdate: boolean): ThinkingStep[] {
   const now = Date.now();
-  const steps: ThinkingStep[] = [
+  const keywords = prompt
+    .split(/[，。；、\s]+/)
+    .filter(Boolean)
+    .slice(0, 5)
+    .join("、");
+
+  return [
     {
       id: `step-${now}-1`,
       title: "理解需求",
-      description: `分析用户输入: "${prompt.slice(0, 30)}${prompt.length > 30 ? "..." : ""}"`,
+      description: `分析输入内容：${prompt.slice(0, 30)}${prompt.length > 30 ? "..." : ""}`,
       status: "success",
-      content: `用户希望${isUpdate ? "更新现有项目" : "创建一个新项目"}。\n关键词提取: ${prompt.split(/[，,。.！!？?\s]+/).filter(Boolean).slice(0, 5).join("、")}`,
+      content: `当前目标是${isUpdate ? "继续完善现有项目" : "创建一个新项目"}，识别到的重点包括：${keywords || "页面结构、视觉层次、基础交互"}。`,
     },
     {
       id: `step-${now}-2`,
-      title: "设计方案",
-      description: "确定技术栈与页面结构",
+      title: "设计页面结构",
+      description: "确定页面层级、主要区块与视觉风格。",
       status: "success",
-      content: "技术栈: HTML5 + CSS3 + Vanilla JS\n布局方案: 响应式单页，移动端优先\n视觉风格: 毛玻璃卡片 + 渐变背景",
+      content: "采用单页结构，包含主视觉区域、说明区块和基础交互入口，并默认兼容移动端展示。",
     },
     {
       id: `step-${now}-3`,
-      title: "生成代码",
-      description: isUpdate ? "基于现有文件增量更新" : "生成 index.html / style.css / main.js",
+      title: "生成项目文件",
+      description: isUpdate ? "基于现有文件做增量更新。" : "生成 HTML、CSS 和 JS 文件。",
       status: "success",
-      content: "生成文件清单:\n- index.html (页面结构)\n- style.css (样式与动画)\n- main.js (交互逻辑)",
+      content: "输出 index.html、style.css、main.js 三个核心文件，便于直接预览和继续编辑。",
     },
     {
       id: `step-${now}-4`,
-      title: "质量检查",
-      description: "验证代码规范与浏览器兼容性",
+      title: "检查可用性",
+      description: "确认结构完整、样式可读、交互可运行。",
       status: "success",
+      content: "已保留基础按钮交互和演示列表，方便继续追加需求。",
     },
     {
       id: `step-${now}-5`,
-      title: "部署就绪",
-      description: "项目文件已准备完毕，可预览",
+      title: "准备继续迭代",
+      description: "当前版本已经可以进入预览或继续补充需求。",
       status: "success",
+      content: "你可以继续描述布局、配色、模块或交互要求，我会在当前项目上继续生成。",
     },
   ];
-
-  return steps;
 }
 
 export const mockAIService: AIService = {
   async generateProjectFromPrompt(prompt, project) {
     const createdAt = new Date().toISOString();
     const files = buildFiles(prompt, project);
-    const isUpdate = !!project;
+    const isUpdate = Boolean(project);
     const thinkingSteps = buildThinkingSteps(prompt, isUpdate);
 
     const messages: GeneratedProjectPayload["messages"] = [
@@ -162,8 +166,8 @@ export const mockAIService: AIService = {
         id: `${Date.now()}-assistant`,
         role: "assistant",
         content: isUpdate
-          ? "已根据你的新需求更新了项目文件。你可以在预览中查看效果，或继续描述新的修改。"
-          : "已根据你的描述生成结构化项目文件，包含 HTML 页面、CSS 样式和 JS 交互。你可以预览效果或继续优化。",
+          ? "已根据你的新需求更新项目文件。你可以先预览效果，或继续补充想修改的部分。"
+          : "已根据你的描述生成首版项目文件，包含页面结构、样式和基础交互。你可以直接预览，或继续细化需求。",
         createdAt,
         thinkingSteps,
         metadata: {
@@ -172,7 +176,7 @@ export const mockAIService: AIService = {
       },
     ];
 
-    const payload: GeneratedProjectPayload = {
+    return {
       projectName: deriveProjectName(prompt),
       summary: prompt,
       files,
@@ -182,7 +186,5 @@ export const mockAIService: AIService = {
         framework: "vanilla",
       },
     };
-
-    return payload;
   },
 };
