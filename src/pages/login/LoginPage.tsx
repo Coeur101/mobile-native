@@ -5,7 +5,6 @@ import {
   ChevronRight,
   Loader2,
   Mail,
-  RotateCcw,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -17,19 +16,13 @@ import { authConfig } from "@/services/auth/auth-config";
 import { authService } from "@/services/auth";
 import { useAuthStore } from "@/stores/use-auth-store";
 
-type EntryMode = "login" | "register" | "reset_request";
+type EntryMode = "login" | "register";
 type OtpPurpose = "login" | "register" | null;
 
 const PANEL = { duration: 0.24, ease: EASE_SMOOTH };
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function validatePasswordPair(password: string, confirm?: string) {
-  if (password.trim().length < 8) return "密码至少需要 8 位字符。";
-  if (confirm !== undefined && password !== confirm) return "两次输入的密码不一致。";
-  return null;
 }
 
 export function LoginPage() {
@@ -45,22 +38,16 @@ export function LoginPage() {
     rememberUntil,
   } = useAuthStore();
 
-  const [entryMode, setEntryMode] = useState<EntryMode>(
-    pendingAction === "reset_password" ? "reset_request" : "login",
-  );
+  const [entryMode, setEntryMode] = useState<EntryMode>("login");
   const [email, setEmail] = useState(pendingActionEmail ?? pendingEmail ?? "");
   const [verificationCode, setVerificationCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [otpPurpose, setOtpPurpose] = useState<OtpPurpose>(null);
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isVerifyLoading, setIsVerifyLoading] = useState(false);
-  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
-  const [isResetLoading, setIsResetLoading] = useState(false);
   const [isClearingPendingAction, setIsClearingPendingAction] = useState(false);
 
-  const isResetPasswordStep = pendingAction === "reset_password";
+  const hasLegacyResetRecovery = pendingAction === "reset_password";
 
   useEffect(() => {
     if (isAuthenticated) navigate("/", { replace: true });
@@ -73,7 +60,7 @@ export function LoginPage() {
   useEffect(() => {
     if (pendingActionEmail) setEmail(pendingActionEmail);
     if (pendingAction === "reset_password") {
-      setEntryMode("reset_request");
+      setEntryMode("login");
       setOtpPurpose(null);
       setVerificationCode("");
     }
@@ -94,11 +81,11 @@ export function LoginPage() {
     : null;
 
   const stepMeta = (() => {
-    if (isResetPasswordStep) {
+    if (hasLegacyResetRecovery) {
       return {
-        label: "步骤 2 / 2",
-        title: "设置新密码",
-        desc: "重置回流已完成，保存后将直接恢复登录状态。",
+        label: "安全迁移",
+        title: "通过资料页管理密码",
+        desc: "旧的邮件回流重置已下线。请先完成 OTP 登录，再到个人信息页的安全区域设置或重置密码。",
       };
     }
 
@@ -114,14 +101,6 @@ export function LoginPage() {
             title: "先验证你的邮箱",
             desc: "注册入口只保留邮箱验证码这一条路径。",
           };
-    }
-
-    if (entryMode === "reset_request") {
-      return {
-        label: "步骤 1 / 2",
-        title: "发送密码重置邮件",
-        desc: "打开邮件中的回流链接后，再设置新密码。",
-      };
     }
 
     return otpPurpose === "login"
@@ -148,8 +127,6 @@ export function LoginPage() {
     setSubmitError(null);
     setOtpPurpose(null);
     setVerificationCode("");
-    setPassword("");
-    setConfirmPassword("");
   };
 
   const handleRequestOtp = async (purpose: Exclude<OtpPurpose, null>) => {
@@ -195,39 +172,6 @@ export function LoginPage() {
     }
   };
 
-  const handleRequestPasswordReset = async () => {
-    setIsResetLoading(true);
-    setSubmitError(null);
-    try {
-      const result = await authService.requestPasswordReset(ensureValidEmail(email));
-      toast.success(result.message);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "发送重置邮件失败，请稍后重试。";
-      setSubmitError(message);
-      toast.error(message);
-    } finally {
-      setIsResetLoading(false);
-    }
-  };
-
-  const handleCompletePasswordReset = async () => {
-    setIsPasswordLoading(true);
-    setSubmitError(null);
-    try {
-      const error = validatePasswordPair(password, confirmPassword);
-      if (error) throw new Error(error);
-      await authService.completePasswordReset(password);
-      toast.success("密码已更新，正在返回应用。");
-      navigate("/", { replace: true });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "重置密码失败，请稍后重试。";
-      setSubmitError(message);
-      toast.error(message);
-    } finally {
-      setIsPasswordLoading(false);
-    }
-  };
-
   const handleClearPendingAction = async () => {
     setIsClearingPendingAction(true);
     setSubmitError(null);
@@ -236,8 +180,6 @@ export function LoginPage() {
       setEntryMode("login");
       setOtpPurpose(null);
       setVerificationCode("");
-      setPassword("");
-      setConfirmPassword("");
     } catch (error) {
       const message = error instanceof Error ? error.message : "无法取消当前认证流程。";
       setSubmitError(message);
@@ -287,53 +229,22 @@ export function LoginPage() {
       eyebrow: "新账号",
       title: "注册",
     },
-    {
-      value: "reset_request" as const,
-      eyebrow: "恢复",
-      title: "重置密码",
-    },
   ];
 
   const flowBody = () => {
-    if (isResetPasswordStep) {
+    if (hasLegacyResetRecovery) {
       return (
         <div className="space-y-4">
           <div className="rounded-[22px] border border-sky-200/60 bg-sky-50/80 px-4 py-3 text-sm leading-6 text-sky-900 dark:border-sky-900/30 dark:bg-sky-950/20 dark:text-sky-300">
-            正在为 <span className="font-medium">{targetEmail}</span> 设置新密码。完成后会恢复当前账号的登录状态。
+            <span className="font-medium">{targetEmail}</span> 的旧密码回流链接已不再作为主流程使用。请返回 OTP 登录，进入资料页安全区域继续处理密码。
           </div>
-          <div className="space-y-3">
-            <Input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="输入新密码"
-              autoComplete="new-password"
-              className="h-12 rounded-2xl bg-background"
-            />
-            <Input
-              type="password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              placeholder="再次输入新密码"
-              autoComplete="new-password"
-              className="h-12 rounded-2xl bg-background"
-            />
-          </div>
-          {primaryButton(
-            () => void handleCompletePasswordReset(),
-            isPasswordLoading,
-            "保存新密码",
-            <ShieldCheck className="h-4 w-4" />,
-            "sky",
-            "complete-password-reset",
-          )}
           <button
             type="button"
             onClick={() => void handleClearPendingAction()}
             disabled={isClearingPendingAction}
-            className="w-full text-center text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+            className="flex h-12 w-full items-center justify-center rounded-2xl bg-primary text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
           >
-            放弃本次重置，返回登录
+            {isClearingPendingAction ? "正在返回 OTP 登录" : "返回 OTP 登录"}
           </button>
         </div>
       );
@@ -399,38 +310,6 @@ export function LoginPage() {
       );
     }
 
-    if (entryMode === "reset_request") {
-      return (
-        <div className="space-y-4">
-          <Input
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="输入需要重置密码的邮箱"
-            autoComplete="email"
-            className="h-12 rounded-2xl bg-background"
-          />
-          {primaryButton(
-            () => void handleRequestPasswordReset(),
-            isResetLoading,
-            "发送重置邮件",
-            <RotateCcw className="h-4 w-4" />,
-            "primary",
-            "request-password-reset",
-          )}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-            <span>收到邮件后打开回流链接，再继续设置新密码。</span>
-            <button
-              type="button"
-              onClick={() => switchEntryMode("login")}
-              className="underline-offset-2 hover:text-foreground hover:underline"
-            >
-              返回登录
-            </button>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="space-y-4">
         <Input
@@ -478,13 +357,7 @@ export function LoginPage() {
           ) : (
             <span>验证码会发送到你填写的邮箱。</span>
           )}
-          <button
-            type="button"
-            onClick={() => switchEntryMode("reset_request")}
-            className="underline-offset-2 hover:text-foreground hover:underline"
-          >
-            忘记密码
-          </button>
+          <span>密码设置与重置已迁移到登录后的个人信息页。</span>
         </div>
       </div>
     );
@@ -524,17 +397,17 @@ export function LoginPage() {
           </div>
         </section>
 
-        {!isResetPasswordStep ? (
+        {!hasLegacyResetRecovery ? (
           <section className="space-y-2">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">选择入口</p>
               </div>
               <div className="rounded-full bg-background/80 px-3 py-1 text-[11px] text-muted-foreground">
-                {entryMode === "login" ? "登录中" : entryMode === "register" ? "注册中" : "重置中"}
+                {entryMode === "login" ? "登录中" : "注册中"}
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {entryCards.map((item) => {
                 const active = entryMode === item.value;
                 return (

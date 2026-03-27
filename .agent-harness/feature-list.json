@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-27T07:09:08.486Z",
+  "generatedAt": "2026-03-27T09:00:17.394Z",
   "project": "AI Web Builder Mobile",
   "workflowVersion": "project-lifecycle-v3",
   "activeChanges": [
@@ -9,36 +9,34 @@
     "task-level-closed-loop-workflow"
   ],
   "currentFocus": {
-    "id": "TASK-020",
+    "id": "TASK-023",
     "change": "otp-auth-and-supabase-user-profile",
-    "phase": "delivery",
-    "title": "实现头像压缩存储与资料页密码安全流程",
-    "type": "feature",
+    "phase": "closure",
+    "title": "执行 change 所需验证并清理一次性测试产物",
+    "type": "verification",
     "status": "in_progress",
     "priority": "P0",
-    "scope": "头像上传压缩转 base64、设置密码与重置密码的邮箱验证码确认流程",
+    "scope": "构建、功能测试、Playwright UI 测试、证据回写与临时产物清理",
     "acceptanceCriteria": [
-      "头像上传后先压缩再转 base64 存入 profile",
-      "资料页根据 has_password 展示设置密码或重置密码",
-      "密码安全操作前必须通过邮箱验证码确认",
-      "功能验证、UI 自动化、清理与独立 commit 全部留痕"
+      "执行并记录本 change 所需构建、功能测试与 UI 测试",
+      "验证证据同步回 TASK.json 与 task logs",
+      "删除一次性测试文件、test-results、report、trace、video 等产物",
+      "形成独立 verification commit"
     ],
     "functionalTestsRequired": true,
     "uiTestsRequired": true,
     "buildRequired": true,
-    "designReviewRequired": true,
+    "designReviewRequired": false,
     "implementationReviewRequired": true,
     "docsToUpdate": [
-      "src/pages/settings/SettingsPage.tsx",
-      "src/services/auth/supabase-auth-service.ts",
-      "src/types/index.ts",
-      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
+      "TASK.json",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
       "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
-      "TASK.json"
+      "CHANGELOG.md"
     ],
     "commitRequired": true,
     "commitRef": null,
-    "commitMessage": "feat: TASK-020 交付资料安全与头像存储流程",
+    "commitMessage": "test: TASK-023 记录资料与认证变更验证证据",
     "pushRequired": false,
     "artifacts": {
       "functionalTests": [],
@@ -47,20 +45,18 @@
         "pnpm build"
       ],
       "docs": [
-        "src/pages/settings/SettingsPage.tsx",
-        "src/services/auth/supabase-auth-service.ts",
-        "src/types/index.ts",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
+        "TASK.json",
+        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
         "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
-        "TASK.json"
+        "CHANGELOG.md"
       ],
       "commits": [],
       "pushes": []
     },
     "blockers": [],
-    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
-    "createdAt": "2026-03-27T09:13:00+08:00",
-    "updatedAt": "2026-03-27T07:09:08.480Z",
+    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+    "createdAt": "2026-03-27T09:16:00+08:00",
+    "updatedAt": "2026-03-27T09:00:17.386Z",
     "mustRead": [
       "openspec/changes/otp-auth-and-supabase-user-profile/proposal.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
@@ -70,11 +66,9 @@
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/project-data/spec.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-auth/spec.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-profile/spec.md",
-      "src/pages/settings/SettingsPage.tsx",
-      "src/services/auth/supabase-auth-service.ts",
-      "src/types/index.ts",
-      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
-      "TASK.json"
+      "TASK.json",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+      "CHANGELOG.md"
     ],
     "requiredChecks": [
       "pnpm build"
@@ -82,35 +76,11 @@
   },
   "nextQueue": [
     {
-      "id": "TASK-020",
-      "change": "otp-auth-and-supabase-user-profile",
-      "phase": "delivery",
-      "priority": "P0",
-      "status": "in_progress",
-      "title": "实现头像压缩存储与资料页密码安全流程"
-    },
-    {
-      "id": "TASK-021",
-      "change": "otp-auth-and-supabase-user-profile",
-      "phase": "closure",
-      "priority": "P0",
-      "status": "todo",
-      "title": "完成资料模型与认证链路 implementation_review"
-    },
-    {
-      "id": "TASK-022",
-      "change": "otp-auth-and-supabase-user-profile",
-      "phase": "closure",
-      "priority": "P0",
-      "status": "todo",
-      "title": "完成页面导航、个人信息交互与安全流程 implementation_review"
-    },
-    {
       "id": "TASK-023",
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "closure",
       "priority": "P0",
-      "status": "todo",
+      "status": "in_progress",
       "title": "执行 change 所需验证并清理一次性测试产物"
     },
     {
@@ -387,7 +357,7 @@
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "delivery",
       "title": "实现头像压缩存储与资料页密码安全流程",
-      "status": "in_progress",
+      "status": "docs_verified",
       "priority": "P0",
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
       "requiredChecks": [
@@ -399,7 +369,7 @@
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "closure",
       "title": "完成资料模型与认证链路 implementation_review",
-      "status": "todo",
+      "status": "docs_verified",
       "priority": "P0",
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
       "requiredChecks": []
@@ -409,7 +379,7 @@
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "closure",
       "title": "完成页面导航、个人信息交互与安全流程 implementation_review",
-      "status": "todo",
+      "status": "docs_verified",
       "priority": "P0",
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
       "requiredChecks": []
@@ -419,7 +389,7 @@
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "closure",
       "title": "执行 change 所需验证并清理一次性测试产物",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "P0",
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
       "requiredChecks": [

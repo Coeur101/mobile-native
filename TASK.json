@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T08:37:46.421Z",
+  "updatedAt": "2026-03-27T09:00:17.386Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1080,8 +1080,8 @@
         "TASK.json"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": "feat: TASK-020 交付资料安全与头像存储流程",
+      "commitRef": "82d6c9f",
+      "commitMessage": "feat: TASK-020 add profile avatar and password security",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [],
@@ -1103,7 +1103,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-020.jsonl",
       "createdAt": "2026-03-27T09:13:00+08:00",
-      "updatedAt": "2026-03-27T08:37:46.406Z"
+      "updatedAt": "2026-03-27T08:58:29.934Z"
     },
     {
       "id": "TASK-021",
@@ -1111,7 +1111,7 @@
       "phase": "closure",
       "title": "完成资料模型与认证链路 implementation_review",
       "type": "review",
-      "status": "in_progress",
+      "status": "docs_verified",
       "priority": "P0",
       "scope": "核对实现与 proposal、design、specs、TASK.json 与 task logs 的一致性",
       "acceptanceCriteria": [
@@ -1149,7 +1149,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-021.jsonl",
       "createdAt": "2026-03-27T09:14:00+08:00",
-      "updatedAt": "2026-03-27T08:37:46.421Z"
+      "updatedAt": "2026-03-27T08:58:57.984Z"
     },
     {
       "id": "TASK-022",
@@ -1157,7 +1157,7 @@
       "phase": "closure",
       "title": "完成页面导航、个人信息交互与安全流程 implementation_review",
       "type": "review",
-      "status": "todo",
+      "status": "docs_verified",
       "priority": "P0",
       "scope": "核对 UI、数据流、验证码校验与旧设置收缩结果",
       "acceptanceCriteria": [
@@ -1195,7 +1195,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-022.jsonl",
       "createdAt": "2026-03-27T09:15:00+08:00",
-      "updatedAt": "2026-03-27T09:15:00+08:00"
+      "updatedAt": "2026-03-27T09:00:17.372Z"
     },
     {
       "id": "TASK-023",
@@ -1203,7 +1203,7 @@
       "phase": "closure",
       "title": "执行 change 所需验证并清理一次性测试产物",
       "type": "verification",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "P0",
       "scope": "构建、功能测试、Playwright UI 测试、证据回写与临时产物清理",
       "acceptanceCriteria": [
@@ -1245,7 +1245,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
       "createdAt": "2026-03-27T09:16:00+08:00",
-      "updatedAt": "2026-03-27T09:16:00+08:00"
+      "updatedAt": "2026-03-27T09:00:17.386Z"
     },
     {
       "id": "TASK-024",
