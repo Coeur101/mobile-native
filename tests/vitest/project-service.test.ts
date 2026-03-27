@@ -310,4 +310,65 @@ describe("createSupabaseProjectService", () => {
     expect(db.project_versions).toHaveLength(2);
     expect(db.project_messages).toHaveLength(2);
   });
+
+  it("migrates local legacy projects into the remote backing store once", async () => {
+    const localProject: Project = {
+      id: "legacy-project",
+      ownerUserId: profile.id,
+      name: "Legacy Project",
+      description: "Created before remote persistence",
+      status: "active",
+      files: {
+        "index.html": "<div>legacy</div>",
+      },
+      messages: [
+        {
+          id: "legacy-message",
+          role: "user",
+          content: "Create a dashboard",
+          createdAt: "2026-03-27T09:00:00.000Z",
+          projectId: "legacy-project",
+          ownerUserId: profile.id,
+        },
+      ],
+      versions: [
+        {
+          id: "legacy-project-v1",
+          versionNo: 1,
+          summary: "Legacy snapshot",
+          files: {
+            "index.html": "<div>legacy</div>",
+          },
+          createdAt: "2026-03-27T09:00:00.000Z",
+          projectId: "legacy-project",
+          ownerUserId: profile.id,
+        },
+      ],
+      preview: {
+        entry: "index.html",
+        framework: "vanilla",
+      },
+      createdAt: "2026-03-27T09:00:00.000Z",
+      updatedAt: "2026-03-27T09:00:00.000Z",
+    };
+    localDb.saveProjects([localProject]);
+
+    const db: FakeDatabase = {
+      projects: [],
+      project_versions: [],
+      project_messages: [],
+    };
+    const service = createSupabaseProjectService({
+      client: createFakeClient(db),
+    });
+
+    const projects = await service.listProjects();
+
+    expect(projects).toHaveLength(1);
+    expect(projects[0]?.id).toBe("legacy-project");
+    expect(db.projects).toHaveLength(1);
+    expect(db.project_versions).toHaveLength(1);
+    expect(db.project_messages).toHaveLength(1);
+    expect(localDb.hasProjectMigrationCompleted(profile.id)).toBe(true);
+  });
 });

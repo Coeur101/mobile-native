@@ -51,6 +51,10 @@ type ProjectServiceDependencies = {
   aiService?: AIService;
 };
 
+type ProjectIdRow = {
+  id: string;
+};
+
 function createId(prefix: string) {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return `${prefix}-${crypto.randomUUID()}`;
@@ -210,6 +214,98 @@ async function listRemoteProjects(client: SupabaseClient, ownerUserId: string) {
   return hydrateProjects(client, (data ?? []) as ProjectRow[]);
 }
 
+async function migrateLocalProjectsIfNeeded(client: SupabaseClient, ownerUserId: string) {
+  if (localDb.hasProjectMigrationCompleted(ownerUserId)) {
+    return;
+  }
+
+  const localProjects = localDb.getProjects();
+  if (localProjects.length === 0) {
+    localDb.markProjectMigrationCompleted(ownerUserId, []);
+    return;
+  }
+
+  const { data, error } = await client
+    .from("projects")
+    .select("id")
+    .eq("owner_user_id", ownerUserId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const existingIds = new Set(((data ?? []) as ProjectIdRow[]).map((row) => row.id));
+  const pendingProjects = localProjects.filter((project) => !existingIds.has(project.id));
+
+  if (pendingProjects.length === 0) {
+    localDb.markProjectMigrationCompleted(
+      ownerUserId,
+      localProjects.map((project) => project.id),
+    );
+    return;
+  }
+
+  const { error: projectError } = await client.from("projects").insert(
+    pendingProjects.map((project) => ({
+      id: project.id,
+      owner_user_id: ownerUserId,
+      name: project.name,
+      description: project.description,
+      status: project.status,
+      files: project.files,
+      preview: project.preview,
+      created_at: project.createdAt,
+      updated_at: project.updatedAt,
+    })),
+  );
+
+  if (projectError) {
+    throw new Error(projectError.message);
+  }
+
+  const versionRows = pendingProjects.flatMap((project) =>
+    project.versions.map((version) => ({
+      id: version.id,
+      version_no: version.versionNo,
+      summary: version.summary,
+      files: version.files,
+      created_at: version.createdAt,
+      project_id: project.id,
+      owner_user_id: ownerUserId,
+    })),
+  );
+  if (versionRows.length > 0) {
+    const { error: versionError } = await client.from("project_versions").insert(versionRows);
+    if (versionError) {
+      throw new Error(versionError.message);
+    }
+  }
+
+  const messageRows = pendingProjects.flatMap((project) =>
+    project.messages.map((message) => ({
+      id: message.id,
+      role: message.role,
+      content: message.content,
+      created_at: message.createdAt,
+      project_id: project.id,
+      owner_user_id: ownerUserId,
+      thinking_steps: message.thinkingSteps ?? null,
+      metadata: message.metadata ?? null,
+    })),
+  );
+  if (messageRows.length > 0) {
+    const { error: messageError } = await client.from("project_messages").insert(messageRows);
+    if (messageError) {
+      throw new Error(messageError.message);
+    }
+  }
+
+  localDb.markProjectMigrationCompleted(
+    ownerUserId,
+    localProjects.map((project) => project.id),
+  );
+}
+
 async function loadRemoteProjectById(
   client: SupabaseClient,
   ownerUserId: string,
@@ -258,6 +354,7 @@ export function createSupabaseProjectService(
     async listProjects() {
       const ownerUserId = requireCurrentUserId();
       const client = requireClient(dependencies.client);
+      await migrateLocalProjectsIfNeeded(client, ownerUserId);
       const projects = await listRemoteProjects(client, ownerUserId);
       cacheProjects(projects);
       return projects;
@@ -266,6 +363,7 @@ export function createSupabaseProjectService(
     async getProjectById(id) {
       const ownerUserId = requireCurrentUserId();
       const client = requireClient(dependencies.client);
+      await migrateLocalProjectsIfNeeded(client, ownerUserId);
       const project = await loadRemoteProjectById(client, ownerUserId, id);
       if (!project) {
         return null;

@@ -14,17 +14,28 @@ export function PreviewPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const [project, setProject] = useState<Project | null>(null);
+  const [isLoadingProject, setIsLoadingProject] = useState(Boolean(projectId));
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [mode, setMode] = useState<"preview" | "code">("preview");
 
   useEffect(() => {
     async function loadProject() {
-      if (!projectId) return;
+      if (!projectId) {
+        setIsLoadingProject(false);
+        return;
+      }
+      setIsLoadingProject(true);
+      setLoadError(null);
       try {
         const nextProject = await projectService.getProjectById(projectId);
         setProject(nextProject);
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Unable to load project preview.");
+        const message = error instanceof Error ? error.message : "Unable to load project preview.";
+        toast.error(message);
+        setLoadError(message);
         setProject(null);
+      } finally {
+        setIsLoadingProject(false);
       }
     }
     void loadProject();
@@ -43,7 +54,59 @@ export function PreviewPage() {
     URL.revokeObjectURL(url);
   };
 
-  if (!project) return null;
+  if (isLoadingProject) {
+    return (
+      <PageTransition className="flex min-h-screen items-center justify-center bg-[#0C0A09] px-6 text-white">
+        <div className="text-center">
+          <p className="text-sm text-white/70">Loading project preview...</p>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <PageTransition className="flex min-h-screen items-center justify-center bg-[#0C0A09] px-6 text-white">
+        <div
+          data-testid="preview-load-error"
+          className="w-full max-w-md rounded-[28px] border border-white/10 bg-white/5 p-8 text-center"
+        >
+          <h1 className="text-xl font-semibold text-white">Unable to load preview</h1>
+          <p className="mt-2 text-sm text-white/70">{loadError}</p>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="mt-5 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#0C0A09]"
+          >
+            Back to Projects
+          </button>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (!project) {
+    return (
+      <PageTransition className="flex min-h-screen items-center justify-center bg-[#0C0A09] px-6 text-white">
+        <div
+          data-testid="preview-project-missing"
+          className="w-full max-w-md rounded-[28px] border border-white/10 bg-white/5 p-8 text-center"
+        >
+          <h1 className="text-xl font-semibold text-white">Project not found</h1>
+          <p className="mt-2 text-sm text-white/70">
+            The requested preview is not available for the current account.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="mt-5 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#0C0A09]"
+          >
+            Back to Projects
+          </button>
+        </div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition className="flex min-h-screen flex-col bg-[#0C0A09] text-white">

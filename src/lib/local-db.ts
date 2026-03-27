@@ -16,6 +16,7 @@ const SETTINGS_KEY = "ai_web_builder_settings_v3";
 const LEGACY_SETTINGS_KEY = "ai_web_builder_settings";
 const AUTH_STATE_KEY = "ai_web_builder_auth_state_v2";
 const LEGACY_AUTH_STATE_KEY = "ai_web_builder_auth_state_v1";
+const PROJECT_MIGRATIONS_KEY = "ai_web_builder_project_migrations_v1";
 const AUTH_KEY = "ai_web_builder_auth_v2";
 const LEGACY_AUTH_KEY = "fake_user_logged_in";
 const LEGACY_OWNER_ID = "legacy-local-user";
@@ -34,6 +35,12 @@ type LegacyProject = {
     content: string;
     timestamp: string | Date;
   }>;
+};
+
+type ProjectMigrationRecord = {
+  userId: string;
+  completedAt: string;
+  projectIds: string[];
 };
 
 const defaultFiles = (): ProjectFileMap => ({
@@ -263,6 +270,14 @@ function parseSettingsRecords(): UserSettingsRecord[] {
   ];
 }
 
+function parseProjectMigrationRecords(): ProjectMigrationRecord[] {
+  return readJson<ProjectMigrationRecord[]>(PROJECT_MIGRATIONS_KEY) ?? [];
+}
+
+function saveProjectMigrationRecords(records: ProjectMigrationRecord[]) {
+  localStorage.setItem(PROJECT_MIGRATIONS_KEY, JSON.stringify(records));
+}
+
 function saveSettingsRecords(records: UserSettingsRecord[]) {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(records));
   localStorage.removeItem(LEGACY_SETTINGS_KEY);
@@ -312,6 +327,21 @@ export const localDb = {
     const nextRecords = records.filter((item) => item.userId !== ownerId);
     nextRecords.push(nextRecord);
     saveSettingsRecords(nextRecords);
+  },
+  getProjectMigrationRecord(userId: string): ProjectMigrationRecord | null {
+    return parseProjectMigrationRecords().find((item) => item.userId === userId) ?? null;
+  },
+  hasProjectMigrationCompleted(userId: string): boolean {
+    return Boolean(this.getProjectMigrationRecord(userId));
+  },
+  markProjectMigrationCompleted(userId: string, projectIds: string[]) {
+    const records = parseProjectMigrationRecords().filter((item) => item.userId !== userId);
+    records.push({
+      userId,
+      completedAt: new Date().toISOString(),
+      projectIds,
+    });
+    saveProjectMigrationRecords(records);
   },
   getAuthState(): PersistedAuthState {
     return getStoredAuthState();

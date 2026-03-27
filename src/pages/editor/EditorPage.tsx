@@ -32,6 +32,8 @@ export function EditorPage() {
   const navigate = useNavigate();
   const { projectId } = useParams();
   const [project, setProject] = useState<Project | null>(null);
+  const [isLoadingProject, setIsLoadingProject] = useState(Boolean(projectId));
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -44,14 +46,22 @@ export function EditorPage() {
     async function loadProject() {
       if (!projectId) {
         setProject(null);
+        setIsLoadingProject(false);
+        setLoadError(null);
         return;
       }
+      setIsLoadingProject(true);
+      setLoadError(null);
       try {
         const nextProject = await projectService.getProjectById(projectId);
         setProject(nextProject);
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Unable to load project.");
+        const message = error instanceof Error ? error.message : "Unable to load project.";
+        toast.error(message);
+        setLoadError(message);
         setProject(null);
+      } finally {
+        setIsLoadingProject(false);
       }
     }
     void loadProject();
@@ -149,6 +159,70 @@ export function EditorPage() {
 
   const messages = project?.messages ?? [];
 
+  if (projectId && isLoadingProject) {
+    return (
+      <PageTransition className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading project workspace...</p>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (projectId && loadError) {
+    return (
+      <PageTransition className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div
+          data-testid="editor-load-error"
+          className="w-full max-w-md rounded-[28px] border border-destructive/20 bg-card p-8 text-center"
+        >
+          <h1 className="text-xl font-semibold text-foreground">Unable to load project</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{loadError}</p>
+          <div className="mt-5 flex justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="rounded-full border border-border px-4 py-2 text-sm text-foreground transition-colors hover:bg-secondary"
+            >
+              Back to Projects
+            </button>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="rounded-full bg-primary px-4 py-2 text-sm text-primary-foreground transition-colors hover:opacity-90"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (projectId && !project) {
+    return (
+      <PageTransition className="flex min-h-screen items-center justify-center bg-background px-6">
+        <div
+          data-testid="editor-project-missing"
+          className="w-full max-w-md rounded-[28px] border border-border bg-card p-8 text-center"
+        >
+          <h1 className="text-xl font-semibold text-foreground">Project not found</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            The requested project could not be found for the current account.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="mt-5 rounded-full bg-primary px-4 py-2 text-sm text-primary-foreground transition-colors hover:opacity-90"
+          >
+            Back to Projects
+          </button>
+        </div>
+      </PageTransition>
+    );
+  }
+
   return (
     <PageTransition className="flex min-h-screen flex-col bg-background">
       {/* Header — 紧凑，纯图标 */}
@@ -197,6 +271,7 @@ export function EditorPage() {
               <>
                 <motion.button
                   type="button"
+                  data-testid="save-version"
                   whileTap={buttonTap}
                   onClick={() => void handleSaveVersion()}
                   disabled={isSaving}
@@ -207,6 +282,7 @@ export function EditorPage() {
                 </motion.button>
                 <motion.button
                   type="button"
+                  data-testid="open-version-panel"
                   whileTap={buttonTap}
                   onClick={() => setShowVersionPanel(true)}
                   className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
@@ -216,6 +292,7 @@ export function EditorPage() {
                 </motion.button>
                 <motion.button
                   type="button"
+                  data-testid="open-project-preview"
                   whileTap={buttonTap}
                   onClick={() => navigate(`/preview/${project.id}`)}
                   className="flex h-9 w-9 items-center justify-center rounded-full text-primary-foreground"

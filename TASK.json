@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T09:50:07.641Z",
+  "updatedAt": "2026-03-27T09:58:15.543Z",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -1425,7 +1425,7 @@
       "phase": "delivery",
       "title": "Implement real project service boundary",
       "type": "feature",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "Real ProjectService, unified service export, and project/version/message persistence contract",
       "acceptanceCriteria": [
@@ -1449,7 +1449,7 @@
         "TASK.json"
       ],
       "commitRequired": true,
-      "commitRef": null,
+      "commitRef": "aa5c86b",
       "commitMessage": "feat: TASK-027 replace mock project service boundary",
       "pushRequired": false,
       "artifacts": {
@@ -1469,13 +1469,16 @@
           "openspec/changes/replace-mock-project-service/tasks.md",
           "TASK.json"
         ],
-        "commits": [],
+        "commits": [
+          "aa5c86b feat: TASK-027 replace mock project service boundary"
+        ],
         "pushes": []
       },
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-027.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:50:07.641Z"
+      "updatedAt": "2026-03-27T09:58:15.543Z",
+      "closedAt": "2026-03-27T09:58:15.543Z"
     },
     {
       "id": "TASK-028",
@@ -1483,7 +1486,7 @@
       "phase": "delivery",
       "title": "Wire remote project flows and local migration",
       "type": "feature",
-      "status": "todo",
+      "status": "docs_verified",
       "priority": "P0",
       "scope": "Home, Editor, Preview flows, loading/error/empty states, and legacy local project migration",
       "acceptanceCriteria": [
@@ -1512,7 +1515,7 @@
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [
-          "pnpm test -- tests/vitest/project-migration.test.ts"
+          "pnpm test -- tests/vitest/project-service.test.ts"
         ],
         "uiTests": [
           ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/project-persistence.spec.ts --headed --reporter=line --workers=1"
@@ -1535,7 +1538,7 @@
       "blockers": [],
       "historyRef": "openspec/changes/replace-mock-project-service/logs/TASK-028.jsonl",
       "createdAt": "2026-03-27T09:29:07.464Z",
-      "updatedAt": "2026-03-27T09:35:55.371Z"
+      "updatedAt": "2026-03-27T09:58:15.543Z"
     },
     {
       "id": "TASK-029",

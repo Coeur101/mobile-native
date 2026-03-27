@@ -34,16 +34,20 @@ export function HomePage() {
   const profile = useAuthStore((state) => state.profile);
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Project | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | ProjectStatus>("all");
 
   async function loadProjects() {
     setIsLoading(true);
+    setLoadError(null);
     try {
       setProjects(await projectService.listProjects());
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unable to load projects.");
+      const message = error instanceof Error ? error.message : "Unable to load projects.";
+      setLoadError(message);
+      toast.error(message);
       setProjects([]);
     } finally {
       setIsLoading(false);
@@ -156,6 +160,26 @@ export function HomePage() {
       <main className="mx-auto max-w-5xl px-4 py-6">
         {isLoading ? (
           <ProjectListSkeleton />
+        ) : loadError ? (
+          <motion.div
+            key="error"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            data-testid="project-load-error"
+            className="rounded-[28px] border border-destructive/20 bg-card p-10 text-center"
+          >
+            <h2 className="text-xl font-semibold text-foreground">Unable to load projects</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{loadError}</p>
+            <motion.button
+              type="button"
+              whileTap={buttonTap}
+              onClick={() => void loadProjects()}
+              className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
+            >
+              Retry
+            </motion.button>
+          </motion.div>
         ) : (
           <AnimatePresence mode="popLayout">
             {filteredProjects.length === 0 && projects.length === 0 ? (
@@ -207,6 +231,7 @@ export function HomePage() {
                 {filteredProjects.map((project) => (
                   <article
                     key={project.id}
+                    data-testid={`project-card-${project.id}`}
                     className="rounded-[28px] border border-border bg-card p-5 transition-shadow duration-200 hover:shadow-md"
                   >
                     <div>
@@ -241,6 +266,7 @@ export function HomePage() {
                     <div className="mt-5 flex gap-2">
                       <motion.button
                         type="button"
+                        data-testid={`project-edit-${project.id}`}
                         whileTap={buttonTap}
                         onClick={() => navigate(`/editor/${project.id}`)}
                         className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:opacity-90"
@@ -250,6 +276,7 @@ export function HomePage() {
                       </motion.button>
                       <motion.button
                         type="button"
+                        data-testid={`project-preview-${project.id}`}
                         whileTap={buttonTap}
                         onClick={() => navigate(`/preview/${project.id}`)}
                         className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-secondary hover:text-primary"
@@ -259,6 +286,7 @@ export function HomePage() {
                       </motion.button>
                       <motion.button
                         type="button"
+                        data-testid={`project-delete-${project.id}`}
                         whileTap={buttonTap}
                         onClick={() => setDeleteTarget(project)}
                         className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-destructive/20 text-destructive transition-colors hover:bg-destructive/5"

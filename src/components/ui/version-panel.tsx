@@ -93,6 +93,7 @@ export const VersionPanel = ({ open, onClose, versions, onRestore }: VersionPane
                         {idx > 0 && (
                           <motion.button
                             type="button"
+                            data-testid={`restore-version-${version.id}`}
                             whileTap={buttonTap}
                             onClick={() => onRestore(version.id)}
                             className="mt-2 inline-flex items-center gap-1.5 rounded-xl bg-accent px-3 py-1.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80"
