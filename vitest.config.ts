@@ -13,6 +13,7 @@ export default defineConfig({
     clearMocks: true,
     restoreMocks: true,
     mockReset: true,
+    include: ["src/**/*.test.{ts,tsx}", "tests/vitest/**/*.test.{ts,tsx}", ".tmp/task-runs/vitest/**/*.test.{ts,tsx}"],
     exclude: [".tmp/task-runs/playwright/**", "node_modules/**"],
   },
 });
