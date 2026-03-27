@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-27T09:00:17.394Z",
+  "generatedAt": "2026-03-27T09:07:19.076Z",
   "project": "AI Web Builder Mobile",
   "workflowVersion": "project-lifecycle-v3",
   "activeChanges": [
@@ -9,54 +9,58 @@
     "task-level-closed-loop-workflow"
   ],
   "currentFocus": {
-    "id": "TASK-023",
+    "id": "TASK-024",
     "change": "otp-auth-and-supabase-user-profile",
     "phase": "closure",
-    "title": "执行 change 所需验证并清理一次性测试产物",
-    "type": "verification",
+    "title": "同步主线文档与 specs 后关闭并归档 change",
+    "type": "closure",
     "status": "in_progress",
     "priority": "P0",
-    "scope": "构建、功能测试、Playwright UI 测试、证据回写与临时产物清理",
+    "scope": "同步主 specs、确认无 blocker、关闭并归档 change",
     "acceptanceCriteria": [
-      "执行并记录本 change 所需构建、功能测试与 UI 测试",
-      "验证证据同步回 TASK.json 与 task logs",
-      "删除一次性测试文件、test-results、report、trace、video 等产物",
-      "形成独立 verification commit"
+      "主线 specs 与当前 change 实现保持同步",
+      "所有 task 均无 blocker 且证据可追溯",
+      "完成关闭所需文档同步后执行 archive",
+      "归档结果记录到 task log"
     ],
-    "functionalTestsRequired": true,
-    "uiTestsRequired": true,
-    "buildRequired": true,
+    "functionalTestsRequired": false,
+    "uiTestsRequired": false,
+    "buildRequired": false,
     "designReviewRequired": false,
     "implementationReviewRequired": true,
     "docsToUpdate": [
-      "TASK.json",
-      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+      "openspec/specs/project-data/spec.md",
+      "openspec/specs/user-auth/spec.md",
+      "openspec/specs/auth-entry-ui/spec.md",
+      "openspec/specs/user-profile/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
       "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
-      "CHANGELOG.md"
+      "TASK.json"
     ],
-    "commitRequired": true,
+    "commitRequired": false,
     "commitRef": null,
-    "commitMessage": "test: TASK-023 记录资料与认证变更验证证据",
+    "commitMessage": null,
     "pushRequired": false,
     "artifacts": {
       "functionalTests": [],
       "uiTests": [],
-      "buildChecks": [
-        "pnpm build"
-      ],
+      "buildChecks": [],
       "docs": [
-        "TASK.json",
-        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
+        "openspec/specs/project-data/spec.md",
+        "openspec/specs/user-auth/spec.md",
+        "openspec/specs/auth-entry-ui/spec.md",
+        "openspec/specs/user-profile/spec.md",
+        "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
         "openspec/changes/otp-auth-and-supabase-user-profile/tasks.md",
-        "CHANGELOG.md"
+        "TASK.json"
       ],
       "commits": [],
       "pushes": []
     },
     "blockers": [],
-    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
-    "createdAt": "2026-03-27T09:16:00+08:00",
-    "updatedAt": "2026-03-27T09:00:17.386Z",
+    "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
+    "createdAt": "2026-03-27T09:17:00+08:00",
+    "updatedAt": "2026-03-27T09:07:19.072Z",
     "mustRead": [
       "openspec/changes/otp-auth-and-supabase-user-profile/proposal.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/design.md",
@@ -66,29 +70,22 @@
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/project-data/spec.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-auth/spec.md",
       "openspec/changes/otp-auth-and-supabase-user-profile/specs/user-profile/spec.md",
-      "TASK.json",
-      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
-      "CHANGELOG.md"
+      "openspec/specs/project-data/spec.md",
+      "openspec/specs/user-auth/spec.md",
+      "openspec/specs/auth-entry-ui/spec.md",
+      "openspec/specs/user-profile/spec.md",
+      "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
+      "TASK.json"
     ],
-    "requiredChecks": [
-      "pnpm build"
-    ]
+    "requiredChecks": []
   },
   "nextQueue": [
-    {
-      "id": "TASK-023",
-      "change": "otp-auth-and-supabase-user-profile",
-      "phase": "closure",
-      "priority": "P0",
-      "status": "in_progress",
-      "title": "执行 change 所需验证并清理一次性测试产物"
-    },
     {
       "id": "TASK-024",
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "closure",
       "priority": "P0",
-      "status": "todo",
+      "status": "in_progress",
       "title": "同步主线文档与 specs 后关闭并归档 change"
     }
   ],
@@ -389,7 +386,7 @@
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "closure",
       "title": "执行 change 所需验证并清理一次性测试产物",
-      "status": "in_progress",
+      "status": "docs_verified",
       "priority": "P0",
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl",
       "requiredChecks": [
@@ -401,7 +398,7 @@
       "change": "otp-auth-and-supabase-user-profile",
       "phase": "closure",
       "title": "同步主线文档与 specs 后关闭并归档 change",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "P0",
       "historyRef": "openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl",
       "requiredChecks": []

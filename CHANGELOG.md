@@ -1,87 +1,72 @@
 # AI Web Builder Mobile CHANGELOG
 
+## 2026-03-27 OTP Auth/Profile Verification
+
+### Verified
+- Confirmed the OTP-first auth entry, profile navigation, avatar upload, and password security flow with `pnpm build`, targeted Vitest, and headed Playwright coverage.
+- Cleaned transient verification outputs after the suite completed, including `test-results` and `.tmp/task-runs` test folders.
 ## 2026-03-27 Agent Harness
 
 ### Added
-- 新增 `scripts/agent-harness/init.mjs`、`refresh.mjs`、`orchestrate.mjs`、`log-progress.mjs` 与共享解析层 `shared.mjs`
-- 新增 `docs/agent-harness.md`，把 Anthropic 长时运行 agent harness 方法映射到当前仓库工具链
-- 新增 `pnpm agent:init`、`pnpm agent:refresh`、`pnpm agent:orchestrate`、`pnpm agent:log` 命令
+- 鏂板 `scripts/agent-harness/init.mjs`銆乣refresh.mjs`銆乣orchestrate.mjs`銆乣log-progress.mjs` 涓庡叡浜В鏋愬眰 `shared.mjs`
+- 鏂板 `docs/agent-harness.md`锛屾妸 Anthropic 闀挎椂杩愯 agent harness 鏂规硶鏄犲皠鍒板綋鍓嶄粨搴撳伐鍏烽摼
+- 鏂板 `pnpm agent:init`銆乣pnpm agent:refresh`銆乣pnpm agent:orchestrate`銆乣pnpm agent:log` 鍛戒护
 
 ### Changed
-- 复用 `OpenSpec + TASK.json + task logs + Playwright/Vitest/build` 作为自编排的状态源、进度桥和验证门禁
+- 澶嶇敤 `OpenSpec + TASK.json + task logs + Playwright/Vitest/build` 浣滀负鑷紪鎺掔殑鐘舵€佹簮銆佽繘搴︽ˉ鍜岄獙璇侀棬绂?
+## [鏈彂甯僝
 
-## [未发布]
+### 灏濊瘯涓?
+- 鏆傛棤
 
-### 尝试中
+### 宸插畬鎴?
+- 鐧诲綍椤?UI 鏀逛负鏇寸揣鍑戠殑绉诲姩绔璇侀〉锛氱Щ闄よ繃搴﹀紩瀵兼枃妗堝拰娴嬭瘯鎬ц鏄庯紝鍘嬬缉椤堕儴淇℃伅鍖轰笌鍏ュ彛鍒囨崲鍖?- 鐧诲綍涓庢敞鍐屽崌绾т负绉诲姩绔垎姝ュ紡閭璁よ瘉锛氭敮鎸佹敞鍐屽悗璁惧瘑鐮併€佸瘑鐮佺櫥褰曘€侀獙璇佺爜鐧诲綍涓庡瘑鐮侀噸缃叆鍙?- 瀹㈡埛绔櫥褰曟€佹樉寮忎繚鐣?7 澶╋紝杩囨湡鍚庝細娓呯悊鏈湴鐘舵€佸苟瑕佹眰閲嶆柊鐧诲綍
+- 褰撳墠鐢ㄦ埛銆侀」鐩€侀」鐩増鏈€侀」鐩秷鎭笌鐢ㄦ埛璁剧疆寤虹珛浜嗘槑纭殑鏈湴褰掑睘妯″瀷锛屼究浜庡悗缁縼绉诲埌 Supabase 琛?- 鎺ュ叆 Supabase Auth 閭 OTP / 楠岃瘉鐮佺櫥褰曚笌 `/login` 浼氳瘽鍥炶皟鎭㈠锛屾浛鎹㈡湰鍦?mock auth
+- 鐧诲綍椤垫敼涓哄彂閫侀偖绠遍獙璇佺爜骞舵敮鎸侀獙璇佺爜鏍￠獙锛屼笖鏄庣‘绉婚櫎寰俊鐧诲綍鐨勮瀵煎叆鍙?- 琛ュ厖 `.env.example`銆乣docs/auth-email-setup.md`銆乣vitest.config.ts`銆乣playwright.config.ts` 浠ユ敮鎸佸厤璐逛紭鍏堥偖绠辫璇佷笌鑷姩鍖栭獙璇?- 鍒濆鍖?task 绾ч棴鐜伐浣滄祦缂栨帓锛氭柊澧?OpenSpec workflow change銆乨evelopment-workflow 瑙勮寖銆乣TASK.json` 璐ㄩ噺闂ㄧ缁撴瀯涓庤拷鍔犲紡 task history 绾﹀畾
+- 鏄庣‘ user-facing task 蹇呴』鎵ц Playwright 鑷姩鍖?UI 娴嬭瘯锛屽苟瑙勫畾涓存椂鐢熸垚娴嬭瘯鏂囦欢涓庢祴璇曚骇鐗╁湪璁板綍缁撴灉鍚庡繀椤诲垹闄?- 灏嗛」鐩伐浣滄祦鎵╁睍涓?Definition / Delivery / Closure 涓夐樁娈碉紝骞舵媶鍒?`design_review` 涓?`implementation_review` 涓や釜 review 鑺傜偣
+- 鏀剁揣 task 绾ф彁浜ら棴鐜細姣忎釜浜や粯鍨?task 瀹屾垚鍚庡繀椤荤嫭绔?commit锛屽苟鍦?`TASK.json` 涓?task history 涓褰曞彲杩芥函鎻愪氦璇佹嵁
 
-- 暂无
+### 宸插洖閫€
 
-### 已完成
-
-- 登录页 UI 改为更紧凑的移动端认证页：移除过度引导文案和测试性说明，压缩顶部信息区与入口切换区
-- 登录与注册升级为移动端分步式邮箱认证：支持注册后设密码、密码登录、验证码登录与密码重置入口
-- 客户端登录态显式保留 7 天，过期后会清理本地状态并要求重新登录
-- 当前用户、项目、项目版本、项目消息与用户设置建立了明确的本地归属模型，便于后续迁移到 Supabase 表
-- 接入 Supabase Auth 邮箱 OTP / 验证码登录与 `/login` 会话回调恢复，替换本地 mock auth
-- 登录页改为发送邮箱验证码并支持验证码校验，且明确移除微信登录的误导入口
-- 补充 `.env.example`、`docs/auth-email-setup.md`、`vitest.config.ts`、`playwright.config.ts` 以支持免费优先邮箱认证与自动化验证
-- 初始化 task 级闭环工作流编排：新增 OpenSpec workflow change、development-workflow 规范、`TASK.json` 质量门禁结构与追加式 task history 约定
-- 明确 user-facing task 必须执行 Playwright 自动化 UI 测试，并规定临时生成测试文件与测试产物在记录结果后必须删除
-- 将项目工作流扩展为 Definition / Delivery / Closure 三阶段，并拆分 `design_review` 与 `implementation_review` 两个 review 节点
-- 收紧 task 级提交闭环：每个交付型 task 完成后必须独立 commit，并在 `TASK.json` 与 task history 中记录可追溯提交证据
-
-### 已回退
-
-- 暂无
+- 鏆傛棤
 
 ---
 
-## 2026-03-25（MVP 前端对齐）
+## 2026-03-25锛圡VP 鍓嶇瀵归綈锛?
+### 灏濊瘯涓?
+- 璇勪及 shadcn/ui 鏂规锛屾渶缁堟敼涓鸿交閲忚嚜鐮?UI 缁勪欢璺嚎
 
-### 尝试中
+### 宸插畬鎴?
+- 鏂板 Dialog銆乂ersionPanel銆丆odeBlock銆丼keleton銆丒rrorBoundary銆丳ageTransition銆丳ulsingDots銆乀houghtChain 绛?UI 缁勪欢
+- 瀹屾垚棣栭〉鎼滅储銆佺姸鎬佺瓫閫夈€侀」鐩垹闄ょ‘璁ゃ€佺増鏈仮澶嶃€佺紪杈戦〉椤圭洰閲嶅懡鍚嶇瓑浜や簰鑳藉姏
+- 寮曞叆 Motion銆乭ighlight.js銆佷富棰樼郴缁熶笌鍏ㄥ眬鍔ㄧ敾甯搁噺
+- 閲嶆瀯 EditorPage 涓哄叏灞忓璇濆紡甯冨眬锛屽苟涓?AI 鍥炲鍔犲叆 thinkingSteps 灞曠ず
+- 瀹屾垚棰勮椤?iframe 灞曠ず銆佷唬鐮佹ā寮忓垏鎹㈠拰瀵煎嚭鑳藉姏
+- 浼樺寲涓婚鏍峰紡銆佹寜閽舰鎬併€侀〉闈㈣浆鍦哄拰 Toast 浣嶇疆
+- 鏂板 `docs/PRD.md`
+- 淇涓嫳鏂囨爣棰樸€佺┖鐘舵€佸姩鐢诲啿绐併€乮frame sandbox 璀﹀憡绛夐棶棰?
+### 宸插洖閫€
 
-- 评估 shadcn/ui 方案，最终改为轻量自研 UI 组件路线
+- 鏆傛棤
 
-### 已完成
+## 2026-03-25锛堥」鐩垵濮嬪寲锛?
+### 灏濊瘯涓?
+- 璇勪及 React Native + WebView 鏂规锛屾渶缁堥€夊畾 React + Capacitor 璺嚎
 
-- 新增 Dialog、VersionPanel、CodeBlock、Skeleton、ErrorBoundary、PageTransition、PulsingDots、ThoughtChain 等 UI 组件
-- 完成首页搜索、状态筛选、项目删除确认、版本恢复、编辑页项目重命名等交互能力
-- 引入 Motion、highlight.js、主题系统与全局动画常量
-- 重构 EditorPage 为全屏对话式布局，并为 AI 回复加入 thinkingSteps 展示
-- 完成预览页 iframe 展示、代码模式切换和导出能力
-- 优化主题样式、按钮形态、页面转场和 Toast 位置
-- 新增 `docs/PRD.md`
-- 修复中英文标题、空状态动画冲突、iframe sandbox 警告等问题
+### 宸插畬鎴?
+- 鍒濆鍖栫粨鏋勫寲椤圭洰妯″瀷涓?mock 璁よ瘉銆丄I銆侀」鐩€佽缃湇鍔?- 鏂板鐧诲綍椤点€侀」鐩垪琛ㄩ〉銆佺紪杈戦〉銆侀瑙堥〉銆佽缃〉
+- 鍒濆鍖?Capacitor Android 宸ョ▼骞跺畬鎴?Android 鍚屾
+- 鎺ュ叆 GitHub Actions Debug APK 鏋勫缓娴佺▼
+- 淇 Android 鏋勫缓鏉冮檺銆佹棫鏍峰紡渚濊禆娈嬬暀涓庡寘绠＄悊鍒囨崲闂
+- 灏嗘棭鏈?code 妯″瀷鍗囩骇涓?`files/messages/versions` 缁撴瀯
+- 鍚屾 README 涓庨」鐩不鐞嗘枃妗?
+### 宸插洖閫€
 
-### 已回退
-
-- 暂无
-
-## 2026-03-25（项目初始化）
-
-### 尝试中
-
-- 评估 React Native + WebView 方案，最终选定 React + Capacitor 路线
-
-### 已完成
-
-- 初始化结构化项目模型与 mock 认证、AI、项目、设置服务
-- 新增登录页、项目列表页、编辑页、预览页、设置页
-- 初始化 Capacitor Android 工程并完成 Android 同步
-- 接入 GitHub Actions Debug APK 构建流程
-- 修复 Android 构建权限、旧样式依赖残留与包管理切换问题
-- 将早期 code 模型升级为 `files/messages/versions` 结构
-- 同步 README 与项目治理文档
-
-### 已回退
-
-- 暂无
+- 鏆傛棤
 
 ## 2026-03-27
 
 ### Added
-- 接入 Chrome DevTools MCP 到 Codex 全局配置，补充真实浏览器可视化验收与调试能力。
-- 新增 `docs/chrome-devtools-mcp.md`，明确 Chrome MCP 与 Playwright 的职责边界和使用方式。
-
+- 鎺ュ叆 Chrome DevTools MCP 鍒?Codex 鍏ㄥ眬閰嶇疆锛岃ˉ鍏呯湡瀹炴祻瑙堝櫒鍙鍖栭獙鏀朵笌璋冭瘯鑳藉姏銆?- 鏂板 `docs/chrome-devtools-mcp.md`锛屾槑纭?Chrome MCP 涓?Playwright 鐨勮亴璐ｈ竟鐣屽拰浣跨敤鏂瑰紡銆?
 ### Changed
-- 明确项目 UI 验证采用双轨模式：Playwright 负责自动化闭环，Chrome DevTools MCP 负责人工验收与问题排查。
+- 鏄庣‘椤圭洰 UI 楠岃瘉閲囩敤鍙岃建妯″紡锛歅laywright 璐熻矗鑷姩鍖栭棴鐜紝Chrome DevTools MCP 璐熻矗浜哄伐楠屾敹涓庨棶棰樻帓鏌ャ€?

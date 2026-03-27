@@ -1,20 +1,20 @@
 # Session Brief
 
-Generated: 2026-03-27T09:00:17.394Z
+Generated: 2026-03-27T09:07:19.076Z
 Branch: master
-Commit: 82d6c9f
+Commit: b24cfb5
 
 ## Just Completed
 
-- Task: TASK-022
+- Task: TASK-023
 - Status: docs_verified
-- Summary: Confirm navigation, profile interactions, and security flow review.
-- Verification: Review evidence: TASK-019 profile-navigation; TASK-020 profile-security; TASK-021 auth-smoke
+- Summary: Record change verification evidence and clean temporary test artifacts.
+- Verification: pnpm build; pnpm test -- tests/vitest/user-profile.test.ts tests/vitest/auth-storage.test.ts tests/vitest/profile-security.test.ts; .\\node_modules\\.bin\\playwright.cmd test tests/playwright/auth-smoke.spec.ts tests/playwright/profile-navigation.spec.ts tests/playwright/profile-security.spec.ts --headed --reporter=line --workers=1
 
 ## Current Focus
 
-- Task: TASK-023
-- Title: 执行 change 所需验证并清理一次性测试产物
+- Task: TASK-024
+- Title: 同步主线文档与 specs 后关闭并归档 change
 - Change: otp-auth-and-supabase-user-profile
 - Phase: closure
 - Status: in_progress
@@ -29,18 +29,20 @@ Commit: 82d6c9f
 - openspec/changes/otp-auth-and-supabase-user-profile/specs/project-data/spec.md
 - openspec/changes/otp-auth-and-supabase-user-profile/specs/user-auth/spec.md
 - openspec/changes/otp-auth-and-supabase-user-profile/specs/user-profile/spec.md
+- openspec/specs/project-data/spec.md
+- openspec/specs/user-auth/spec.md
+- openspec/specs/auth-entry-ui/spec.md
+- openspec/specs/user-profile/spec.md
+- openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-024.jsonl
 - TASK.json
-- openspec/changes/otp-auth-and-supabase-user-profile/logs/TASK-023.jsonl
-- CHANGELOG.md
 
 ## Must Verify
 
-- pnpm build
+- None
 
 ## Next Queue
 
-- TASK-023 [in_progress/closure/P0] 执行 change 所需验证并清理一次性测试产物
-- TASK-024 [todo/closure/P0] 同步主线文档与 specs 后关闭并归档 change
+- TASK-024 [in_progress/closure/P0] 同步主线文档与 specs 后关闭并归档 change
 
 ## Cleanup
 
