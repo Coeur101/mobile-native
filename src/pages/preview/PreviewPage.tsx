@@ -43,7 +43,8 @@ export function PreviewPage() {
     void loadProject();
   }, [projectId]);
 
-  const previewDocument = useMemo(() => buildPreviewDocument(project?.files ?? {}), [project]);
+  const projectFiles = project?.files;
+  const previewDocument = useMemo(() => buildPreviewDocument(projectFiles ?? {}), [projectFiles]);
 
   const handleExport = () => {
     if (!project) {

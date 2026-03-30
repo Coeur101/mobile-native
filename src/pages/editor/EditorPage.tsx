@@ -763,12 +763,6 @@ export function EditorPage() {
                             <PulsingDots />
                           </div>
                         )}
-
-                        {generationStatus === "failed" && draftAssistant.progress.error ? (
-                          <p className="mt-3 text-xs leading-5 text-destructive">
-                            {draftAssistant.progress.error}
-                          </p>
-                        ) : null}
                       </div>
 
                       <p className="mt-2 text-[11px] text-muted-foreground">
@@ -889,6 +883,3 @@ export function EditorPage() {
     </PageTransition>
   );
 }
-
-
-
