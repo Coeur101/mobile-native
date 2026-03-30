@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import {
   ArrowLeft,
@@ -22,12 +22,22 @@ import { VersionPanel } from "@/components/ui/version-panel";
 import { promptTemplates } from "@/features/project/templates";
 import { buttonTap, cardLift, iconLift, SPRING_BOUNCY, SPRING_GENTLE, SPRING_PANEL } from "@/lib/animations";
 import { projectService } from "@/services/project";
-import type { Project } from "@/types";
+import type { Project, ProjectGenerationProgress, ProjectGenerationStatus, ThinkingStep } from "@/types";
 
 const templateIcons = [Grid2X2, Grid3X3, Timer, CloudSun];
 
 interface EditorRouteState {
   initialPrompt?: string;
+}
+
+interface PendingUserMessage {
+  content: string;
+  createdAt: string;
+}
+
+interface DraftAssistantState {
+  startedAt: string;
+  progress: ProjectGenerationProgress;
 }
 
 function formatConversationMeta(project: Project | null) {
@@ -45,6 +55,47 @@ function formatConversationMeta(project: Project | null) {
   return `${isToday ? "今天" : updatedAt.toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })} · ${project.messages.length} 条对话`;
 }
 
+function formatMessageTime(value: string) {
+  return new Date(value).toLocaleTimeString("zh-CN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function getGenerationLabel(status: ProjectGenerationStatus) {
+  switch (status) {
+    case "streaming":
+      return "流式生成中";
+    case "persisting":
+      return "正在保存结果";
+    case "failed":
+      return "生成失败";
+    case "completed":
+      return "已完成";
+    default:
+      return "待开始";
+  }
+}
+
+function getGenerationSummary(status: ProjectGenerationStatus, error?: string) {
+  switch (status) {
+    case "streaming":
+      return "AI 正在逐步生成回复和思路。";
+    case "persisting":
+      return "已拿到完整结果，正在写入项目记录。";
+    case "failed":
+      return error ?? "这次生成失败了，你可以调整需求后重试。";
+    case "completed":
+      return "本次生成已完成。";
+    default:
+      return "准备开始新的生成会话。";
+  }
+}
+
+function mergeThinkingSteps(current: ThinkingStep[], incoming: ThinkingStep[]) {
+  return incoming.length > 0 ? incoming : current;
+}
+
 export function EditorPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,13 +106,27 @@ export function EditorPage() {
   const [isLoadingProject, setIsLoadingProject] = useState(Boolean(projectId));
   const [loadError, setLoadError] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [pendingUserMessage, setPendingUserMessage] = useState<PendingUserMessage | null>(null);
+  const [draftAssistant, setDraftAssistant] = useState<DraftAssistantState | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [showVersionPanel, setShowVersionPanel] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editName, setEditName] = useState("");
   const [isComposerFocused, setIsComposerFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const generationStatus = draftAssistant?.progress.status ?? "idle";
+  const isGenerationActive = generationStatus === "streaming" || generationStatus === "persisting";
+  const sessionTitle = draftAssistant ? (project ? `${project.name}（更新中）` : "新的生成会话") : project?.name ?? "新的生成会话";
+  const sessionSummary = draftAssistant
+    ? getGenerationSummary(generationStatus, draftAssistant.progress.error)
+    : project?.description ?? getGenerationSummary(generationStatus);
+  const sessionMeta = draftAssistant
+    ? `本轮需求发送于 ${formatMessageTime(pendingUserMessage?.createdAt ?? draftAssistant.startedAt)}`
+    : project
+      ? `${formatConversationMeta(project)} · ${project.versions.length} 个版本`
+      : pendingUserMessage
+        ? `本轮需求发送于 ${formatMessageTime(pendingUserMessage.createdAt)}`
+        : "准备开始新会话";
 
   useEffect(() => {
     async function loadProject() {
@@ -98,36 +163,99 @@ export function EditorPage() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [project?.messages, isGenerating]);
+  }, [
+    project?.messages,
+    pendingUserMessage?.content,
+    draftAssistant?.progress.content,
+    draftAssistant?.progress.thinkingSteps,
+    draftAssistant?.progress.status,
+  ]);
 
   const handleGenerate = async () => {
-    if (!prompt.trim() || isGenerating) {
+    const submittedPrompt = prompt.trim();
+    if (!submittedPrompt || isGenerationActive) {
       return;
     }
 
-    setIsGenerating(true);
+    const startedAt = new Date().toISOString();
+    setPendingUserMessage({
+      content: submittedPrompt,
+      createdAt: startedAt,
+    });
+    setDraftAssistant({
+      startedAt,
+      progress: {
+        status: "streaming",
+        content: "",
+        thinkingSteps: [],
+      },
+    });
 
     try {
       const nextProject = project
-        ? await projectService.continueProject(project.id, prompt)
-        : await projectService.createProject(prompt);
+        ? await projectService.continueProject(project.id, submittedPrompt, {
+            onProgress: (progress) => {
+              setDraftAssistant((current) => ({
+                startedAt: current?.startedAt ?? startedAt,
+                progress: {
+                  status: progress.status,
+                  content: progress.content || current?.progress.content || "",
+                  thinkingSteps: mergeThinkingSteps(current?.progress.thinkingSteps ?? [], progress.thinkingSteps),
+                  error: progress.error,
+                },
+              }));
+            },
+          })
+        : await projectService.createProject(submittedPrompt, {
+            onProgress: (progress) => {
+              setDraftAssistant((current) => ({
+                startedAt: current?.startedAt ?? startedAt,
+                progress: {
+                  status: progress.status,
+                  content: progress.content || current?.progress.content || "",
+                  thinkingSteps: mergeThinkingSteps(current?.progress.thinkingSteps ?? [], progress.thinkingSteps),
+                  error: progress.error,
+                },
+              }));
+            },
+          });
 
       if (!nextProject) {
-        toast.error("项目不存在，无法继续生成。");
+        const message = "项目不存在，无法继续生成。";
+        setDraftAssistant((current) => ({
+          startedAt: current?.startedAt ?? startedAt,
+          progress: {
+            status: "failed",
+            content: current?.progress.content ?? "",
+            thinkingSteps: current?.progress.thinkingSteps ?? [],
+            error: message,
+          },
+        }));
+        toast.error(message);
         return;
       }
 
       setProject(nextProject);
       setPrompt("");
+      setPendingUserMessage(null);
+      setDraftAssistant(null);
       toast.success(project ? "项目已根据新需求更新。" : "项目已创建。");
 
       if (!projectId) {
         navigate(`/editor/${nextProject.id}`, { replace: true });
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "生成失败。");
-    } finally {
-      setIsGenerating(false);
+      const message = error instanceof Error ? error.message : "生成失败。";
+      setDraftAssistant((current) => ({
+        startedAt: current?.startedAt ?? startedAt,
+        progress: {
+          status: "failed",
+          content: current?.progress.content ?? "",
+          thinkingSteps: current?.progress.thinkingSteps ?? [],
+          error: current?.progress.error ?? message,
+        },
+      }));
+      toast.error(message);
     }
   };
 
@@ -197,7 +325,7 @@ export function EditorPage() {
   };
 
   const messages = project?.messages ?? [];
-  const isStarterMode = !project;
+  const isStarterMode = !project && !pendingUserMessage && !draftAssistant;
 
   if (projectId && isLoadingProject) {
     return (
@@ -273,10 +401,10 @@ export function EditorPage() {
   }
 
   return (
-    <PageTransition className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(0,113,227,0.08),_transparent_26%),linear-gradient(180deg,_rgba(255,255,255,0.99),_rgba(246,247,251,0.97))]">
+    <PageTransition className="relative min-h-screen overflow-hidden">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-64 overflow-hidden">
         <div className="animate-drift absolute left-[-3rem] top-8 h-28 w-28 rounded-full bg-primary/10 blur-3xl" />
-        <div className="animate-glow absolute right-[-2rem] top-16 h-24 w-24 rounded-full bg-sky-300/14 blur-3xl" />
+        <div className="animate-glow absolute right-[-2rem] top-16 h-24 w-24 rounded-full bg-primary/12 blur-3xl" />
       </div>
 
       <header className="sticky top-0 z-20 border-b border-border/70 bg-background/86 backdrop-blur-2xl">
@@ -289,6 +417,7 @@ export function EditorPage() {
           >
             <motion.button
               type="button"
+              data-testid="editor-back-home"
               whileTap={buttonTap}
               whileHover={reduceMotion ? undefined : iconLift}
               transition={SPRING_BOUNCY}
@@ -323,10 +452,12 @@ export function EditorPage() {
                   onClick={project ? startEditing : undefined}
                   title={project ? "点击编辑项目名称" : undefined}
                 >
-                  {project ? project.name : "新建项目"}
+                  {project ? project.name : pendingUserMessage ? "新会话" : "新建项目"}
                 </h1>
               )}
-              <p className="truncate text-xs text-muted-foreground">{formatConversationMeta(project)}</p>
+              <p className="truncate text-xs text-muted-foreground">
+                {project ? formatConversationMeta(project) : draftAssistant ? getGenerationLabel(generationStatus) : "从一句需求开始"}
+              </p>
             </div>
           </motion.div>
 
@@ -344,9 +475,9 @@ export function EditorPage() {
                 whileHover={reduceMotion ? undefined : iconLift}
                 transition={SPRING_BOUNCY}
                 onClick={() => void handleSaveVersion()}
-                disabled={isSaving}
+                disabled={isSaving || isGenerationActive}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-card/92 text-foreground shadow-[var(--shadow-panel)] transition-colors hover:bg-secondary/75 disabled:opacity-55"
-                title="保存版本"
+                title={isGenerationActive ? "生成中暂不可保存版本" : "保存版本"}
               >
                 <Save className="h-4 w-4" />
               </motion.button>
@@ -357,8 +488,9 @@ export function EditorPage() {
                 whileHover={reduceMotion ? undefined : iconLift}
                 transition={SPRING_BOUNCY}
                 onClick={() => setShowVersionPanel(true)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-card/92 text-foreground shadow-[var(--shadow-panel)] transition-colors hover:bg-secondary/75"
-                title="版本历史"
+                disabled={isGenerationActive}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-card/92 text-foreground shadow-[var(--shadow-panel)] transition-colors hover:bg-secondary/75 disabled:opacity-55"
+                title={isGenerationActive ? "生成中暂不可查看版本历史" : "版本历史"}
               >
                 <WandSparkles className="h-4 w-4" />
               </motion.button>
@@ -369,8 +501,9 @@ export function EditorPage() {
                 whileHover={reduceMotion ? undefined : iconLift}
                 transition={SPRING_BOUNCY}
                 onClick={() => navigate(`/preview/${project.id}`)}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background shadow-[var(--shadow-panel)]"
-                title="预览"
+                disabled={isGenerationActive}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background shadow-[var(--shadow-panel)] disabled:opacity-40"
+                title={isGenerationActive ? "生成中暂不可预览" : "预览"}
               >
                 <Eye className="h-4 w-4" />
               </motion.button>
@@ -408,8 +541,7 @@ export function EditorPage() {
                 你想创造点什么？
               </h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                输入需求或者先尝试下面这些灵感模板。
-              </p>
+                输入需求或者先尝试下面这些灵感模板。              </p>
             </motion.div>
 
             <div className="mt-8 grid grid-cols-2 gap-3">
@@ -447,7 +579,7 @@ export function EditorPage() {
           </section>
         </main>
       ) : (
-        <main className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-md flex-col px-4 pb-[calc(8.5rem+env(safe-area-inset-bottom))] pt-4">
+        <main className="relative z-10 mx-auto flex h-[calc(100dvh-4rem)] min-h-0 w-full max-w-md flex-col px-4 pb-[calc(8.5rem+env(safe-area-inset-bottom))] pt-4">
           <motion.section
             initial={reduceMotion ? undefined : { opacity: 0, y: 16, scale: 0.985 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
@@ -463,21 +595,32 @@ export function EditorPage() {
               >
                 <Sparkles className="h-5 w-5" />
               </motion.div>
-              <div className="min-w-0">
-                <h2 className="truncate text-lg font-semibold tracking-[-0.03em] text-foreground">
-                  {project?.name}
-                </h2>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="truncate text-lg font-semibold tracking-[-0.03em] text-foreground">
+                    {sessionTitle}
+                  </h2>
+                  {draftAssistant ? (
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${
+                        generationStatus === "failed"
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-secondary text-muted-foreground"
+                      }`}
+                    >
+                      {getGenerationLabel(generationStatus)}
+                    </span>
+                  ) : null}
+                </div>
                 <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">
-                  {project?.description}
+                  {sessionSummary}
                 </p>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {formatConversationMeta(project)} · {project?.versions.length ?? 0} 个版本
-                </p>
+                <p className="mt-2 text-xs text-muted-foreground">{sessionMeta}</p>
               </div>
             </div>
           </motion.section>
 
-          <div className="mt-4 flex-1 overflow-y-auto [overscroll-behavior:contain]">
+          <div className="mt-4 min-h-0 flex-1 overflow-y-auto [overscroll-behavior:contain]">
             <AnimatePresence mode="popLayout">
               <div className="space-y-4 pb-4">
                 {messages.map((message, index) => {
@@ -522,10 +665,7 @@ export function EditorPage() {
                         </motion.div>
 
                         <p className={`mt-2 text-[11px] text-muted-foreground ${isUser ? "text-right" : ""}`}>
-                          {new Date(message.createdAt).toLocaleTimeString("zh-CN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {formatMessageTime(message.createdAt)}
                         </p>
                       </div>
 
@@ -542,8 +682,44 @@ export function EditorPage() {
                   );
                 })}
 
-                {isGenerating ? (
+                {pendingUserMessage ? (
                   <motion.div
+                    key={`pending-user-${pendingUserMessage.createdAt}`}
+                    layout={!reduceMotion}
+                    initial={reduceMotion ? undefined : { opacity: 0, y: 14, scale: 0.98 }}
+                    animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+                    exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
+                    transition={SPRING_PANEL}
+                    className="flex justify-end gap-3"
+                  >
+                    <div className="max-w-[84%] items-end">
+                      <motion.div
+                        whileHover={reduceMotion ? undefined : { y: -2 }}
+                        transition={SPRING_BOUNCY}
+                        className="rounded-[24px] rounded-br-[10px] bg-foreground px-4 py-3 text-sm leading-7 text-background shadow-[var(--shadow-panel)]"
+                      >
+                        <p className="whitespace-pre-wrap">{pendingUserMessage.content}</p>
+                      </motion.div>
+
+                      <p className="mt-2 text-right text-[11px] text-muted-foreground">
+                        {formatMessageTime(pendingUserMessage.createdAt)}
+                      </p>
+                    </div>
+
+                    <motion.div
+                      animate={reduceMotion ? undefined : { y: [0, -2, 0] }}
+                      transition={reduceMotion ? undefined : { duration: 4.6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                      className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-foreground text-background"
+                    >
+                      <WandSparkles className="h-4 w-4" />
+                    </motion.div>
+                  </motion.div>
+                ) : null}
+
+                {draftAssistant ? (
+                  <motion.div
+                    key={`draft-assistant-${draftAssistant.startedAt}`}
+                    layout={!reduceMotion}
                     initial={reduceMotion ? undefined : { opacity: 0, y: 10 }}
                     animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                     exit={reduceMotion ? undefined : { opacity: 0 }}
@@ -557,11 +733,47 @@ export function EditorPage() {
                     >
                       <Sparkles className="h-4 w-4" />
                     </motion.div>
-                    <div className="rounded-[24px] rounded-bl-[10px] border border-border/80 bg-card/96 px-4 py-3 shadow-[var(--shadow-panel)]">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        正在生成内容
-                        <PulsingDots />
+
+                    <div className="max-w-[84%]">
+                      <div
+                        className={`rounded-[24px] rounded-bl-[10px] border px-4 py-3 text-sm leading-7 shadow-[var(--shadow-panel)] ${
+                          generationStatus === "failed"
+                            ? "border-destructive/25 bg-destructive/5 text-foreground"
+                            : "border-border/80 bg-card/96 text-foreground"
+                        }`}
+                      >
+                        {draftAssistant.progress.thinkingSteps.length > 0 ? (
+                          <div className="mb-3">
+                            <ThoughtChain
+                              steps={draftAssistant.progress.thinkingSteps}
+                              defaultCollapsed={generationStatus !== "streaming"}
+                            />
+                          </div>
+                        ) : null}
+
+                        {draftAssistant.progress.content ? (
+                          <p className="whitespace-pre-wrap">{draftAssistant.progress.content}</p>
+                        ) : generationStatus === "failed" ? (
+                          <p className="whitespace-pre-wrap text-destructive">
+                            {draftAssistant.progress.error ?? "生成失败，请稍后重试。"}
+                          </p>
+                        ) : (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {generationStatus === "persisting" ? "正在保存最终结果" : "正在生成内容"}
+                            <PulsingDots />
+                          </div>
+                        )}
+
+                        {generationStatus === "failed" && draftAssistant.progress.error ? (
+                          <p className="mt-3 text-xs leading-5 text-destructive">
+                            {draftAssistant.progress.error}
+                          </p>
+                        ) : null}
                       </div>
+
+                      <p className="mt-2 text-[11px] text-muted-foreground">
+                        {formatMessageTime(draftAssistant.startedAt)} · {getGenerationLabel(generationStatus)}
+                      </p>
                     </div>
                   </motion.div>
                 ) : null}
@@ -630,7 +842,7 @@ export function EditorPage() {
                     : "继续描述你希望生成或修改的页面内容..."
                 }
                 className="max-h-32 min-h-[48px] flex-1 resize-none bg-transparent px-2 py-2 text-[15px] leading-6 text-foreground outline-none placeholder:text-muted-foreground"
-                disabled={isGenerating}
+                disabled={isGenerationActive}
               />
               <motion.button
                 type="button"
@@ -657,11 +869,11 @@ export function EditorPage() {
                       }
                 }
                 onClick={() => void handleGenerate()}
-                disabled={!prompt.trim() || isGenerating}
+                disabled={!prompt.trim() || isGenerationActive}
                 className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-opacity disabled:opacity-40"
                 title="发送需求"
               >
-                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                {isGenerationActive ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </motion.button>
             </div>
           </motion.div>
@@ -677,3 +889,6 @@ export function EditorPage() {
     </PageTransition>
   );
 }
+
+
+

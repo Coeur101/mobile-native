@@ -1,5 +1,13 @@
-import type { GeneratedProjectPayload, Project } from "@/types";
+import type { GeneratedProjectPayload, Project, ProjectGenerationProgress } from "@/types";
+
+export interface ProjectGenerationOptions {
+  onProgress?: (progress: ProjectGenerationProgress) => void;
+}
 
 export interface AIService {
-  generateProjectFromPrompt(prompt: string, project?: Project): Promise<GeneratedProjectPayload>;
+  generateProjectFromPrompt(
+    prompt: string,
+    project?: Project,
+    options?: ProjectGenerationOptions,
+  ): Promise<GeneratedProjectPayload>;
 }

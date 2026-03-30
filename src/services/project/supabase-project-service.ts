@@ -6,12 +6,13 @@ import type { AIService } from "@/services/ai/ai-service";
 import type {
   Project,
   ProjectFileMap,
+  ProjectGenerationProgress,
   ProjectMessage,
   ProjectMeta,
   ProjectStatus,
   ProjectVersion,
 } from "@/types";
-import type { ProjectService } from "./project-service";
+import type { ProjectGenerationOptions, ProjectService } from "./project-service";
 
 type ProjectRow = {
   id: string;
@@ -345,6 +346,16 @@ async function touchProject(client: SupabaseClient, projectId: string) {
   }
 }
 
+function getAssistantGenerationProgress(payload: { messages: Array<Partial<ProjectMessage>> }): ProjectGenerationProgress {
+  const assistantMessage = payload.messages.find((message) => message.role === "assistant");
+
+  return {
+    status: "streaming",
+    content: assistantMessage?.content ?? "",
+    thinkingSteps: assistantMessage?.thinkingSteps ?? [],
+  };
+}
+
 export function createSupabaseProjectService(
   dependencies: ProjectServiceDependencies = {},
 ): ProjectService {
@@ -374,20 +385,152 @@ export function createSupabaseProjectService(
       return project;
     },
 
-    async createProject(prompt) {
+    async createProject(prompt, options) {
       const ownerUserId = requireCurrentUserId();
       const client = requireClient(dependencies.client);
-      const payload = await aiService.generateProjectFromPrompt(prompt);
-      const now = new Date().toISOString();
-      const projectId = createId("project");
-      const project: Project = {
-        id: projectId,
-        ownerUserId,
-        name: payload.projectName,
-        description: payload.summary,
-        status: "active",
-        files: payload.files,
-        messages: [
+      try {
+        const payload = await aiService.generateProjectFromPrompt(prompt, undefined, {
+          onProgress: options?.onProgress,
+        });
+        const now = new Date().toISOString();
+        const projectId = createId("project");
+        const project: Project = {
+          id: projectId,
+          ownerUserId,
+          name: payload.projectName,
+          description: payload.summary,
+          status: "active",
+          files: payload.files,
+          messages: [
+            {
+              id: createId("message"),
+              role: "user",
+              content: prompt,
+              createdAt: now,
+              projectId,
+              ownerUserId,
+            },
+            ...payload.messages.map((message) => ({
+              ...message,
+              id: message.id || createId("message"),
+              projectId,
+              ownerUserId,
+            })),
+          ],
+          versions: [
+            {
+              id: nextVersionId(projectId, 1),
+              versionNo: 1,
+              summary: "首次根据需求生成的版本",
+              files: payload.files,
+              createdAt: now,
+              projectId,
+              ownerUserId,
+            },
+          ],
+          preview: payload.meta,
+          createdAt: now,
+          updatedAt: now,
+        };
+
+        options?.onProgress?.({
+          ...getAssistantGenerationProgress(payload),
+          status: "persisting",
+        });
+
+        const { error: projectError } = await client.from("projects").insert({
+          id: project.id,
+          owner_user_id: project.ownerUserId,
+          name: project.name,
+          description: project.description,
+          status: project.status,
+          files: project.files,
+          preview: project.preview,
+          created_at: project.createdAt,
+          updated_at: project.updatedAt,
+        });
+
+        if (projectError) {
+          throw new Error(projectError.message);
+        }
+
+        const { error: versionsError } = await client.from("project_versions").insert(
+          project.versions.map((version) => ({
+            id: version.id,
+            version_no: version.versionNo,
+            summary: version.summary,
+            files: version.files,
+            created_at: version.createdAt,
+            project_id: version.projectId,
+            owner_user_id: version.ownerUserId,
+          })),
+        );
+
+        if (versionsError) {
+          throw new Error(versionsError.message);
+        }
+
+        const { error: messagesError } = await client.from("project_messages").insert(
+          project.messages.map((message) => ({
+            id: message.id,
+            role: message.role,
+            content: message.content,
+            created_at: message.createdAt,
+            project_id: message.projectId,
+            owner_user_id: message.ownerUserId,
+            thinking_steps: message.thinkingSteps ?? null,
+            metadata: message.metadata ?? null,
+          })),
+        );
+
+        if (messagesError) {
+          throw new Error(messagesError.message);
+        }
+
+        const projects = await listRemoteProjects(client, ownerUserId);
+        cacheProjects(projects);
+        const created = projects.find((item) => item.id === projectId) ?? project;
+        options?.onProgress?.({
+          ...getAssistantGenerationProgress(payload),
+          status: "completed",
+        });
+        return created;
+      } catch (error) {
+        if (error instanceof Error) {
+          options?.onProgress?.({
+            status: "failed",
+            content: "",
+            thinkingSteps: [],
+            error: error.message,
+          });
+          throw error;
+        }
+
+        options?.onProgress?.({
+          status: "failed",
+          content: "",
+          thinkingSteps: [],
+          error: "项目生成失败。",
+        });
+        throw new Error("项目生成失败。");
+      }
+    },
+
+    async continueProject(projectId, prompt, options) {
+      const ownerUserId = requireCurrentUserId();
+      const client = requireClient(dependencies.client);
+      const project = await loadRemoteProjectById(client, ownerUserId, projectId);
+      if (!project) {
+        return null;
+      }
+
+      try {
+        const payload = await aiService.generateProjectFromPrompt(prompt, project, {
+          onProgress: options?.onProgress,
+        });
+        const now = new Date().toISOString();
+        const nextVersionNo = project.versions.length + 1;
+        const nextMessages: ProjectMessage[] = [
           {
             id: createId("message"),
             role: "user",
@@ -402,158 +545,89 @@ export function createSupabaseProjectService(
             projectId,
             ownerUserId,
           })),
-        ],
-        versions: [
-          {
-            id: nextVersionId(projectId, 1),
-            versionNo: 1,
-            summary: "首次根据需求生成的版本",
+        ];
+
+        options?.onProgress?.({
+          ...getAssistantGenerationProgress(payload),
+          status: "persisting",
+        });
+
+        const { error: projectError } = await client
+          .from("projects")
+          .update({
             files: payload.files,
-            createdAt: now,
-            projectId,
-            ownerUserId,
-          },
-        ],
-        preview: payload.meta,
-        createdAt: now,
-        updatedAt: now,
-      };
+            description: payload.summary,
+            updated_at: now,
+          })
+          .eq("id", projectId)
+          .eq("owner_user_id", ownerUserId);
 
-      const { error: projectError } = await client.from("projects").insert({
-        id: project.id,
-        owner_user_id: project.ownerUserId,
-        name: project.name,
-        description: project.description,
-        status: project.status,
-        files: project.files,
-        preview: project.preview,
-        created_at: project.createdAt,
-        updated_at: project.updatedAt,
-      });
+        if (projectError) {
+          throw new Error(projectError.message);
+        }
 
-      if (projectError) {
-        throw new Error(projectError.message);
-      }
-
-      const { error: versionsError } = await client.from("project_versions").insert(
-        project.versions.map((version) => ({
-          id: version.id,
-          version_no: version.versionNo,
-          summary: version.summary,
-          files: version.files,
-          created_at: version.createdAt,
-          project_id: version.projectId,
-          owner_user_id: version.ownerUserId,
-        })),
-      );
-
-      if (versionsError) {
-        throw new Error(versionsError.message);
-      }
-
-      const { error: messagesError } = await client.from("project_messages").insert(
-        project.messages.map((message) => ({
-          id: message.id,
-          role: message.role,
-          content: message.content,
-          created_at: message.createdAt,
-          project_id: message.projectId,
-          owner_user_id: message.ownerUserId,
-          thinking_steps: message.thinkingSteps ?? null,
-          metadata: message.metadata ?? null,
-        })),
-      );
-
-      if (messagesError) {
-        throw new Error(messagesError.message);
-      }
-
-      const projects = await listRemoteProjects(client, ownerUserId);
-      cacheProjects(projects);
-      return projects.find((item) => item.id === projectId) ?? project;
-    },
-
-    async continueProject(projectId, prompt) {
-      const ownerUserId = requireCurrentUserId();
-      const client = requireClient(dependencies.client);
-      const project = await loadRemoteProjectById(client, ownerUserId, projectId);
-      if (!project) {
-        return null;
-      }
-
-      const payload = await aiService.generateProjectFromPrompt(prompt, project);
-      const now = new Date().toISOString();
-      const nextVersionNo = project.versions.length + 1;
-      const nextMessages: ProjectMessage[] = [
-        {
-          id: createId("message"),
-          role: "user",
-          content: prompt,
-          createdAt: now,
-          projectId,
-          ownerUserId,
-        },
-        ...payload.messages.map((message) => ({
-          ...message,
-          id: message.id || createId("message"),
-          projectId,
-          ownerUserId,
-        })),
-      ];
-
-      const { error: projectError } = await client
-        .from("projects")
-        .update({
+        const { error: versionError } = await client.from("project_versions").insert({
+          id: nextVersionId(project.id, nextVersionNo),
+          version_no: nextVersionNo,
+          summary: `根据新需求更新：${prompt.slice(0, 48)}`,
           files: payload.files,
-          description: payload.summary,
-          updated_at: now,
-        })
-        .eq("id", projectId)
-        .eq("owner_user_id", ownerUserId);
+          created_at: now,
+          project_id: project.id,
+          owner_user_id: ownerUserId,
+        });
 
-      if (projectError) {
-        throw new Error(projectError.message);
+        if (versionError) {
+          throw new Error(versionError.message);
+        }
+
+        const { error: messagesError } = await client.from("project_messages").insert(
+          nextMessages.map((message) => ({
+            id: message.id,
+            role: message.role,
+            content: message.content,
+            created_at: message.createdAt,
+            project_id: message.projectId,
+            owner_user_id: message.ownerUserId,
+            thinking_steps: message.thinkingSteps ?? null,
+            metadata: message.metadata ?? null,
+          })),
+        );
+
+        if (messagesError) {
+          throw new Error(messagesError.message);
+        }
+
+        const updated = await loadRemoteProjectById(client, ownerUserId, projectId);
+        if (!updated) {
+          return null;
+        }
+
+        const cached = localDb.getProjects().filter((item) => item.id !== projectId);
+        cacheProjects([updated, ...cached]);
+        options?.onProgress?.({
+          ...getAssistantGenerationProgress(payload),
+          status: "completed",
+        });
+        return updated;
+      } catch (error) {
+        if (error instanceof Error) {
+          options?.onProgress?.({
+            status: "failed",
+            content: "",
+            thinkingSteps: [],
+            error: error.message,
+          });
+          throw error;
+        }
+
+        options?.onProgress?.({
+          status: "failed",
+          content: "",
+          thinkingSteps: [],
+          error: "项目续写失败。",
+        });
+        throw new Error("项目续写失败。");
       }
-
-      const { error: versionError } = await client.from("project_versions").insert({
-        id: nextVersionId(project.id, nextVersionNo),
-        version_no: nextVersionNo,
-        summary: `根据新需求更新：${prompt.slice(0, 48)}`,
-        files: payload.files,
-        created_at: now,
-        project_id: project.id,
-        owner_user_id: ownerUserId,
-      });
-
-      if (versionError) {
-        throw new Error(versionError.message);
-      }
-
-      const { error: messagesError } = await client.from("project_messages").insert(
-        nextMessages.map((message) => ({
-          id: message.id,
-          role: message.role,
-          content: message.content,
-          created_at: message.createdAt,
-          project_id: message.projectId,
-          owner_user_id: message.ownerUserId,
-          thinking_steps: message.thinkingSteps ?? null,
-          metadata: message.metadata ?? null,
-        })),
-      );
-
-      if (messagesError) {
-        throw new Error(messagesError.message);
-      }
-
-      const updated = await loadRemoteProjectById(client, ownerUserId, projectId);
-      if (!updated) {
-        return null;
-      }
-
-      const cached = localDb.getProjects().filter((item) => item.id !== projectId);
-      cacheProjects([updated, ...cached]);
-      return updated;
     },
 
     async updateProjectFiles(projectId, files) {

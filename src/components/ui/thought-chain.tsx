@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Check, ChevronDown, ChevronRight, Circle, CircleAlert, Loader2 } from "lucide-react";
 import type { ThinkingStep, ThinkingStepStatus } from "@/types";
 
@@ -51,6 +51,7 @@ export const ThoughtChain = ({ steps, defaultCollapsed = true }: ThoughtChainPro
     <div className="overflow-hidden rounded-[22px] border border-border bg-background/70 backdrop-blur-xl">
       <button
         type="button"
+        data-testid="thought-chain-toggle"
         onClick={() => setCollapsed((value) => !value)}
         className="flex w-full items-center gap-2 px-4 py-3 text-left transition-colors hover:bg-secondary/55"
       >

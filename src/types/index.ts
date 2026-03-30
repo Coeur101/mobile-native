@@ -8,12 +8,21 @@ export type ProjectFileMap = Record<string, string>;
 
 export type ThinkingStepStatus = "pending" | "loading" | "success" | "error";
 
+export type ProjectGenerationStatus = "idle" | "streaming" | "persisting" | "completed" | "failed";
+
 export interface ThinkingStep {
   id: string;
   title: string;
   description?: string;
   status: ThinkingStepStatus;
   content?: string;
+}
+
+export interface ProjectGenerationProgress {
+  status: ProjectGenerationStatus;
+  content: string;
+  thinkingSteps: ThinkingStep[];
+  error?: string;
 }
 
 export interface ProjectMessage {
