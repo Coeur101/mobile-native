@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-30T18:31:05+08:00",
+  "updatedAt": "2026-03-30T18:41:12+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -292,7 +292,7 @@
       "phase": "delivery",
       "title": "记录验证证据并清理临时测试产物",
       "type": "verification",
-      "status": "docs_verified",
+      "status": "done",
       "priority": "P0",
       "scope": "build、Vitest、Playwright 证据落账以及生成测试与结果清理",
       "acceptanceCriteria": [
@@ -313,8 +313,8 @@
         "CHANGELOG.md"
       ],
       "commitRequired": true,
-      "commitRef": null,
-      "commitMessage": null,
+      "commitRef": "3982e7d",
+      "commitMessage": "test: TASK-006 finalize email auth verification evidence",
       "pushRequired": false,
       "artifacts": {
         "functionalTests": [
@@ -336,7 +336,8 @@
       "blockers": [],
       "historyRef": "openspec/changes/integrate-free-email-auth/logs/TASK-006.jsonl",
       "createdAt": "2026-03-26T17:05:00+08:00",
-      "updatedAt": "2026-03-26T20:05:00+08:00"
+      "updatedAt": "2026-03-30T18:41:12+08:00",
+      "closedAt": "2026-03-30T18:41:12+08:00"
     },
     {
       "id": "TASK-007",
