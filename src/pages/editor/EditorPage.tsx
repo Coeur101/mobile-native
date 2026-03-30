@@ -22,6 +22,7 @@ import { VersionPanel } from "@/components/ui/version-panel";
 import { promptTemplates } from "@/features/project/templates";
 import { buttonTap, cardLift, iconLift, SPRING_BOUNCY, SPRING_GENTLE, SPRING_PANEL } from "@/lib/animations";
 import { projectService } from "@/services/project";
+import { useGlobalStatusStore } from "@/stores/use-global-status-store";
 import type { Project, ProjectGenerationProgress, ProjectGenerationStatus, ThinkingStep } from "@/types";
 
 const templateIcons = [Grid2X2, Grid3X3, Timer, CloudSun];
@@ -170,6 +171,56 @@ export function EditorPage() {
     draftAssistant?.progress.thinkingSteps,
     draftAssistant?.progress.status,
   ]);
+
+  // 将 AI 生成进度同步到全局状态栏
+  useEffect(() => {
+    const GENERATION_ID = "ai-generation";
+    const globalStatus = useGlobalStatusStore.getState();
+
+    if (!draftAssistant) {
+      globalStatus.dismiss(GENERATION_ID);
+      return;
+    }
+
+    const status = draftAssistant.progress.status;
+    const targetPath = projectId ? `/editor/${projectId}` : undefined;
+
+    if (status === "streaming") {
+      globalStatus.push({
+        id: GENERATION_ID,
+        severity: "info",
+        message: project ? `正在更新「${project.name}」...` : "AI 正在生成项目...",
+        dismissable: false,
+        autoDismissMs: null,
+      });
+    } else if (status === "persisting") {
+      globalStatus.push({
+        id: GENERATION_ID,
+        severity: "info",
+        message: "正在保存生成结果...",
+        dismissable: false,
+        autoDismissMs: null,
+      });
+    } else if (status === "completed") {
+      globalStatus.push({
+        id: GENERATION_ID,
+        severity: "success",
+        message: project ? `「${project.name}」已更新` : "项目已生成完成",
+        dismissable: true,
+        autoDismissMs: 4000,
+        actionLabel: targetPath ? "查看" : undefined,
+        actionTo: targetPath,
+      });
+    } else if (status === "failed") {
+      globalStatus.push({
+        id: GENERATION_ID,
+        severity: "error",
+        message: draftAssistant.progress.error ?? "生成失败",
+        dismissable: true,
+        autoDismissMs: 8000,
+      });
+    }
+  }, [draftAssistant?.progress.status, draftAssistant?.progress.error, project?.name, projectId]);
 
   const handleGenerate = async () => {
     const submittedPrompt = prompt.trim();

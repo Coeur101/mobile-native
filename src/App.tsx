@@ -37,13 +37,15 @@ export default function App() {
     <ErrorBoundary>
       <RouterProvider router={router} />
       <Toaster
-        position="bottom-center"
+        position="top-center"
         richColors
-        offset="80px"
+        visibleToasts={2}
+        offset="5rem"
+        gap={8}
         theme={resolvedMode}
         toastOptions={{
           className:
-            "rounded-[24px] border border-border bg-card/95 text-foreground shadow-[0_18px_48px_rgba(15,23,42,0.12)] backdrop-blur-xl",
+            "rounded-[20px] border border-border bg-card/95 text-foreground shadow-[0_12px_32px_rgba(15,23,42,0.10)] backdrop-blur-xl",
         }}
       />
     </ErrorBoundary>
