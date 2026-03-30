@@ -56,9 +56,9 @@ export function SettingsPage() {
             </motion.button>
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-                Workspace settings
+                工作区设置
               </div>
-              <h1 className="mt-1 text-[1.1rem] font-semibold text-foreground">Advanced Settings</h1>
+              <h1 className="mt-1 text-[1.1rem] font-semibold text-foreground">高级设置</h1>
             </div>
           </div>
 
@@ -80,7 +80,7 @@ export function SettingsPage() {
           <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
             <div>
               <div className="inline-flex rounded-full bg-accent px-3 py-1 text-[11px] font-medium text-accent-foreground">
-                Device scoped configuration
+                当前设备配置
               </div>
               <h2 className="mt-4 text-[2rem] font-semibold tracking-[-0.05em] text-foreground sm:text-[2.5rem]">
                 只保留与当前工作设备和 AI 接入相关的高级配置。
@@ -92,8 +92,8 @@ export function SettingsPage() {
 
             <div className="grid gap-3 sm:grid-cols-3">
               {[
-                { label: "存储范围", value: "Local only" },
-                { label: "配置类型", value: "AI + Device" },
+                { label: "存储范围", value: "仅当前设备" },
+                { label: "配置类型", value: "AI 与设备" },
                 { label: "当前主题", value: settings.theme || "auto" },
               ].map((item) => (
                 <div key={item.label} className="rounded-[24px] bg-secondary/72 px-4 py-4">
@@ -209,3 +209,4 @@ export function SettingsPage() {
     </PageTransition>
   );
 }
+

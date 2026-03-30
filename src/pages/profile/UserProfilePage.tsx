@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useNavigate } from "react-router";
 import {
   ArrowLeft,
@@ -10,6 +10,7 @@ import {
   Mail,
   Monitor,
   Moon,
+  Save,
   ShieldCheck,
   Sun,
   UserCircle2,
@@ -40,20 +41,20 @@ const themeOptions: Array<{
 }> = [
   {
     value: "light",
-    label: "Light",
-    description: "Bright surfaces with subtle depth and higher contrast.",
+    label: "浅色",
+    description: "界面更明亮，适合白天查看。",
     icon: Sun,
   },
   {
     value: "auto",
-    label: "Auto",
-    description: "Follow the current system appearance automatically.",
+    label: "跟随系统",
+    description: "自动使用当前设备的主题模式。",
     icon: Monitor,
   },
   {
     value: "dark",
-    label: "Dark",
-    description: "A quieter palette for low-light work sessions.",
+    label: "深色",
+    description: "降低夜间使用时的视觉刺激。",
     icon: Moon,
   },
 ];
@@ -61,7 +62,7 @@ const themeOptions: Array<{
 function getDisplayInitials(name: string) {
   const source = name.trim();
   if (!source) {
-    return "U";
+    return "用户";
   }
 
   const parts = source.split(/[\s_-]+/).filter(Boolean);
@@ -71,24 +72,24 @@ function getDisplayInitials(name: string) {
 
 function formatDateLabel(value: string | null) {
   if (!value) {
-    return "Not available";
+    return "暂无";
   }
 
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "Not available" : date.toLocaleString("en-US");
+  return Number.isNaN(date.getTime()) ? "暂无" : date.toLocaleString("zh-CN", { hour12: false });
 }
 
 function validatePasswordPair(password: string, confirmPassword: string) {
   if (!password.trim()) {
-    return "New password is required.";
+    return "请输入新密码。";
   }
 
   if (password.trim().length < 8) {
-    return "New password must be at least 8 characters.";
+    return "新密码至少需要 8 位。";
   }
 
   if (password !== confirmPassword) {
-    return "Passwords do not match.";
+    return "两次输入的密码不一致。";
   }
 
   return null;
@@ -96,17 +97,17 @@ function validatePasswordPair(password: string, confirmPassword: string) {
 
 async function compressImageFile(file: File): Promise<string> {
   if (!file.type.startsWith("image/")) {
-    throw new Error("Please choose an image file.");
+    throw new Error("请选择图片文件。");
   }
 
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onerror = () => reject(new Error("Failed to read the image file."));
+    reader.onerror = () => reject(new Error("读取图片失败。"));
     reader.onload = () => {
       const image = new Image();
 
-      image.onerror = () => reject(new Error("Failed to decode the image."));
+      image.onerror = () => reject(new Error("解析图片失败。"));
       image.onload = () => {
         const scale = Math.min(1, MAX_AVATAR_EDGE / image.width, MAX_AVATAR_EDGE / image.height);
         const width = Math.max(1, Math.round(image.width * scale));
@@ -117,7 +118,7 @@ async function compressImageFile(file: File): Promise<string> {
 
         const context = canvas.getContext("2d");
         if (!context) {
-          reject(new Error("Canvas rendering is not available."));
+          reject(new Error("当前环境不支持图片压缩。"));
           return;
         }
 
@@ -146,6 +147,8 @@ export function UserProfilePage() {
   const themeMode = useThemeStore((state) => state.mode);
   const setThemeMode = useThemeStore((state) => state.setMode);
   const [settingsTheme, setSettingsTheme] = useState<ThemeOption>("auto");
+  const [nicknameInput, setNicknameInput] = useState("");
+  const [isProfileSaving, setIsProfileSaving] = useState(false);
   const [isAvatarUploading, setIsAvatarUploading] = useState(false);
   const [isSecurityDialogOpen, setIsSecurityDialogOpen] = useState(false);
   const [securityStep, setSecurityStep] = useState<SecurityStep>("idle");
@@ -159,12 +162,17 @@ export function UserProfilePage() {
     setSettingsTheme(mockSettingsService.getSettings().theme);
   }, []);
 
-  const displayName = profile?.nickname?.trim() || profile?.email || "Anonymous User";
-  const passwordActionLabel = profile?.hasPassword ? "Reset password" : "Set password";
-  const passwordActionDescription = profile?.hasPassword
-    ? "Require a fresh email verification code before rotating the password."
-    : "Add a password alongside the OTP-first login flow.";
-  const passwordStatusLabel = profile?.hasPassword ? "Password set" : "OTP-only";
+  useEffect(() => {
+    setNicknameInput(profile?.nickname ?? "");
+  }, [profile?.nickname]);
+
+  const displayName = profile?.nickname?.trim() || profile?.email || "未设置用户名";
+  const currentNickname = profile?.nickname?.trim() ?? "";
+  const trimmedNickname = nicknameInput.trim();
+  const hasNicknameChanged = trimmedNickname !== currentNickname;
+  const canSaveNickname = Boolean(trimmedNickname) && hasNicknameChanged && !isProfileSaving;
+  const passwordActionLabel = profile?.hasPassword ? "重置密码" : "设置密码";
+  const passwordStatusLabel = profile?.hasPassword ? "已设置" : "仅验证码";
 
   const resetSecurityForm = () => {
     setSecurityStep("idle");
@@ -180,12 +188,36 @@ export function UserProfilePage() {
       ...mockSettingsService.getSettings(),
       theme,
     });
-    toast.success(`Theme switched to ${theme}.`);
+
+    const selectedTheme = themeOptions.find((option) => option.value === theme)?.label ?? theme;
+    toast.success(`已切换为${selectedTheme}主题。`);
+  };
+
+  const handleSaveNickname = async () => {
+    if (!trimmedNickname) {
+      toast.error("用户名不能为空。");
+      return;
+    }
+
+    if (!hasNicknameChanged) {
+      return;
+    }
+
+    setIsProfileSaving(true);
+    try {
+      await authService.updateProfile({ nickname: trimmedNickname });
+      toast.success("用户名已更新。");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "用户名更新失败，请稍后重试。";
+      toast.error(message);
+    } finally {
+      setIsProfileSaving(false);
+    }
   };
 
   const handleLogout = async () => {
     await authService.signOut();
-    toast.success("Signed out.");
+    toast.success("已退出登录。");
     navigate("/login", { replace: true });
   };
 
@@ -201,9 +233,9 @@ export function UserProfilePage() {
     try {
       const compressedAvatar = await compressImageFile(file);
       await authService.updateProfile({ avatarBase64: compressedAvatar });
-      toast.success("Profile avatar updated.");
+      toast.success("头像已更新。");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update the avatar.";
+      const message = error instanceof Error ? error.message : "头像更新失败，请稍后重试。";
       toast.error(message);
     } finally {
       setIsAvatarUploading(false);
@@ -217,8 +249,7 @@ export function UserProfilePage() {
       setSecurityStep("code_sent");
       toast.success(result.message);
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to send the verification code.";
+      const message = error instanceof Error ? error.message : "发送验证码失败，请稍后重试。";
       toast.error(message);
     } finally {
       setIsSecuritySending(false);
@@ -235,24 +266,16 @@ export function UserProfilePage() {
     setIsSecuritySubmitting(true);
     try {
       await authService.updatePasswordWithNonce(newPassword, securityCode);
-      toast.success(profile?.hasPassword ? "Password reset completed." : "Password set.");
+      toast.success(profile?.hasPassword ? "密码已重置。" : "密码已设置。");
       setIsSecurityDialogOpen(false);
       resetSecurityForm();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update the password.";
+      const message = error instanceof Error ? error.message : "密码更新失败，请稍后重试。";
       toast.error(message);
     } finally {
       setIsSecuritySubmitting(false);
     }
   };
-
-  const securitySummary = useMemo(
-    () =>
-      profile?.hasPassword
-        ? "Password-based recovery is available after email verification."
-        : "You currently sign in with email OTP only.",
-    [profile?.hasPassword],
-  );
 
   return (
     <PageTransition className="min-h-screen">
@@ -264,15 +287,13 @@ export function UserProfilePage() {
               whileTap={buttonTap}
               onClick={() => navigate("/")}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-foreground shadow-[var(--shadow-panel)]"
-              title="Back to home"
+              title="返回首页"
             >
               <ArrowLeft className="h-5 w-5" />
             </motion.button>
             <div>
-              <div className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-                Account center
-              </div>
-              <h1 className="mt-1 text-[1.1rem] font-semibold text-foreground">Profile</h1>
+              <div className="text-[11px] tracking-[0.24em] text-muted-foreground">账户中心</div>
+              <h1 className="mt-1 text-[1.1rem] font-semibold text-foreground">个人资料</h1>
             </div>
           </div>
 
@@ -281,10 +302,10 @@ export function UserProfilePage() {
             whileTap={buttonTap}
             onClick={() => void handleLogout()}
             className="flex h-11 items-center gap-2 rounded-full border border-destructive/18 bg-destructive/6 px-4 text-sm font-medium text-destructive"
-            title="Sign out"
+            title="退出登录"
           >
             <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Sign out</span>
+            <span className="hidden sm:inline">退出登录</span>
           </motion.button>
         </div>
       </header>
@@ -327,7 +348,7 @@ export function UserProfilePage() {
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isAvatarUploading}
                     className="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-card text-foreground shadow-[var(--shadow-panel)] disabled:opacity-65"
-                    title="Upload avatar"
+                    title="上传头像"
                   >
                     {isAvatarUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                   </motion.button>
@@ -339,7 +360,7 @@ export function UserProfilePage() {
                   </h2>
                   <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-secondary/75 px-3 py-1.5 text-sm text-muted-foreground">
                     <Mail className="h-4 w-4" />
-                    <span>{profile?.email ?? "No email available"}</span>
+                    <span>{profile?.email ?? "暂无邮箱"}</span>
                   </div>
                 </div>
               </div>
@@ -351,29 +372,84 @@ export function UserProfilePage() {
                 data-testid="advanced-settings-link"
                 className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-5 text-sm font-medium text-foreground shadow-[var(--shadow-panel)] transition-colors hover:bg-secondary/75"
               >
-                Advanced settings
+                高级设置
                 <ChevronRight className="h-4 w-4" />
               </motion.button>
             </div>
 
-            <div className="mt-6 grid gap-3 md:grid-cols-3">
-              {[
-                { label: "Provider", value: "Email OTP" },
-                { label: "Password Status", value: passwordStatusLabel, testId: "password-status" },
-                { label: "Last Sign-in", value: formatDateLabel(profile?.lastSignInAt ?? null) },
-              ].map((item) => (
-                <div key={item.label} className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                    {item.label}
-                  </p>
-                  <p
-                    data-testid={item.testId}
-                    className="mt-3 text-base font-semibold text-foreground"
-                  >
-                    {item.value}
-                  </p>
+            <div className="mt-6 grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
+              <section className="rounded-[28px] bg-secondary/58 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">基础信息</h3>
+                  </div>
+                  <div className="rounded-full bg-card px-3 py-1 text-xs text-muted-foreground">
+                    最近更新：{formatDateLabel(profile?.updatedAt ?? null)}
+                  </div>
                 </div>
-              ))}
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
+                  <label className="block text-sm font-medium text-foreground">
+                    用户名
+                    <Input
+                      data-testid="profile-nickname-input"
+                      value={nicknameInput}
+                      onChange={(event) => setNicknameInput(event.target.value)}
+                      placeholder="请输入用户名"
+                      maxLength={24}
+                      className="mt-2 h-12"
+                    />
+                  </label>
+                  <motion.button
+                    type="button"
+                    data-testid="save-profile-nickname"
+                    whileTap={buttonTap}
+                    onClick={() => void handleSaveNickname()}
+                    disabled={!canSaveNickname}
+                    className="mt-auto flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-[0_12px_30px_rgba(0,113,227,0.22)] disabled:opacity-60"
+                  >
+                    {isProfileSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    保存用户名
+                  </motion.button>
+                </div>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-[24px] bg-card/90 px-4 py-4">
+                    <p className="text-[11px] tracking-[0.18em] text-muted-foreground">邮箱地址</p>
+                    <p className="mt-3 break-all text-base font-semibold text-foreground">
+                      {profile?.email ?? "暂无邮箱"}
+                    </p>
+                  </div>
+                  <div className="rounded-[24px] bg-card/90 px-4 py-4">
+                    <p className="text-[11px] tracking-[0.18em] text-muted-foreground">邮箱状态</p>
+                    <p className="mt-3 text-base font-semibold text-foreground">
+                      {profile?.emailVerified ? "已验证" : "未验证"}
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="rounded-[28px] bg-secondary/58 p-4">
+                <h3 className="text-lg font-semibold text-foreground">账户状态</h3>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {[
+                    { label: "登录方式", value: "邮箱验证" },
+                    { label: "密码状态", value: passwordStatusLabel, testId: "password-status" },
+                    { label: "最近登录", value: formatDateLabel(profile?.lastSignInAt ?? null) },
+                    { label: "资料更新时间", value: formatDateLabel(profile?.updatedAt ?? null) },
+                  ].map((item) => (
+                    <div key={item.label} className="rounded-[24px] bg-card/90 px-4 py-4">
+                      <p className="text-[11px] tracking-[0.18em] text-muted-foreground">{item.label}</p>
+                      <p
+                        data-testid={item.testId}
+                        className="mt-3 text-base font-semibold text-foreground"
+                      >
+                        {item.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
           </div>
         </section>
@@ -385,10 +461,7 @@ export function UserProfilePage() {
                 <Sun className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-[1.25rem] font-semibold text-foreground">Quick Preferences</h2>
-                <p className="text-sm text-muted-foreground">
-                  Keep theme switching close to the account summary.
-                </p>
+                <h2 className="text-[1.25rem] font-semibold text-foreground">界面主题</h2>
               </div>
             </div>
 
@@ -434,11 +507,21 @@ export function UserProfilePage() {
           </section>
 
           <section className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-[1.25rem] font-semibold text-foreground">Security</h2>
-                <p className="mt-2 text-sm leading-7 text-muted-foreground">{securitySummary}</p>
+                <h2 className="text-[1.25rem] font-semibold text-foreground">账户安全</h2>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm text-muted-foreground">
+                    <ShieldCheck className="h-4 w-4" />
+                    {profile?.emailVerified ? "邮箱已验证" : "邮箱未验证"}
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm text-muted-foreground">
+                    <KeyRound className="h-4 w-4" />
+                    {profile?.hasPassword ? "已设置登录密码" : "当前仅支持验证码登录"}
+                  </span>
+                </div>
               </div>
+
               <motion.button
                 type="button"
                 data-testid="start-password-security-action"
@@ -447,7 +530,7 @@ export function UserProfilePage() {
                   resetSecurityForm();
                   setIsSecurityDialogOpen(true);
                 }}
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-[0_12px_30px_rgba(0,113,227,0.22)]"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-[0_12px_30px_rgba(0,113,227,0.22)]"
               >
                 <KeyRound className="h-4 w-4" />
                 {passwordActionLabel}
@@ -456,34 +539,15 @@ export function UserProfilePage() {
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Action</p>
-                <p className="mt-3 text-base font-semibold text-foreground">{passwordActionLabel}</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{passwordActionDescription}</p>
-              </div>
-              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Delivery</p>
-                <p className="mt-3 text-base font-semibold text-foreground">Email verification code</p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  A fresh code is required before the password is accepted.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Verified Email
-                </p>
+                <p className="text-[11px] tracking-[0.18em] text-muted-foreground">验证邮箱</p>
                 <p className="mt-3 text-base font-semibold text-foreground">
-                  {profile?.emailVerified ? "Verified" : "Unverified"}
+                  {profile?.email ?? "暂无邮箱"}
                 </p>
               </div>
               <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Profile Updated
-                </p>
+                <p className="text-[11px] tracking-[0.18em] text-muted-foreground">最近登录</p>
                 <p className="mt-3 text-base font-semibold text-foreground">
-                  {formatDateLabel(profile?.updatedAt ?? null)}
+                  {formatDateLabel(profile?.lastSignInAt ?? null)}
                 </p>
               </div>
             </div>
@@ -498,12 +562,12 @@ export function UserProfilePage() {
           resetSecurityForm();
         }}
         title={passwordActionLabel}
-        description="Keep password management inside the profile screen and verify the action with a fresh email code."
       >
         <div data-testid="password-security-dialog" className="space-y-4">
           <div className="rounded-[20px] bg-secondary/72 px-4 py-3 text-sm leading-6 text-muted-foreground">
-            This action will send a verification code to{" "}
-            <span className="font-medium text-foreground">{profile?.email ?? "your email"}</span>.
+            验证码会发送到
+            <span className="mx-1 font-medium text-foreground">{profile?.email ?? "当前邮箱"}</span>
+            ，请先完成验证。
           </div>
 
           {securityStep === "idle" ? (
@@ -516,36 +580,45 @@ export function UserProfilePage() {
               className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground disabled:opacity-65"
             >
               {isSecuritySending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-              Send verification code
+              发送验证码
             </motion.button>
           ) : (
             <div className="space-y-3">
-              <Input
-                data-testid="security-code-input"
-                value={securityCode}
-                onChange={(event) => setSecurityCode(event.target.value)}
-                placeholder="Enter the verification code"
-                inputMode="numeric"
-                className="h-12"
-              />
-              <Input
-                data-testid="security-password-input"
-                type="password"
-                value={newPassword}
-                onChange={(event) => setNewPassword(event.target.value)}
-                placeholder="Enter the new password"
-                autoComplete="new-password"
-                className="h-12"
-              />
-              <Input
-                data-testid="security-password-confirm-input"
-                type="password"
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-                placeholder="Confirm the new password"
-                autoComplete="new-password"
-                className="h-12"
-              />
+              <label className="block text-sm font-medium text-foreground">
+                验证码
+                <Input
+                  data-testid="security-code-input"
+                  value={securityCode}
+                  onChange={(event) => setSecurityCode(event.target.value)}
+                  placeholder="请输入验证码"
+                  inputMode="numeric"
+                  className="mt-2 h-12"
+                />
+              </label>
+              <label className="block text-sm font-medium text-foreground">
+                新密码
+                <Input
+                  data-testid="security-password-input"
+                  type="password"
+                  value={newPassword}
+                  onChange={(event) => setNewPassword(event.target.value)}
+                  placeholder="请输入新密码"
+                  autoComplete="new-password"
+                  className="mt-2 h-12"
+                />
+              </label>
+              <label className="block text-sm font-medium text-foreground">
+                确认密码
+                <Input
+                  data-testid="security-password-confirm-input"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  placeholder="请再次输入新密码"
+                  autoComplete="new-password"
+                  className="mt-2 h-12"
+                />
+              </label>
               <motion.button
                 type="button"
                 data-testid="confirm-password-security-action"
@@ -566,7 +639,7 @@ export function UserProfilePage() {
                 onClick={() => void handleRequestSecurityCode()}
                 className="w-full text-center text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
               >
-                Resend verification code
+                重新发送验证码
               </button>
             </div>
           )}

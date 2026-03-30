@@ -106,7 +106,7 @@ export function HomePage() {
             </motion.div>
             <div>
               <h1 className="text-[1.15rem] font-semibold tracking-[-0.04em] text-foreground">
-                AI Web Builder
+                AI网页生成器
               </h1>
               <p className="text-xs text-muted-foreground">最近项目</p>
             </div>
@@ -164,7 +164,7 @@ export function HomePage() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
-                  Continue
+                  继续创作
                 </p>
                 <h2 className="mt-1 text-[1.25rem] font-semibold tracking-[-0.03em] text-foreground">
                   继续最近一次创作
@@ -212,7 +212,7 @@ export function HomePage() {
         >
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
-              Projects
+              项目列表
             </p>
             <h2 className="mt-1 text-[1.25rem] font-semibold tracking-[-0.03em] text-foreground">
               你的项目

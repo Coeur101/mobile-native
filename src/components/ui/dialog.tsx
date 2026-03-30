@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import { buttonTap } from "@/lib/animations";
@@ -51,10 +52,10 @@ export const Dialog = ({
     };
   }, [open]);
 
-  return (
+  const content = (
     <AnimatePresence>
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -70,7 +71,7 @@ export const Dialog = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 12 }}
             transition={{ duration: 0.22 }}
-            className="relative z-10 w-full max-w-md rounded-[28px] border border-border bg-popover/95 p-6 shadow-[var(--shadow-card)] backdrop-blur-2xl"
+            className="relative z-10 my-auto flex max-h-[calc(100dvh-2rem)] w-full max-w-md flex-col overflow-y-auto rounded-[28px] border border-border bg-popover/95 p-6 shadow-[var(--shadow-card)] backdrop-blur-2xl"
           >
             <motion.button
               type="button"
@@ -121,4 +122,10 @@ export const Dialog = ({
       ) : null}
     </AnimatePresence>
   );
+
+  if (typeof document === "undefined") {
+    return content;
+  }
+
+  return createPortal(content, document.body);
 };

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("authenticated user can enter profile page from home and open advanced settings", async ({
+test("authenticated user can update nickname from profile and open advanced settings", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -78,10 +78,12 @@ test("authenticated user can enter profile page from home and open advanced sett
   await page.goto("/");
   await page.getByTestId("profile-entry").click();
   await expect(page.getByTestId("profile-page")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Profile", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "个人资料", exact: true })).toBeVisible();
+
+  await page.getByTestId("profile-nickname-input").fill("产品同学");
+  await page.getByTestId("save-profile-nickname").click();
+  await expect(page.getByRole("heading", { name: "产品同学", exact: true })).toBeVisible();
 
   await page.getByTestId("advanced-settings-link").click();
-  await expect(
-    page.getByRole("heading", { name: "Advanced Settings", exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "高级设置", exact: true })).toBeVisible();
 });

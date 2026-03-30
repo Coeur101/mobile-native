@@ -73,6 +73,52 @@ describe("profile security service", () => {
     expect(mockClient.auth.updateUser).toHaveBeenCalledTimes(1);
   });
 
+  it("updates the profile nickname metadata through Supabase auth", async () => {
+    let currentSession = createSession({
+      full_name: "Demo User",
+      avatar_base64: "data:image/svg+xml;base64,avatar",
+      has_password: false,
+      profile_email: "demo@example.com",
+      profile_updated_at: "2026-03-27T09:05:00.000Z",
+    });
+
+    const mockClient = {
+      auth: {
+        getSession: vi.fn(async () => ({ data: { session: currentSession }, error: null })),
+        updateUser: vi.fn(async ({ data }: { data: Record<string, unknown> }) => {
+          currentSession = {
+            ...currentSession,
+            user: {
+              ...currentSession.user,
+              user_metadata: {
+                ...currentSession.user.user_metadata,
+                ...data,
+              },
+            },
+          } as Session;
+
+          return {
+            data: { user: currentSession.user },
+            error: null,
+          };
+        }),
+      },
+    } as unknown as SupabaseClient;
+
+    (window as typeof window & { __APP_SUPABASE_MOCK__?: SupabaseClient }).__APP_SUPABASE_MOCK__ = mockClient;
+
+    const service = createSupabaseAuthService();
+    const profile = await service.updateProfile({ nickname: "产品同学" });
+
+    expect(profile.nickname).toBe("产品同学");
+    expect(service.getSnapshot().profile?.nickname).toBe("产品同学");
+    expect(mockClient.auth.updateUser).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ full_name: "产品同学" }),
+      }),
+    );
+  });
+
   it("sends a reauthentication code and updates the password with a nonce", async () => {
     let currentSession = createSession({
       full_name: "Demo User",

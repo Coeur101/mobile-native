@@ -112,5 +112,5 @@ test("authenticated user can upload an avatar and complete password setup from p
   await page.getByTestId("security-password-confirm-input").fill("supersafe-password");
   await page.getByTestId("confirm-password-security-action").click();
 
-  await expect(page.getByTestId("password-status")).toHaveText("Password set");
+  await expect(page.getByTestId("password-status")).toHaveText("已设置");
 });
