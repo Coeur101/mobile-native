@@ -2,7 +2,7 @@
   "version": 4,
   "project": "AI Web Builder Mobile",
   "createdAt": "2026-03-26T00:00:00+08:00",
-  "updatedAt": "2026-03-27T18:53:00+08:00",
+  "updatedAt": "2026-03-30T18:31:05+08:00",
   "workflowVersion": "project-lifecycle-v3",
   "workflowPhases": [
     "definition",
@@ -2031,6 +2031,500 @@
       "createdAt": "2026-03-27T18:41:00+08:00",
       "updatedAt": "2026-03-27T18:53:00+08:00",
       "closedAt": "2026-03-27T18:53:00+08:00"
+    },
+    {
+      "id": "TASK-038",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "definition",
+      "title": "注册会话流式修复变更台账",
+      "type": "init",
+      "status": "done",
+      "priority": "P0",
+      "scope": "OpenSpec proposal/design/specs/tasks 工件、TASK.json 映射与追加式日志入口",
+      "acceptanceCriteria": [
+        "fix-chat-session-streaming-and-thinking-chain 已在 TASK.json 中建立 Definition、Delivery、Closure 任务映射",
+        "变更目录包含 proposal、design、specs 与 tasks 工件",
+        "每个任务都声明 historyRef 与所需质量门禁",
+        "日志目录为后续 task 追加式记录做好准备"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/proposal.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/design.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/assistant-chat-session/spec.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/project-data/spec.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/proposal.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/design.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/assistant-chat-session/spec.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/project-data/spec.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-038.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T10:52:00+08:00",
+      "closedAt": "2026-03-30T10:52:00+08:00"
+    },
+    {
+      "id": "TASK-039",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "definition",
+      "title": "完成会话流式与落库边界设计评审",
+      "type": "review",
+      "status": "done",
+      "priority": "P0",
+      "scope": "流式输出、思维链展示、draft 状态与最终消息持久化边界评审",
+      "acceptanceCriteria": [
+        "设计确认流式协议解析位于 AI service 边界，而不是页面层",
+        "设计确认 draft assistant 状态不会直接污染 authoritative project.messages",
+        "设计确认显示 generation lifecycle 状态机以支撑 UI 与验证",
+        "在 Delivery 开始前不存在阻塞性的设计缺口"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": true,
+      "implementationReviewRequired": false,
+      "docsToUpdate": [
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/design.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/assistant-chat-session/spec.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/project-data/spec.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/design.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/assistant-chat-session/spec.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/specs/project-data/spec.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-039.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T10:52:00+08:00",
+      "closedAt": "2026-03-30T10:52:00+08:00"
+    },
+    {
+      "id": "TASK-040",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "delivery",
+      "title": "实现 AI 流式会话事件边界",
+      "type": "feature",
+      "status": "done",
+      "priority": "P0",
+      "scope": "OpenAI-compatible AI service 流式解析、事件归一化与 generation lifecycle 输出",
+      "acceptanceCriteria": [
+        "AI service 能在请求期间输出文本 chunk、思维链更新与最终结果事件",
+        "服务层对不支持完整思维链事件的 provider 提供安全降级",
+        "显式暴露 idle、streaming、persisting、completed、failed 生命周期",
+        "相关改动具备独立提交与可追溯日志"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": false,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "src/services/ai/ai-service.ts",
+        "src/services/ai/openai-compatible-ai-service.ts",
+        "tests/vitest/ai-service-streaming.test.ts",
+        "tests/vitest/ai-service-think-streaming.test.ts",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": "901ac80",
+      "commitMessage": "feat: TASK-040 TASK-041 TASK-042 TASK-043 stream editor chat session",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/ai-service-streaming.test.ts tests/vitest/ai-service-think-streaming.test.ts"
+        ],
+        "uiTests": [],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/services/ai/ai-service.ts",
+          "src/services/ai/openai-compatible-ai-service.ts",
+          "tests/vitest/ai-service-streaming.test.ts",
+          "tests/vitest/ai-service-think-streaming.test.ts",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-040.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T18:31:05+08:00",
+      "closedAt": "2026-03-30T18:31:05+08:00"
+    },
+    {
+      "id": "TASK-041",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "delivery",
+      "title": "收紧项目消息持久化边界并接入最终结果落库",
+      "type": "feature",
+      "status": "done",
+      "priority": "P0",
+      "scope": "project service create/continue 流程、draft assistant 隔离与 authoritative messages 回写",
+      "acceptanceCriteria": [
+        "流式中的中间文本与中间思维链状态不写入 authoritative project_messages",
+        "createProject 与 continueProject 仅在最终结果归一化后写入 assistant message",
+        "失败路径不会留下半成品消息记录",
+        "交付记录具备独立提交与日志追溯"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": false,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "src/services/project/project-service.ts",
+        "src/services/project/supabase-project-service.ts",
+        "tests/vitest/project-service-streaming.test.ts",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": "901ac80",
+      "commitMessage": "feat: TASK-040 TASK-041 TASK-042 TASK-043 stream editor chat session",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/project-service-streaming.test.ts"
+        ],
+        "uiTests": [],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/services/project/project-service.ts",
+          "src/services/project/supabase-project-service.ts",
+          "tests/vitest/project-service-streaming.test.ts",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-041.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T18:31:05+08:00",
+      "closedAt": "2026-03-30T18:31:05+08:00"
+    },
+    {
+      "id": "TASK-042",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "delivery",
+      "title": "重构编辑器会话窗口以展示流式草稿与思维链",
+      "type": "feature",
+      "status": "done",
+      "priority": "P0",
+      "scope": "EditorPage 会话状态、draft bubble、ThoughtChain 渲染与错误/持久化状态展示",
+      "acceptanceCriteria": [
+        "编辑器在生成中展示单一 assistant draft 气泡",
+        "思维链在生成期间可见并随状态变化更新",
+        "UI 明确区分 streaming、persisting 与 failed 状态并阻止重复提交",
+        "交付记录具备独立提交与日志追溯"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "src/pages/editor/EditorPage.tsx",
+        "src/components/ui/thought-chain.tsx",
+        "src/types/index.ts",
+        "tests/playwright/editor-thought-chain-layout.spec.ts",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": "901ac80",
+      "commitMessage": "feat: TASK-040 TASK-041 TASK-042 TASK-043 stream editor chat session",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/editor-chat-session.spec.ts --reporter=line --workers=1",
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/editor-thought-chain-layout.spec.ts --reporter=line --workers=1"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "src/pages/editor/EditorPage.tsx",
+          "src/components/ui/thought-chain.tsx",
+          "src/types/index.ts",
+          "tests/playwright/editor-thought-chain-layout.spec.ts",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-042.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T18:31:05+08:00",
+      "closedAt": "2026-03-30T18:31:05+08:00"
+    },
+    {
+      "id": "TASK-043",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "delivery",
+      "title": "补齐流式会话与思维链的定向自动化验证",
+      "type": "verification",
+      "status": "done",
+      "priority": "P0",
+      "scope": "Vitest 与 Playwright 覆盖流式文本、思维链展示、失败态与最终落库行为",
+      "acceptanceCriteria": [
+        "Vitest 覆盖流式 AI 事件解析与项目消息持久化边界",
+        "Playwright 覆盖编辑器会话中的流式反馈与思维链可见性",
+        "验证记录后清理测试产物、trace、视频与截图等一次性文件",
+        "交付记录具备独立提交与日志追溯"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": true,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "tests/vitest/ai-service-streaming.test.ts",
+        "tests/vitest/ai-service-think-streaming.test.ts",
+        "tests/vitest/project-service-streaming.test.ts",
+        "tests/playwright/editor-chat-session.spec.ts",
+        "tests/playwright/editor-thought-chain-layout.spec.ts",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": true,
+      "commitRef": "901ac80",
+      "commitMessage": "feat: TASK-040 TASK-041 TASK-042 TASK-043 stream editor chat session",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/ai-service-streaming.test.ts tests/vitest/ai-service-think-streaming.test.ts tests/vitest/project-service-streaming.test.ts"
+        ],
+        "uiTests": [
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/editor-chat-session.spec.ts --reporter=line --workers=1",
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/editor-thought-chain-layout.spec.ts --reporter=line --workers=1"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "tests/vitest/ai-service-streaming.test.ts",
+          "tests/vitest/ai-service-think-streaming.test.ts",
+          "tests/vitest/project-service-streaming.test.ts",
+          "tests/playwright/editor-chat-session.spec.ts",
+          "tests/playwright/editor-thought-chain-layout.spec.ts",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-043.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T18:31:05+08:00",
+      "closedAt": "2026-03-30T18:31:05+08:00"
+    },
+    {
+      "id": "TASK-044",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "closure",
+      "title": "完成会话流式修复的实现评审",
+      "type": "review",
+      "status": "done",
+      "priority": "P0",
+      "scope": "实现与 proposal/design/specs/tasks、测试证据与提交追溯一致性评审",
+      "acceptanceCriteria": [
+        "实现与 assistant-chat-session、project-data delta spec 保持一致",
+        "TASK.json、task logs、测试证据与提交引用互相可追溯",
+        "残余风险已记录且不存在未报告偏差",
+        "进入最终验证前已完成 implementation review"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-044.jsonl",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-044.jsonl",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-044.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T18:31:05+08:00",
+      "closedAt": "2026-03-30T18:31:05+08:00"
+    },
+    {
+      "id": "TASK-045",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "closure",
+      "title": "运行流式会话修复的最终验证与清理",
+      "type": "verification",
+      "status": "done",
+      "priority": "P0",
+      "scope": "Build、Vitest、Playwright、证据记录、一次性产物清理与独立验证提交",
+      "acceptanceCriteria": [
+        "目标功能测试、UI 测试与构建结果全部执行并记录",
+        "验证后的 trace、视频、截图、临时测试文件与报告已清理",
+        "TASK.json 与日志记录独立 verification commit 证据",
+        "无 blocker 遗留到归档阶段"
+      ],
+      "functionalTestsRequired": true,
+      "uiTestsRequired": true,
+      "buildRequired": true,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "TASK.json",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-045.jsonl",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "CHANGELOG.md"
+      ],
+      "commitRequired": true,
+      "commitRef": "901ac80",
+      "commitMessage": "feat: TASK-040 TASK-041 TASK-042 TASK-043 stream editor chat session",
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [
+          "pnpm test -- tests/vitest/ai-service-streaming.test.ts tests/vitest/ai-service-think-streaming.test.ts tests/vitest/project-service-streaming.test.ts"
+        ],
+        "uiTests": [
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/editor-chat-session.spec.ts --reporter=line --workers=1",
+          ".\\node_modules\\.bin\\playwright.cmd test tests/playwright/editor-thought-chain-layout.spec.ts --reporter=line --workers=1"
+        ],
+        "buildChecks": [
+          "pnpm build"
+        ],
+        "docs": [
+          "TASK.json",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-045.jsonl",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "CHANGELOG.md"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-045.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T18:31:05+08:00",
+      "closedAt": "2026-03-30T18:31:05+08:00"
+    },
+    {
+      "id": "TASK-046",
+      "change": "fix-chat-session-streaming-and-thinking-chain",
+      "phase": "closure",
+      "title": "同步主规范并归档会话流式修复变更",
+      "type": "closure",
+      "status": "done",
+      "priority": "P0",
+      "scope": "主 project-data/specs 同步、项目文档更新、归档与无阻塞确认",
+      "acceptanceCriteria": [
+        "主 project-data 规范与 assistant-chat-session 能力说明已同步到实现结果",
+        "所有 task 均完成且无 blocker",
+        "变更归档结果已写入日志与台账",
+        "归档后仓库中不再保留该 active change 的未闭环状态"
+      ],
+      "functionalTestsRequired": false,
+      "uiTestsRequired": false,
+      "buildRequired": false,
+      "designReviewRequired": false,
+      "implementationReviewRequired": true,
+      "docsToUpdate": [
+        "openspec/specs/assistant-chat-session/spec.md",
+        "openspec/specs/project-data/spec.md",
+        "docs/PRD.md",
+        "PROJECT.md",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-046.jsonl",
+        "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+        "TASK.json"
+      ],
+      "commitRequired": false,
+      "commitRef": null,
+      "commitMessage": null,
+      "pushRequired": false,
+      "artifacts": {
+        "functionalTests": [],
+        "uiTests": [],
+        "buildChecks": [],
+        "docs": [
+          "openspec/specs/assistant-chat-session/spec.md",
+          "openspec/specs/project-data/spec.md",
+          "docs/PRD.md",
+          "PROJECT.md",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-046.jsonl",
+          "openspec/changes/fix-chat-session-streaming-and-thinking-chain/tasks.md",
+          "TASK.json"
+        ],
+        "commits": [],
+        "pushes": []
+      },
+      "blockers": [],
+      "historyRef": "openspec/changes/fix-chat-session-streaming-and-thinking-chain/logs/TASK-046.jsonl",
+      "createdAt": "2026-03-30T10:52:00+08:00",
+      "updatedAt": "2026-03-30T18:31:05+08:00",
+      "closedAt": "2026-03-30T18:31:05+08:00"
     }
   ]
 }

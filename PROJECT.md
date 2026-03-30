@@ -236,3 +236,11 @@ PROJECT.md
 - `src/services/ai` now exports a real OpenAI-compatible AI service as the default generation boundary for project creation and continuation.
 - Runtime generation no longer imports `mockAIService`; invalid settings or malformed provider output now fail with actionable Chinese errors before project persistence mutates data.
 - Verification for this change uses `pnpm test -- tests/vitest/ai-service.test.ts tests/vitest/project-service.test.ts` and `pnpm build`.
+
+## 2026-03-30 Streaming Chat Session Update
+
+- The editor chat session now renders a temporary assistant draft while generation is active instead of waiting for the final persisted project payload.
+- Assistant streaming uses explicit `streaming`, `persisting`, `completed`, and `failed` lifecycle states so the editor can disable duplicate submissions and keep the draft bubble visible until persistence finishes.
+- Incremental thinking-step updates are exposed in the active draft bubble through `ThoughtChain`, while unsupported providers degrade gracefully to text-only streaming.
+- Project persistence keeps in-progress draft content outside authoritative `project.messages` and writes only the final normalized assistant message after create/continue succeeds.
+- Verification for this change uses `pnpm test -- tests/vitest/ai-service-streaming.test.ts tests/vitest/ai-service-think-streaming.test.ts tests/vitest/project-service-streaming.test.ts`, `.\node_modules\.bin\playwright.cmd test tests/playwright/editor-chat-session.spec.ts --reporter=line --workers=1`, `.\node_modules\.bin\playwright.cmd test tests/playwright/editor-thought-chain-layout.spec.ts --reporter=line --workers=1`, and `pnpm build`.

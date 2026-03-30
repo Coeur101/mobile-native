@@ -1,5 +1,12 @@
 # AI Web Builder Mobile CHANGELOG
 
+## 2026-03-30 Streaming Chat Session Verification
+
+### Verified
+- Added streaming assistant drafts, in-progress thinking-chain visibility, and explicit `streaming` / `persisting` / `failed` lifecycle handling inside the editor chat session.
+- Confirmed authoritative project persistence keeps transient draft chunks outside `project.messages` until the final assistant message is ready.
+- Verified with `pnpm test -- tests/vitest/ai-service-streaming.test.ts tests/vitest/ai-service-think-streaming.test.ts tests/vitest/project-service-streaming.test.ts`, `.\node_modules\.bin\playwright.cmd test tests/playwright/editor-chat-session.spec.ts --reporter=line --workers=1`, `.\node_modules\.bin\playwright.cmd test tests/playwright/editor-thought-chain-layout.spec.ts --reporter=line --workers=1`, and `pnpm build`.
+
 ## 2026-03-27 Real AI Boundary Verification
 
 ### Verified

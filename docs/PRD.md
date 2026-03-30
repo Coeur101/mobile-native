@@ -112,3 +112,10 @@
 - Project creation and continuation now use a settings-driven OpenAI-compatible AI boundary instead of a bundled runtime mock.
 - AI generation fails closed when the model name, Base URL, API key, or returned file payload is invalid.
 - The settings page now exposes explicit local AI configuration fields for model, Base URL, and API key.
+
+## 2026-03-30 Streaming Chat Session Update
+
+- 编辑页在生成过程中会先展示临时 assistant draft，而不是等项目持久化完成后才一次性出现回复。
+- 思维链会在生成中实时显示 `pending` / `loading` / `success` / `error` 状态；如果 provider 不支持思维链事件，则继续保持文本流式反馈。
+- 编辑器会显式区分 `streaming`、`persisting`、`completed`、`failed` 四种生成状态，用来控制输入、版本入口和预览入口。
+- 项目消息持久化保持 authoritative 边界不变：中间流式片段不写入 `project_messages`，只在成功完成后保存最终 assistant 消息与归一化思维链。
