@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
-import { Navigate, createBrowserRouter } from "react-router";
+import { Navigate, Outlet, createBrowserRouter } from "react-router";
+import { GlobalStatusBar } from "@/components/ui/global-status-bar";
 import { HomePage } from "@/pages/home/HomePage";
 import { LoginPage } from "@/pages/login/LoginPage";
 import { EditorPage } from "@/pages/editor/EditorPage";
@@ -37,29 +38,44 @@ function requireAuth(Component: ComponentType) {
   };
 }
 
+/** 全局布局：挂载 GlobalStatusBar，所有路由共享 */
+function AppLayout() {
+  return (
+    <>
+      <GlobalStatusBar />
+      <Outlet />
+    </>
+  );
+}
+
 export const router = createBrowserRouter([
   {
-    path: "/",
-    Component: requireAuth(HomePage),
-  },
-  {
-    path: "/login",
-    Component: LoginPage,
-  },
-  {
-    path: "/editor/:projectId?",
-    Component: requireAuth(EditorPage),
-  },
-  {
-    path: "/preview/:projectId",
-    Component: requireAuth(PreviewPage),
-  },
-  {
-    path: "/profile",
-    Component: requireAuth(UserProfilePage),
-  },
-  {
-    path: "/settings",
-    Component: requireAuth(SettingsPage),
+    Component: AppLayout,
+    children: [
+      {
+        path: "/",
+        Component: requireAuth(HomePage),
+      },
+      {
+        path: "/login",
+        Component: LoginPage,
+      },
+      {
+        path: "/editor/:projectId?",
+        Component: requireAuth(EditorPage),
+      },
+      {
+        path: "/preview/:projectId",
+        Component: requireAuth(PreviewPage),
+      },
+      {
+        path: "/profile",
+        Component: requireAuth(UserProfilePage),
+      },
+      {
+        path: "/settings",
+        Component: requireAuth(SettingsPage),
+      },
+    ],
   },
 ]);
