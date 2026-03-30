@@ -9,6 +9,12 @@ import { useAuthStore } from "./stores/use-auth-store";
 export default function App() {
   const mode = useThemeStore((s) => s.mode);
   const initializeAuth = useAuthStore((s) => s.initialize);
+  const resolvedMode =
+    mode === "auto"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : mode;
 
   // 初始化和响应主题变化
   useEffect(() => {
@@ -30,7 +36,16 @@ export default function App() {
   return (
     <ErrorBoundary>
       <RouterProvider router={router} />
-      <Toaster position="bottom-center" richColors offset="80px" />
+      <Toaster
+        position="bottom-center"
+        richColors
+        offset="80px"
+        theme={resolvedMode}
+        toastOptions={{
+          className:
+            "rounded-[24px] border border-border bg-card/95 text-foreground shadow-[0_18px_48px_rgba(15,23,42,0.12)] backdrop-blur-xl",
+        }}
+      />
     </ErrorBoundary>
   );
 }

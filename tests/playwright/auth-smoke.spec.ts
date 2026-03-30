@@ -34,8 +34,18 @@ test("未登录用户会进入 OTP-only 登录页并可切换登录路径", asyn
   await expect(page.getByRole("heading", { name: "邮箱验证码登录" })).toBeVisible();
   await expect(page.getByTestId("entry-mode-login")).toBeVisible();
   await expect(page.getByTestId("entry-mode-register")).toBeVisible();
+  await expect(page.getByTestId("login-method-otp")).toBeVisible();
+  await expect(page.getByTestId("login-method-password")).toBeVisible();
   await expect(page.getByTestId("request-login-otp")).toBeVisible();
   await expect(page.getByTestId("entry-mode-reset_request")).toHaveCount(0);
+
+  await page.getByTestId("login-method-password").click();
+  await expect(page.locator('input[type="password"]')).toBeVisible();
+  await expect(page.getByTestId("login-with-password")).toBeVisible();
+  await expect(page.getByTestId("request-password-reset")).toBeVisible();
+
+  await page.getByTestId("login-method-otp").click();
+  await expect(page.getByTestId("request-login-otp")).toBeVisible();
 
   await page.getByTestId("entry-mode-register").click();
   await expect(page.getByTestId("request-register-otp")).toBeVisible();

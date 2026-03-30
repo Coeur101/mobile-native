@@ -10,10 +10,11 @@ import { useAuthStore } from "@/stores/use-auth-store";
 
 function AuthLoadingScreen() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-6 text-center">
-      <div className="space-y-3">
-        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
-        <div className="text-sm text-muted-foreground">Checking authentication state...</div>
+    <div className="flex min-h-screen items-center justify-center px-6 text-center">
+      <div className="w-full max-w-sm rounded-[32px] border border-border bg-card/90 px-6 py-8 shadow-[var(--shadow-card)] backdrop-blur-xl">
+        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-primary/15 border-t-primary" />
+        <div className="mt-4 text-base font-semibold text-foreground">正在确认登录状态</div>
+        <div className="mt-1 text-sm text-muted-foreground">请稍候，我们正在恢复你的工作区。</div>
       </div>
     </div>
   );

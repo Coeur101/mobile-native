@@ -5,10 +5,10 @@ export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={[
-        "w-full rounded-2xl border border-border bg-input-background px-3 py-2 text-sm text-foreground outline-none transition",
+        "w-full rounded-[20px] border border-border bg-input-background px-4 py-3 text-[15px] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] outline-none transition duration-200",
         "placeholder:text-muted-foreground",
-        "focus:border-primary/40 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]",
-        "dark:focus:shadow-[0_0_0_3px_rgba(167,139,250,0.1)]",
+        "focus:border-primary/30 focus:shadow-[var(--shadow-focus)]",
+        "disabled:opacity-60",
         props.className ?? "",
       ].join(" ")}
     />

@@ -19,9 +19,9 @@ import { toast } from "sonner";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { PageTransition } from "@/components/ui/page-transition";
+import { SPRING_BOUNCY, buttonTap } from "@/lib/animations";
 import { authService } from "@/services/auth";
 import { mockSettingsService } from "@/services/settings/mock-settings-service";
-import { SPRING_BOUNCY, buttonTap } from "@/lib/animations";
 import { useAuthStore } from "@/stores/use-auth-store";
 import { useThemeStore } from "@/stores/use-theme-store";
 import type { UserSettings } from "@/types";
@@ -41,19 +41,19 @@ const themeOptions: Array<{
   {
     value: "light",
     label: "Light",
-    description: "Always use the light surface palette.",
+    description: "Bright surfaces with subtle depth and higher contrast.",
     icon: Sun,
   },
   {
     value: "auto",
     label: "Auto",
-    description: "Follow the current system preference.",
+    description: "Follow the current system appearance automatically.",
     icon: Monitor,
   },
   {
     value: "dark",
     label: "Dark",
-    description: "Always use the dark surface palette.",
+    description: "A quieter palette for low-light work sessions.",
     icon: Moon,
   },
 ];
@@ -105,6 +105,7 @@ async function compressImageFile(file: File): Promise<string> {
     reader.onerror = () => reject(new Error("Failed to read the image file."));
     reader.onload = () => {
       const image = new Image();
+
       image.onerror = () => reject(new Error("Failed to decode the image."));
       image.onload = () => {
         const scale = Math.min(1, MAX_AVATAR_EDGE / image.width, MAX_AVATAR_EDGE / image.height);
@@ -122,6 +123,7 @@ async function compressImageFile(file: File): Promise<string> {
 
         context.drawImage(image, 0, 0, width, height);
         const webpDataUrl = canvas.toDataURL("image/webp", AVATAR_QUALITY);
+
         if (webpDataUrl.startsWith("data:image/webp")) {
           resolve(webpDataUrl);
           return;
@@ -160,8 +162,8 @@ export function UserProfilePage() {
   const displayName = profile?.nickname?.trim() || profile?.email || "Anonymous User";
   const passwordActionLabel = profile?.hasPassword ? "Reset password" : "Set password";
   const passwordActionDescription = profile?.hasPassword
-    ? "Require an email verification code before rotating the password."
-    : "Add a password to complement the OTP-first sign-in flow.";
+    ? "Require a fresh email verification code before rotating the password."
+    : "Add a password alongside the OTP-first login flow.";
   const passwordStatusLabel = profile?.hasPassword ? "Password set" : "OTP-only";
 
   const resetSecurityForm = () => {
@@ -244,44 +246,50 @@ export function UserProfilePage() {
     }
   };
 
-  const securitySummary = useMemo(() => {
-    return profile?.hasPassword
-      ? "Password-based recovery is available after email verification."
-      : "You currently sign in with email OTP only.";
-  }, [profile?.hasPassword]);
+  const securitySummary = useMemo(
+    () =>
+      profile?.hasPassword
+        ? "Password-based recovery is available after email verification."
+        : "You currently sign in with email OTP only.",
+    [profile?.hasPassword],
+  );
 
   return (
-    <PageTransition className="min-h-screen bg-background">
-      <header className="sticky top-0 z-10 border-b border-border bg-card/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
+    <PageTransition className="min-h-screen">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/82 backdrop-blur-2xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <motion.button
               type="button"
               whileTap={buttonTap}
               onClick={() => navigate("/")}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-foreground shadow-[var(--shadow-panel)]"
               title="Back to home"
             >
               <ArrowLeft className="h-5 w-5" />
             </motion.button>
             <div>
-              <h1 className="text-lg font-semibold text-foreground">Profile</h1>
-              <p className="text-xs text-muted-foreground">Account summary and secure controls</p>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                Account center
+              </div>
+              <h1 className="mt-1 text-[1.1rem] font-semibold text-foreground">Profile</h1>
             </div>
           </div>
+
           <motion.button
             type="button"
             whileTap={buttonTap}
             onClick={() => void handleLogout()}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-destructive transition-colors hover:bg-destructive/5"
+            className="flex h-11 items-center gap-2 rounded-full border border-destructive/18 bg-destructive/6 px-4 text-sm font-medium text-destructive"
             title="Sign out"
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Sign out</span>
           </motion.button>
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-6">
+      <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
         <input
           ref={fileInputRef}
           data-testid="avatar-file-input"
@@ -293,19 +301,13 @@ export function UserProfilePage() {
 
         <section
           data-testid="profile-page"
-          className="overflow-hidden rounded-[32px] border border-border bg-card"
+          className="overflow-hidden rounded-[36px] border border-border bg-card/92 shadow-[var(--shadow-card)]"
         >
-          <div
-            className="h-28"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(249,115,22,0.18), rgba(236,72,153,0.18) 45%, rgba(14,165,233,0.18))",
-            }}
-          />
-          <div className="px-5 pb-5">
-            <div className="-mt-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div className="flex items-end gap-4">
-                <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[28px] border-4 border-card bg-secondary text-2xl font-semibold text-foreground shadow-sm">
+          <div className="h-32 bg-[linear-gradient(135deg,rgba(0,113,227,0.16),rgba(255,255,255,0.02),rgba(52,170,220,0.18))]" />
+          <div className="px-5 pb-5 sm:px-6 sm:pb-6">
+            <div className="-mt-14 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+                <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-[30px] border-4 border-card bg-secondary text-2xl font-semibold text-foreground shadow-[var(--shadow-panel)]">
                   {profile?.avatarBase64 ? (
                     <img
                       data-testid="profile-avatar-image"
@@ -324,166 +326,169 @@ export function UserProfilePage() {
                     whileTap={buttonTap}
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isAvatarUploading}
-                    className="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-card text-foreground shadow-sm transition-colors hover:bg-secondary disabled:cursor-wait disabled:opacity-70"
+                    className="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-card text-foreground shadow-[var(--shadow-panel)] disabled:opacity-65"
                     title="Upload avatar"
                   >
-                    {isAvatarUploading ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Camera className="h-4 w-4" />
-                    )}
+                    {isAvatarUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                   </motion.button>
                 </div>
-                <div className="pb-2">
-                  <h2 className="text-2xl font-semibold text-foreground">{displayName}</h2>
-                  <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+
+                <div>
+                  <h2 className="text-[2rem] font-semibold tracking-[-0.04em] text-foreground">
+                    {displayName}
+                  </h2>
+                  <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-secondary/75 px-3 py-1.5 text-sm text-muted-foreground">
                     <Mail className="h-4 w-4" />
                     <span>{profile?.email ?? "No email available"}</span>
                   </div>
                 </div>
               </div>
+
               <motion.button
                 type="button"
                 whileTap={buttonTap}
                 onClick={() => navigate("/settings")}
                 data-testid="advanced-settings-link"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-border px-5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-card px-5 text-sm font-medium text-foreground shadow-[var(--shadow-panel)] transition-colors hover:bg-secondary/75"
               >
-                <span>Advanced settings</span>
+                Advanced settings
                 <ChevronRight className="h-4 w-4" />
               </motion.button>
             </div>
 
-            <div className="mt-5 grid gap-3 md:grid-cols-3">
-              <div className="rounded-3xl bg-secondary p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Provider</p>
-                <p className="mt-2 text-base font-semibold text-foreground">Email OTP</p>
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              {[
+                { label: "Provider", value: "Email OTP" },
+                { label: "Password Status", value: passwordStatusLabel, testId: "password-status" },
+                { label: "Last Sign-in", value: formatDateLabel(profile?.lastSignInAt ?? null) },
+              ].map((item) => (
+                <div key={item.label} className="rounded-[24px] bg-secondary/72 px-4 py-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                    {item.label}
+                  </p>
+                  <p
+                    data-testid={item.testId}
+                    className="mt-3 text-base font-semibold text-foreground"
+                  >
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-[0.92fr_1.08fr]">
+          <section className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                <Sun className="h-5 w-5" />
               </div>
-              <div className="rounded-3xl bg-secondary p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  Password Status
-                </p>
-                <p data-testid="password-status" className="mt-2 text-base font-semibold text-foreground">
-                  {passwordStatusLabel}
-                </p>
-              </div>
-              <div className="rounded-3xl bg-secondary p-4">
-                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  Last Sign-in
-                </p>
-                <p className="mt-2 text-base font-semibold text-foreground">
-                  {formatDateLabel(profile?.lastSignInAt ?? null)}
+              <div>
+                <h2 className="text-[1.25rem] font-semibold text-foreground">Quick Preferences</h2>
+                <p className="text-sm text-muted-foreground">
+                  Keep theme switching close to the account summary.
                 </p>
               </div>
             </div>
-          </div>
-        </section>
 
-        <section className="mt-4 rounded-[28px] border border-border bg-card p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent text-primary">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">Quick Preferences</h2>
-              <p className="text-sm text-muted-foreground">
-                Theme switching is available here. The full device-level configuration remains in
-                advanced settings.
-              </p>
-            </div>
-          </div>
+            <div className="mt-5 space-y-3">
+              {themeOptions.map((option) => {
+                const Icon = option.icon;
+                const isActive = (settingsTheme || themeMode) === option.value;
 
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
-            {themeOptions.map((option) => {
-              const Icon = option.icon;
-              const isActive = (settingsTheme || themeMode) === option.value;
+                return (
+                  <motion.button
+                    key={option.value}
+                    type="button"
+                    whileTap={buttonTap}
+                    onClick={() => void handleThemeChange(option.value)}
+                    className={`relative flex w-full items-start gap-4 rounded-[24px] border px-4 py-4 text-left transition-colors ${
+                      isActive
+                        ? "border-primary/18 bg-accent/65"
+                        : "border-border bg-card hover:bg-secondary/65"
+                    }`}
+                  >
+                    {isActive ? (
+                      <motion.div
+                        layoutId="profile-theme-indicator"
+                        className="pointer-events-none absolute inset-0 rounded-[24px] border border-primary/18"
+                        transition={SPRING_BOUNCY}
+                      />
+                    ) : null}
+                    <div
+                      className={`flex h-11 w-11 items-center justify-center rounded-full ${
+                        isActive ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-foreground">{option.label}</p>
+                      <p className="mt-1 text-sm leading-6 text-muted-foreground">{option.description}</p>
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </section>
 
-              return (
-                <motion.button
-                  key={option.value}
-                  type="button"
-                  whileTap={buttonTap}
-                  onClick={() => void handleThemeChange(option.value)}
-                  className={`relative rounded-[24px] border p-4 text-left transition-all ${
-                    isActive
-                      ? "border-primary bg-accent shadow-sm"
-                      : "border-border bg-card hover:border-primary/30 hover:bg-secondary"
-                  }`}
-                >
-                  {isActive ? (
-                    <motion.div
-                      layoutId="profile-theme-indicator"
-                      className="pointer-events-none absolute inset-0 rounded-[24px] border border-primary"
-                      transition={SPRING_BOUNCY}
-                    />
-                  ) : null}
-                  <Icon className={`h-5 w-5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-                  <p className="mt-4 text-sm font-semibold text-foreground">{option.label}</p>
-                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{option.description}</p>
-                </motion.button>
-              );
-            })}
-          </div>
-        </section>
+          <section className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <h2 className="text-[1.25rem] font-semibold text-foreground">Security</h2>
+                <p className="mt-2 text-sm leading-7 text-muted-foreground">{securitySummary}</p>
+              </div>
+              <motion.button
+                type="button"
+                data-testid="start-password-security-action"
+                whileTap={buttonTap}
+                onClick={() => {
+                  resetSecurityForm();
+                  setIsSecurityDialogOpen(true);
+                }}
+                className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground shadow-[0_12px_30px_rgba(0,113,227,0.22)]"
+              >
+                <KeyRound className="h-4 w-4" />
+                {passwordActionLabel}
+              </motion.button>
+            </div>
 
-        <section className="mt-4 rounded-[28px] border border-border bg-card p-5">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">Security</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{securitySummary}</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Action</p>
+                <p className="mt-3 text-base font-semibold text-foreground">{passwordActionLabel}</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{passwordActionDescription}</p>
+              </div>
+              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Delivery</p>
+                <p className="mt-3 text-base font-semibold text-foreground">Email verification code</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  A fresh code is required before the password is accepted.
+                </p>
+              </div>
             </div>
-            <motion.button
-              type="button"
-              data-testid="start-password-security-action"
-              whileTap={buttonTap}
-              onClick={() => {
-                resetSecurityForm();
-                setIsSecurityDialogOpen(true);
-              }}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
-            >
-              <KeyRound className="h-4 w-4" />
-              <span>{passwordActionLabel}</span>
-            </motion.button>
-          </div>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-3xl bg-secondary p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Action</p>
-              <p className="mt-2 text-base font-semibold text-foreground">{passwordActionLabel}</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{passwordActionDescription}</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Verified Email
+                </p>
+                <p className="mt-3 text-base font-semibold text-foreground">
+                  {profile?.emailVerified ? "Verified" : "Unverified"}
+                </p>
+              </div>
+              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Profile Updated
+                </p>
+                <p className="mt-3 text-base font-semibold text-foreground">
+                  {formatDateLabel(profile?.updatedAt ?? null)}
+                </p>
+              </div>
             </div>
-            <div className="rounded-3xl bg-secondary p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Delivery</p>
-              <p className="mt-2 text-base font-semibold text-foreground">Email verification code</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                A fresh email code is required before the new password is accepted.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-4 rounded-[28px] border border-border bg-card p-5">
-          <h2 className="text-lg font-semibold text-foreground">Profile Metadata</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-3xl bg-secondary p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                Verified Email
-              </p>
-              <p className="mt-2 text-base font-semibold text-foreground">
-                {profile?.emailVerified ? "Verified" : "Unverified"}
-              </p>
-            </div>
-            <div className="rounded-3xl bg-secondary p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                Profile Updated
-              </p>
-              <p className="mt-2 text-base font-semibold text-foreground">
-                {formatDateLabel(profile?.updatedAt ?? null)}
-              </p>
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </main>
 
       <Dialog
@@ -496,8 +501,9 @@ export function UserProfilePage() {
         description="Keep password management inside the profile screen and verify the action with a fresh email code."
       >
         <div data-testid="password-security-dialog" className="space-y-4">
-          <div className="rounded-2xl bg-secondary px-4 py-3 text-sm leading-6 text-muted-foreground">
-            This action will send a verification code to <span className="font-medium text-foreground">{profile?.email ?? "your email"}</span>.
+          <div className="rounded-[20px] bg-secondary/72 px-4 py-3 text-sm leading-6 text-muted-foreground">
+            This action will send a verification code to{" "}
+            <span className="font-medium text-foreground">{profile?.email ?? "your email"}</span>.
           </div>
 
           {securityStep === "idle" ? (
@@ -507,10 +513,10 @@ export function UserProfilePage() {
               whileTap={buttonTap}
               onClick={() => void handleRequestSecurityCode()}
               disabled={isSecuritySending}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground disabled:opacity-65"
             >
               {isSecuritySending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-              <span>Send verification code</span>
+              Send verification code
             </motion.button>
           ) : (
             <div className="space-y-3">
@@ -520,7 +526,7 @@ export function UserProfilePage() {
                 onChange={(event) => setSecurityCode(event.target.value)}
                 placeholder="Enter the verification code"
                 inputMode="numeric"
-                className="h-11 rounded-2xl"
+                className="h-12"
               />
               <Input
                 data-testid="security-password-input"
@@ -529,7 +535,7 @@ export function UserProfilePage() {
                 onChange={(event) => setNewPassword(event.target.value)}
                 placeholder="Enter the new password"
                 autoComplete="new-password"
-                className="h-11 rounded-2xl"
+                className="h-12"
               />
               <Input
                 data-testid="security-password-confirm-input"
@@ -538,7 +544,7 @@ export function UserProfilePage() {
                 onChange={(event) => setConfirmPassword(event.target.value)}
                 placeholder="Confirm the new password"
                 autoComplete="new-password"
-                className="h-11 rounded-2xl"
+                className="h-12"
               />
               <motion.button
                 type="button"
@@ -546,14 +552,14 @@ export function UserProfilePage() {
                 whileTap={buttonTap}
                 onClick={() => void handleSubmitPasswordAction()}
                 disabled={isSecuritySubmitting}
-                className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground disabled:opacity-65"
               >
                 {isSecuritySubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <KeyRound className="h-4 w-4" />
                 )}
-                <span>{passwordActionLabel}</span>
+                {passwordActionLabel}
               </motion.button>
               <button
                 type="button"

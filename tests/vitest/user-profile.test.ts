@@ -153,4 +153,40 @@ describe("createSupabaseAuthService", () => {
     expect(persisted.pendingActionEmail).toBeNull();
     expect(persisted.rememberUntil).not.toBeNull();
   });
+
+  it("邮箱密码登录成功后会写入密码登录态", async () => {
+    const session = createSession({
+      has_password: true,
+      profile_email: "demo@example.com",
+      profile_updated_at: "2026-03-27T10:10:00.000Z",
+    });
+    const mockClient = {
+      auth: {
+        signInWithPassword: async () => ({ data: { session }, error: null }),
+        updateUser: async ({ data }: { data: Record<string, unknown> }) => ({
+          data: {
+            user: {
+              ...session.user,
+              user_metadata: {
+                ...session.user.user_metadata,
+                ...data,
+              },
+            },
+          },
+          error: null,
+        }),
+      },
+    } as unknown as SupabaseClient;
+
+    (window as typeof window & { __APP_SUPABASE_MOCK__?: SupabaseClient }).__APP_SUPABASE_MOCK__ =
+      mockClient;
+
+    const service = createSupabaseAuthService();
+    await service.signInWithPassword("demo@example.com", "supersafe-password");
+    const snapshot = service.getSnapshot();
+
+    expect(snapshot.isAuthenticated).toBe(true);
+    expect(snapshot.lastAuthMethod).toBe("password");
+    expect(snapshot.profile?.email).toBe("demo@example.com");
+  });
 });

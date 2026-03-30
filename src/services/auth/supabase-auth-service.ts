@@ -1,6 +1,7 @@
 import type { AuthChangeEvent, Session, SupabaseClient } from "@supabase/supabase-js";
 import { localDb } from "@/lib/local-db";
-import { getSupabaseBrowserClient } from "@/lib/supabase";import type {
+import { getSupabaseBrowserClient } from "@/lib/supabase";
+import type {
   AuthMethod,
   AuthSession,
   AuthStateSnapshot,
@@ -572,6 +573,49 @@ export function createSupabaseAuthService(): AuthService {
       return () => listeners.delete(listener);
     },
 
+    async signInWithPassword(email: string, password: string) {
+      const normalizedEmail = email.trim().toLowerCase();
+      if (!normalizedEmail) {
+        throw new Error("请输入邮箱地址。");
+      }
+
+      validatePassword(password, "登录密码");
+
+      const client = getSupabaseBrowserClient();
+      if (!client) {
+        const message = getAuthConfigurationError();
+        setSnapshot({
+          lastError: message,
+          pendingEmail: normalizedEmail,
+        });
+        throw new Error(message);
+      }
+
+      const {
+        data: { session },
+        error,
+      } = await client.auth.signInWithPassword({
+        email: normalizedEmail,
+        password: password.trim(),
+      });
+
+      if (error) {
+        setSnapshot({
+          lastError: error.message,
+          pendingEmail: normalizedEmail,
+        });
+        throw new Error(error.message);
+      }
+
+      const resolvedSession = session ? await syncRemoteProfile(client, session) : session;
+      syncSession(resolvedSession, {
+        pendingAction: null,
+        pendingActionEmail: null,
+        refreshRememberWindow: true,
+        lastAuthMethod: "password",
+      });
+    },
+
     async requestEmailOtp(email, purpose) {
       const normalizedEmail = email.trim().toLowerCase();
       if (!normalizedEmail) {
@@ -591,7 +635,6 @@ export function createSupabaseAuthService(): AuthService {
       const { error } = await client.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
-          emailRedirectTo: authConfig.emailRedirectTo,
           shouldCreateUser: purpose === "register",
         },
       });
@@ -638,11 +681,11 @@ export function createSupabaseAuthService(): AuthService {
       const normalizedToken = token.trim();
 
       if (!normalizedEmail) {
-        throw new Error("??????????");
+        throw new Error("请输入邮箱地址。");
       }
 
       if (!normalizedToken) {
-        throw new Error("?????????");
+        throw new Error("请输入验证码。");
       }
 
       const client = getSupabaseBrowserClient();
@@ -689,8 +732,8 @@ export function createSupabaseAuthService(): AuthService {
         email: normalizedEmail,
         message:
           purpose === "register"
-            ? "????????????????????"
-            : "???????????????",
+            ? "注册成功，已自动登录。"
+            : "验证码校验通过，登录成功。",
       };
     },
 

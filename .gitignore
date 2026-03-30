@@ -11,6 +11,7 @@ source.zip
 
 .claude/settings.local.json
 .tmp/
+supabase/.temp
 playwright-report/
 test-results/
 .env

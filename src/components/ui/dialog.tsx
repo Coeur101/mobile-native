@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import { buttonTap } from "@/lib/animations";
 
@@ -9,11 +9,8 @@ interface DialogProps {
   title: string;
   description?: string;
   children?: React.ReactNode;
-  /** 确认按钮文字 */
   confirmLabel?: string;
-  /** 取消按钮文字 */
   cancelLabel?: string;
-  /** 确认按钮是否为危险操作样式 */
   destructive?: boolean;
   onConfirm?: () => void;
 }
@@ -31,22 +28,24 @@ export const Dialog = ({
 }: DialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // ESC 关闭
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) onClose();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && open) {
+        onClose();
+      }
     };
+
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
 
-  // 打开时禁止背景滚动
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
+    if (!open) {
       document.body.style.overflow = "";
+      return;
     }
+
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };
@@ -54,54 +53,51 @@ export const Dialog = ({
 
   return (
     <AnimatePresence>
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* 遮罩 */}
+      {open ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/45 backdrop-blur-[18px]"
             onClick={onClose}
           />
 
-          {/* 对话框 */}
           <motion.div
             ref={dialogRef}
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.98, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className="relative z-10 mx-4 w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl"
+            exit={{ opacity: 0, scale: 0.98, y: 12 }}
+            transition={{ duration: 0.22 }}
+            className="relative z-10 w-full max-w-md rounded-[28px] border border-border bg-popover/95 p-6 shadow-[var(--shadow-card)] backdrop-blur-2xl"
           >
-            {/* 关闭按钮 */}
             <motion.button
               type="button"
               whileTap={buttonTap}
               onClick={onClose}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary"
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-secondary/80 text-muted-foreground transition-colors hover:text-foreground"
+              aria-label="关闭弹窗"
             >
               <X className="h-4 w-4" />
             </motion.button>
 
-            {/* 标题 */}
-            <h2 className="pr-8 text-lg font-semibold text-foreground">{title}</h2>
-            {description && (
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
-            )}
+            <div className="pr-10">
+              <h2 className="text-[1.35rem] font-semibold text-foreground">{title}</h2>
+              {description ? (
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+              ) : null}
+            </div>
 
-            {/* 自定义内容 */}
-            {children && <div className="mt-4">{children}</div>}
+            {children ? <div className="mt-5">{children}</div> : null}
 
-            {/* 操作按钮 */}
-            {onConfirm && (
+            {onConfirm ? (
               <div className="mt-6 flex gap-3">
                 <motion.button
                   type="button"
                   whileTap={buttonTap}
                   onClick={onClose}
-                  className="flex-1 rounded-2xl border border-border bg-secondary px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary/80"
+                  className="flex-1 rounded-full border border-border bg-secondary/70 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
                 >
                   {cancelLabel}
                 </motion.button>
@@ -112,19 +108,17 @@ export const Dialog = ({
                     onConfirm();
                     onClose();
                   }}
-                  className={`flex-1 rounded-2xl px-4 py-2.5 text-sm font-medium transition-colors ${
-                    destructive
-                      ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      : "bg-primary text-primary-foreground hover:bg-primary/90"
+                  className={`flex-1 rounded-full px-4 py-3 text-sm font-medium text-white transition-opacity hover:opacity-92 ${
+                    destructive ? "bg-destructive" : "bg-primary"
                   }`}
                 >
                   {confirmLabel}
                 </motion.button>
               </div>
-            )}
+            ) : null}
           </motion.div>
         </div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 };

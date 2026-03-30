@@ -17,6 +17,7 @@ export interface AuthService {
   getCurrentUser(): UserProfile | null;
   getSnapshot(): AuthStateSnapshot;
   subscribe(listener: AuthStateListener): () => void;
+  signInWithPassword(email: string, password: string): Promise<void>;
   requestEmailOtp(email: string, purpose: EmailOtpPurpose): Promise<EmailOtpRequestResult>;
   verifyEmailOtp(
     email: string,
