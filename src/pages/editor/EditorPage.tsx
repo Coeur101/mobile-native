@@ -110,6 +110,8 @@ export function EditorPage() {
   const [pendingUserMessage, setPendingUserMessage] = useState<PendingUserMessage | null>(null);
   const [draftAssistant, setDraftAssistant] = useState<DraftAssistantState | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
+  const [restoringVersionId, setRestoringVersionId] = useState<string | null>(null);
   const [showVersionPanel, setShowVersionPanel] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editName, setEditName] = useState("");
@@ -331,9 +333,12 @@ export function EditorPage() {
   };
 
   const handleRestoreVersion = async (versionId: string) => {
-    if (!project) {
+    if (!project || isRestoring) {
       return;
     }
+
+    setIsRestoring(true);
+    setRestoringVersionId(versionId);
 
     try {
       const restored = await projectService.restoreProjectVersion(project.id, versionId);
@@ -344,6 +349,9 @@ export function EditorPage() {
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "恢复版本失败。");
+    } finally {
+      setIsRestoring(false);
+      setRestoringVersionId(null);
     }
   };
 
@@ -526,7 +534,7 @@ export function EditorPage() {
                 whileHover={reduceMotion ? undefined : iconLift}
                 transition={SPRING_BOUNCY}
                 onClick={() => void handleSaveVersion()}
-                disabled={isSaving || isGenerationActive}
+                disabled={isSaving || isRestoring || isGenerationActive}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-card/92 text-foreground shadow-[var(--shadow-panel)] transition-colors hover:bg-secondary/75 disabled:opacity-55"
                 title={isGenerationActive ? "生成中暂不可保存版本" : "保存版本"}
               >
@@ -914,7 +922,7 @@ export function EditorPage() {
                       }
                 }
                 onClick={() => void handleGenerate()}
-                disabled={!prompt.trim() || isGenerationActive}
+                disabled={!prompt.trim() || isRestoring || isGenerationActive}
                 className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-opacity disabled:opacity-40"
                 title="发送需求"
               >
@@ -930,6 +938,8 @@ export function EditorPage() {
         onClose={() => setShowVersionPanel(false)}
         versions={project?.versions ?? []}
         onRestore={(versionId) => void handleRestoreVersion(versionId)}
+        isRestoring={isRestoring}
+        restoringVersionId={restoringVersionId}
       />
     </PageTransition>
   );

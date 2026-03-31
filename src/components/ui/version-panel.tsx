@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { Clock3, RotateCcw, X } from "lucide-react";
+import { Clock3, Loader2, RotateCcw, X } from "lucide-react";
 import { buttonTap } from "@/lib/animations";
 import type { ProjectVersion } from "@/types";
 
@@ -8,9 +8,11 @@ interface VersionPanelProps {
   onClose: () => void;
   versions: ProjectVersion[];
   onRestore: (versionId: string) => void;
+  isRestoring?: boolean;
+  restoringVersionId?: string | null;
 }
 
-export const VersionPanel = ({ open, onClose, versions, onRestore }: VersionPanelProps) => {
+export const VersionPanel = ({ open, onClose, versions, onRestore, isRestoring = false, restoringVersionId = null }: VersionPanelProps) => {
   return (
     <AnimatePresence>
       {open ? (
@@ -91,10 +93,15 @@ export const VersionPanel = ({ open, onClose, versions, onRestore }: VersionPane
                             data-testid={`restore-version-${version.id}`}
                             whileTap={buttonTap}
                             onClick={() => onRestore(version.id)}
-                            className="inline-flex h-11 items-center gap-2 rounded-full bg-secondary px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                            disabled={isRestoring}
+                            className="inline-flex h-11 items-center gap-2 rounded-full bg-secondary px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-55"
                           >
-                            <RotateCcw className="h-4 w-4" />
-                            恢复
+                            {isRestoring && restoringVersionId === version.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <RotateCcw className="h-4 w-4" />
+                            )}
+                            {isRestoring && restoringVersionId === version.id ? "恢复中..." : "恢复"}
                           </motion.button>
                         ) : null}
                       </div>
