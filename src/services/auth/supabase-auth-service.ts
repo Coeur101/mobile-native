@@ -18,6 +18,12 @@ import { authConfig, getAuthConfigurationError } from "./auth-config";
 
 export const AUTH_REMEMBER_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
 
+/** Session 过期检查间隔（5 分钟） */
+const SESSION_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+
+/** Session 过期后允许的缓冲时间（5 分钟），给 Supabase 自动刷新留余地 */
+const SESSION_EXPIRY_BUFFER_MS = 5 * 60 * 1000;
+
 type ProfileMetadata = {
   full_name?: string;
   avatar_base64?: string;
@@ -303,7 +309,35 @@ export function createSupabaseAuthService(): AuthService {
   let initialized = false;
   let initializePromise: Promise<void> | null = null;
   let unsubscribeAuthListener: (() => void) | null = null;
+  let sessionCheckTimer: ReturnType<typeof setInterval> | null = null;
   const listeners = new Set<AuthStateListener>();
+
+  /** 检查 session token 是否已过期（含缓冲时间） */
+  function isSessionTokenExpired(session: AuthSession | null): boolean {
+    if (!session?.expiresAt) {
+      return false;
+    }
+
+    return Date.now() / 1000 > session.expiresAt + SESSION_EXPIRY_BUFFER_MS / 1000;
+  }
+
+  /** 定期检查 session 有效性，过期则自动清除 */
+  function startSessionExpiryCheck() {
+    stopSessionExpiryCheck();
+
+    sessionCheckTimer = setInterval(() => {
+      if (snapshot.session && isSessionTokenExpired(snapshot.session)) {
+        clearAuthState("登录已过期，请重新登录。");
+      }
+    }, SESSION_CHECK_INTERVAL_MS);
+  }
+
+  function stopSessionExpiryCheck() {
+    if (sessionCheckTimer) {
+      clearInterval(sessionCheckTimer);
+      sessionCheckTimer = null;
+    }
+  }
 
   const emitChange = () => {
     for (const listener of listeners) {
@@ -360,6 +394,7 @@ export function createSupabaseAuthService(): AuthService {
   };
 
   const clearAuthState = (lastError: string | null = null) => {
+    stopSessionExpiryCheck();
     localDb.saveAuthState({
       profile: null,
       session: null,
@@ -434,8 +469,21 @@ export function createSupabaseAuthService(): AuthService {
       lastError: options.errorMessage ?? null,
       isLoading: false,
       authConfigured: authConfig.isConfigured,
-      isAuthenticated: Boolean(nextPersisted.profile && nextPersisted.session && !nextPersisted.pendingAction),
+      isAuthenticated: Boolean(
+        nextPersisted.profile &&
+        nextPersisted.session &&
+        !nextPersisted.pendingAction &&
+        !isSessionTokenExpired(nextPersisted.session),
+      ),
     };
+
+    // session 有效时启动过期检查，否则停止
+    if (snapshot.session && !isSessionTokenExpired(snapshot.session)) {
+      startSessionExpiryCheck();
+    } else {
+      stopSessionExpiryCheck();
+    }
+
     emitChange();
   };
 
@@ -550,6 +598,11 @@ export function createSupabaseAuthService(): AuthService {
         if (!unsubscribeAuthListener) {
           const { data } = client.auth.onAuthStateChange(handleAuthChange);
           unsubscribeAuthListener = () => data.subscription.unsubscribe();
+        }
+
+        // session 有效时启动定期过期检查
+        if (snapshot.session && !isSessionTokenExpired(snapshot.session)) {
+          startSessionExpiryCheck();
         }
 
         initialized = true;
