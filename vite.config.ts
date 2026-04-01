@@ -11,4 +11,16 @@ export default defineConfig({
     },
   },
   assetsInclude: ["**/*.svg", "**/*.csv"],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router"],
+          ui: ["lucide-react", "sonner", "motion"],
+          supabase: ["@supabase/supabase-js"],
+          highlight: ["highlight.js"],
+        },
+      },
+    },
+  },
 });

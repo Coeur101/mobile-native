@@ -1,4 +1,4 @@
-﻿import { settingsService as defaultSettingsService } from "@/services/settings";
+import { settingsService as defaultSettingsService } from "@/services/settings";
 import type { SettingsService } from "@/services/settings/settings-service";
 import type { GeneratedProjectPayload, Project, ProjectFileMap, ProjectGenerationProgress, ThinkingStep } from "@/types";
 import type { AIService, ProjectGenerationOptions } from "./ai-service";
@@ -75,31 +75,60 @@ function buildEndpoint(baseUrl: string) {
 
 function buildSystemPrompt() {
   return [
-    "你是一个中文网页生成助手。",
-    "你的任务是根据用户需求输出一个完整、可直接预览的轻量网页项目。",
-    "你必须只返回 JSON，禁止返回 Markdown 代码块、解释文本或额外前后缀。",
-    "返回 JSON 时请保持字段顺序固定为：projectName、summary、assistantMessage、thinkingSteps、files。",
-    "JSON 必须包含以下字段：",
-    "projectName: 字符串，项目名称。",
-    "summary: 字符串，简洁总结当前版本内容。",
-    "assistantMessage: 字符串，面向用户的中文回复。",
-    "thinkingSteps: 数组，可选，每项包含 title、description、content、status。",
-    "files: 对象，且必须包含 index.html、style.css、main.js 三个字符串文件。",
-    "thinkingSteps 请使用 2 到 4 个简短中文步骤，status 只允许 pending、loading、success、error。",
-    "返回的 HTML 必须使用 zh-CN，CSS 和 JS 必须可直接运行。",
-    "如果用户是在续写已有项目，你必须返回完整文件内容，而不是增量补丁。",
+    "你是中文网页生成助手，负责根据用户需求输出一个完整、可直接预览的轻量网页项目。请严格按照以下结构化要求执行：",
+    "",
+    "1. **角色与输出格式**",
+    "   - 你只返回一个合法的 JSON 对象，禁止包含任何 Markdown 代码块、解释文本或额外前后缀。",
+    "   - JSON 字段顺序必须固定为：projectName、summary、assistantMessage、thinkingSteps、files。",
+    "",
+    "2. **核心需求与输出要素**",
+    "   - projectName：字符串，为项目起一个简洁的中文或英文名称。",
+    "   - summary：字符串，用一两句话简洁总结当前版本的核心内容。",
+    "   - assistantMessage：字符串，面向用户的中文回复，语气友好、专业。",
+    "   - thinkingSteps：数组（可选），包含 2 到 4 个步骤，每项结构为 { \"title\": \"步骤标题\", \"description\": \"步骤描述\", \"content\": \"详细内容\", \"status\": \"状态\" }；status 只允许使用 pending、loading、success、error 之一。",
+    "   - files：对象，必须包含 index.html、style.css、main.js 三个键，对应的值为完整的文件内容字符串。",
+    "",
+    "3. **分步执行指令**",
+    "   - 第一步：解析用户需求，明确网页主题、功能与风格。",
+    "   - 第二步：生成 thinkingSteps（如需要），用简短中文描述设计思路，并设置合理状态。",
+    "   - 第三步：编写 index.html，确保语言属性为 zh-CN，结构完整且语义化。",
+    "   - 第四步：编写 style.css，提供美观、响应式的样式，确保可直接运行。",
+    "   - 第五步：编写 main.js，实现基本交互逻辑，确保代码无语法错误。",
+    "   - 第六步：整合所有内容，按固定字段顺序生成 JSON，并检查文件完整性。",
+    "",
+    "4. **格式要求与示例输出**",
+    "   - 所有文件内容必须为可直接运行的完整代码，若用户续写已有项目，需返回全部文件内容而非增量补丁。",
+    "   - 示例 JSON 结构：",
+    "   {",
+    "     \"projectName\": \"示例网页\",",
+    "     \"summary\": \"这是一个展示提示词优化工具的轻量网页。\",",
+    "     \"assistantMessage\": \"您好！我已为您生成完整的网页项目，包含HTML、CSS和JS文件，可直接预览。\",",
+    "     \"thinkingSteps\": [",
+    "       {",
+    "         \"title\": \"需求分析\",",
+    "         \"description\": \"确定网页主题与功能\",",
+    "         \"content\": \"根据用户输入，网页需展示工具介绍与交互示例。\",",
+    "         \"status\": \"success\"",
+    "       }",
+    "     ],",
+    "     \"files\": {",
+    "       \"index.html\": \"<!DOCTYPE html><html lang=\\\"zh-CN\\\">...</html>\",",
+    "       \"style.css\": \"body { font-family: sans-serif; }\",",
+    "       \"main.js\": \"console.log('页面加载完成');\"",
+    "     }",
+    "   }",
   ].join("\n");
 }
 
 function buildUserPrompt(prompt: string, project?: Project) {
   const context = project
     ? [
-        "当前正在续写已有项目。",
-        `项目名称：${project.name}`,
-        `项目描述：${project.description}`,
-        "当前文件：",
-        JSON.stringify(project.files, null, 2),
-      ].join("\n")
+      "当前正在续写已有项目。",
+      `项目名称：${project.name}`,
+      `项目描述：${project.description}`,
+      "当前文件：",
+      JSON.stringify(project.files, null, 2),
+    ].join("\n")
     : "当前是首次生成新项目。";
 
   return [
@@ -205,9 +234,9 @@ function parseThinkingSteps(value: unknown): ThinkingStep[] {
       content: typeof item.content === "string" ? item.content : undefined,
       status:
         item.status === "pending" ||
-        item.status === "loading" ||
-        item.status === "success" ||
-        item.status === "error"
+          item.status === "loading" ||
+          item.status === "success" ||
+          item.status === "error"
           ? item.status
           : "success",
     }));
@@ -334,6 +363,11 @@ function parseProviderResponseWithThinkingSupport(responseText: string) {
   try {
     parsed = JSON.parse(responseText);
   } catch {
+    const sseContent = extractContentFromSSEText(responseText);
+    if (sseContent) {
+      return parseProjectPayloadText(sseContent);
+    }
+
     return parseProjectPayloadText(responseText);
   }
 
@@ -614,6 +648,45 @@ function extractStreamContent(response: ChatCompletionResponse) {
   return extractResponseText(choice.delta?.content ?? choice.message?.content);
 }
 
+function extractContentFromSSEText(source: string) {
+  const normalized = source.replace(/\r\n/g, "\n");
+  const eventBlocks = normalized.split(/\n{2,}/);
+  let content = "";
+  let foundEvent = false;
+
+  for (const eventBlock of eventBlocks) {
+    const trimmedBlock = eventBlock.trim();
+    if (!trimmedBlock) {
+      continue;
+    }
+
+    const dataLines = trimmedBlock
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("data:"))
+      .map((line) => line.slice(5).trimStart());
+
+    if (dataLines.length === 0) {
+      continue;
+    }
+
+    foundEvent = true;
+    const payloadText = dataLines.join("\n");
+    if (!payloadText || payloadText === "[DONE]") {
+      continue;
+    }
+
+    const response = JSON.parse(payloadText) as ChatCompletionResponse;
+    if (response.error?.message) {
+      throw new Error(response.error.message);
+    }
+
+    content += extractStreamContent(response);
+  }
+
+  return foundEvent ? content : "";
+}
+
 function formatUpstreamError(status: number, responseText: string) {
   let detail = "";
   try {
@@ -759,6 +832,11 @@ export function createOpenAICompatibleAIService(
       const endpoint = buildEndpoint(config.customBaseUrl);
       const shouldStream = typeof options?.onProgress === "function";
 
+      // 超时保护：非流式 120 秒，流式 300 秒
+      const timeoutMs = shouldStream ? 300_000 : 120_000;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
       try {
         const response = await fetchImpl(endpoint, {
           method: "POST",
@@ -767,6 +845,7 @@ export function createOpenAICompatibleAIService(
             Authorization: `Bearer ${config.apiKey}`,
           },
           body: JSON.stringify(buildRequestBody(normalizedPrompt, project, config.preferredModel, shouldStream)),
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -776,13 +855,28 @@ export function createOpenAICompatibleAIService(
 
         if (shouldStream) {
           const streamedResult = await parseStreamingProviderResponse(response, options);
+          clearTimeout(timeoutId);
           return buildGeneratedProjectPayload(streamedResult, config.preferredModel);
         }
 
         const responseText = await response.text();
+        clearTimeout(timeoutId);
         const result = parseProviderResponseWithThinkingSupport(responseText);
         return buildGeneratedProjectPayload(result, config.preferredModel);
       } catch (error) {
+        clearTimeout(timeoutId);
+
+        if (error instanceof DOMException && error.name === "AbortError") {
+          const abortMessage = `AI 生成请求超时（${timeoutMs / 1000} 秒），请检查网络或稍后重试。`;
+          emitProgress(options, {
+            status: "failed",
+            content: "",
+            thinkingSteps: [],
+            error: abortMessage,
+          });
+          throw new Error(abortMessage);
+        }
+
         if (error instanceof Error) {
           emitProgress(options, {
             status: "failed",

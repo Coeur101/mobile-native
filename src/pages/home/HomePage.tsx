@@ -7,31 +7,10 @@ import { Dialog } from "@/components/ui/dialog";
 import { ProjectListSkeleton } from "@/components/ui/skeleton";
 import { PageTransition } from "@/components/ui/page-transition";
 import { buttonTap, cardLift, iconLift, SPRING_BOUNCY, SPRING_GENTLE, SPRING_PANEL } from "@/lib/animations";
+import { getDisplayInitials, formatProjectMeta } from "@/lib/formatters";
 import { projectService } from "@/services/project";
 import { useAuthStore } from "@/stores/use-auth-store";
 import type { Project } from "@/types";
-
-function getDisplayInitials(name: string) {
-  const source = name.trim();
-  if (!source) {
-    return "我";
-  }
-
-  const parts = source.split(/[\s_-]+/).filter(Boolean);
-  const initials = parts.length > 1 ? `${parts[0][0]}${parts[1][0]}` : source.slice(0, 2);
-  return initials.toUpperCase();
-}
-
-function formatProjectMeta(project: Project) {
-  const updatedAt = new Date(project.updatedAt);
-  const now = new Date();
-  const isToday =
-    updatedAt.getFullYear() === now.getFullYear() &&
-    updatedAt.getMonth() === now.getMonth() &&
-    updatedAt.getDate() === now.getDate();
-
-  return `${isToday ? "今天" : updatedAt.toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" })} · ${project.messages.length} 条对话`;
-}
 
 export function HomePage() {
   const navigate = useNavigate();

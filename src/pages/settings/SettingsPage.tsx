@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { ArrowLeft, Check, LogOut, Save, Shield, Wrench } from "lucide-react";
+import { ArrowLeft, Check, LogOut, Save, Wrench } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -27,17 +27,32 @@ export function SettingsPage() {
     setSettings(mockSettingsService.getSettings());
   }, []);
 
+  // 安全清理 saveSuccess 定时器
+  useEffect(() => {
+    if (!saveSuccess) return;
+    const timer = setTimeout(() => setSaveSuccess(false), 2000);
+    return () => clearTimeout(timer);
+  }, [saveSuccess]);
+
   const handleSave = async () => {
-    await mockSettingsService.saveSettings(settings);
-    setSaveSuccess(true);
-    toast.success("高级设置已保存。");
-    setTimeout(() => setSaveSuccess(false), 2000);
+    try {
+      await mockSettingsService.saveSettings(settings);
+      setSaveSuccess(true);
+      toast.success("高级设置已保存。");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "保存设置失败，请稍后重试。";
+      toast.error(message);
+    }
   };
 
   const handleLogout = async () => {
-    await authService.signOut();
-    toast.success("已退出登录。");
-    navigate("/login", { replace: true });
+    try {
+      await authService.signOut();
+      toast.success("已退出登录。");
+      navigate("/login", { replace: true });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "退出登录失败。");
+    }
   };
 
   return (
@@ -76,36 +91,7 @@ export function SettingsPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        <section className="rounded-[36px] border border-border bg-card/92 p-6 shadow-[var(--shadow-card)]">
-          <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
-            <div>
-              <div className="inline-flex rounded-full bg-accent px-3 py-1 text-[11px] font-medium text-accent-foreground">
-                当前设备配置
-              </div>
-              <h2 className="mt-4 text-[2rem] font-semibold tracking-[-0.05em] text-foreground sm:text-[2.5rem]">
-                只保留与当前工作设备和 AI 接入相关的高级配置。
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-[15px]">
-                主题、密码与账号摘要已经归并到 Profile 页面，这里专注模型、接口和设备备注，减少认知负担。
-              </p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              {[
-                { label: "存储范围", value: "仅当前设备" },
-                { label: "配置类型", value: "AI 与设备" },
-                { label: "当前主题", value: settings.theme || "auto" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{item.label}</p>
-                  <p className="mt-3 text-base font-semibold text-foreground">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <div className="mt-4 grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
           <section className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
@@ -113,9 +99,6 @@ export function SettingsPage() {
               </div>
               <div>
                 <h2 className="text-[1.25rem] font-semibold text-foreground">AI 集成配置</h2>
-                <p className="text-sm text-muted-foreground">
-                  这些值仅保存在当前设备，用于连接你的 AI 服务并驱动项目生成。
-                </p>
               </div>
             </div>
 
@@ -159,17 +142,7 @@ export function SettingsPage() {
             </div>
           </section>
 
-          <section className="flex flex-col gap-4">
-            <div className="rounded-[32px] border border-amber-200/60 bg-amber-50/90 p-5 text-sm leading-7 text-amber-900 shadow-[var(--shadow-panel)] dark:border-amber-900/35 dark:bg-amber-950/20 dark:text-amber-200">
-              <div className="flex items-center gap-2 font-medium">
-                <Shield className="h-4 w-4" />
-                本地存储边界
-              </div>
-              <p className="mt-3">
-                这里填写的配置暂时只会保存在本地设备，可用于当前设备的 AI 调试与接入，但尚未同步到远端设置服务。
-              </p>
-            </div>
-
+          <section>
             <div className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
               <label className="block text-sm font-medium text-foreground">
                 备注

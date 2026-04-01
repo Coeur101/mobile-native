@@ -36,7 +36,7 @@ export function Tabs({ value, onValueChange, children }: TabsProps) {
 }
 
 export function TabsList({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div {...props} className={`inline-flex items-center gap-1 ${className}`.trim()} />;
+  return <div role="tablist" {...props} className={`inline-flex items-center gap-1 ${className}`.trim()} />;
 }
 
 interface TabsTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -51,7 +51,25 @@ export function TabsTrigger({ value, className = "", children, ...props }: TabsT
     <button
       {...props}
       type="button"
+      role="tab"
+      aria-selected={isActive}
+      tabIndex={isActive ? 0 : -1}
       onClick={() => context.onValueChange(value)}
+      onKeyDown={(event) => {
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+          event.preventDefault();
+          const triggers = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role=tab]");
+          if (!triggers) return;
+          const list = Array.from(triggers);
+          const currentIndex = list.indexOf(event.currentTarget);
+          const nextIndex = event.key === "ArrowRight"
+            ? (currentIndex + 1) % list.length
+            : (currentIndex - 1 + list.length) % list.length;
+          const next = list[nextIndex];
+          next.focus();
+          next.click();
+        }
+      }}
       className={[
         "relative flex-1 px-3 py-2 text-sm font-medium transition-all duration-200",
         isActive
@@ -76,5 +94,5 @@ export function TabsContent({ value, children, ...props }: TabsContentProps) {
     return null;
   }
 
-  return <div {...props}>{children}</div>;
+  return <div role="tabpanel" {...props}>{children}</div>;
 }

@@ -20,9 +20,10 @@ interface CodeBlockProps {
   code: string;
   fileName: string;
   showLineNumbers?: boolean;
+  className?: string;
 }
 
-export const CodeBlock = ({ code, fileName, showLineNumbers = true }: CodeBlockProps) => {
+export const CodeBlock = ({ code, fileName, showLineNumbers = true, className = "" }: CodeBlockProps) => {
   const codeRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export const CodeBlock = ({ code, fileName, showLineNumbers = true }: CodeBlockP
   const lines = code.split("\n");
 
   return (
-    <div className="relative overflow-auto text-xs leading-6 text-white/92">
+    <div className={`code-scrollbar relative overflow-auto text-xs leading-6 text-white/92 ${className}`.trim()}>
       {showLineNumbers ? (
         <div className="absolute left-0 top-0 flex flex-col select-none border-r border-white/8 px-3 py-4 text-right text-white/28">
           {lines.map((_, index) => (

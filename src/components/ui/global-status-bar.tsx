@@ -156,7 +156,7 @@ export function GlobalStatusBar() {
                   type="button"
                   whileTap={buttonTap}
                   onClick={() => dismiss(activeItem.id)}
-                  className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full transition-colors hover:bg-foreground/8"
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-colors hover:bg-foreground/8"
                   aria-label="关闭通知"
                 >
                   <X className="h-3.5 w-3.5" />

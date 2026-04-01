@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ArrowLeft, Download, FileCode2, MonitorSmartphone } from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, FileCode2, MonitorSmartphone } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -17,6 +17,7 @@ export function PreviewPage() {
   const [isLoadingProject, setIsLoadingProject] = useState(Boolean(projectId));
   const [loadError, setLoadError] = useState<string | null>(null);
   const [mode, setMode] = useState<"preview" | "code">("preview");
+  const [collapsedFiles, setCollapsedFiles] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function loadProject() {
@@ -45,6 +46,27 @@ export function PreviewPage() {
 
   const projectFiles = project?.files;
   const previewDocument = useMemo(() => buildPreviewDocument(projectFiles ?? {}), [projectFiles]);
+
+  useEffect(() => {
+    if (!projectFiles) {
+      setCollapsedFiles({});
+      return;
+    }
+
+    setCollapsedFiles((current) =>
+      Object.keys(projectFiles).reduce<Record<string, boolean>>((nextState, fileName) => {
+        nextState[fileName] = current[fileName] ?? false;
+        return nextState;
+      }, {}),
+    );
+  }, [projectFiles]);
+
+  const toggleFileCollapse = (fileName: string) => {
+    setCollapsedFiles((current) => ({
+      ...current,
+      [fileName]: !current[fileName],
+    }));
+  };
 
   const handleExport = () => {
     if (!project) {
@@ -203,18 +225,48 @@ export function PreviewPage() {
               exit={{ opacity: 0 }}
               className="grid gap-4 lg:grid-cols-3"
             >
-              {Object.entries(project.files).map(([fileName, content]) => (
-                <section
-                  key={fileName}
-                  className="overflow-hidden rounded-[30px] border border-white/6 bg-[#101216] shadow-[0_20px_50px_rgba(0,0,0,0.24)]"
-                >
-                  <header className="flex items-center gap-2 border-b border-white/8 px-4 py-3 text-sm font-medium text-white">
-                    <FileCode2 className="h-4 w-4 text-white/70" />
-                    {fileName}
-                  </header>
-                  <CodeBlock code={content} fileName={fileName} />
-                </section>
-              ))}
+              {Object.entries(project.files).map(([fileName, content]) => {
+                const isCollapsed = collapsedFiles[fileName] ?? false;
+
+                return (
+                  <section
+                    key={fileName}
+                    className="overflow-hidden rounded-[30px] border border-white/6 bg-[#101216] shadow-[0_20px_50px_rgba(0,0,0,0.24)]"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleFileCollapse(fileName)}
+                      className="flex w-full items-center justify-between gap-3 border-b border-white/8 px-4 py-3 text-left text-sm font-medium text-white"
+                      aria-expanded={!isCollapsed}
+                      title={isCollapsed ? `展开 ${fileName}` : `收起 ${fileName}`}
+                    >
+                      <span className="flex min-w-0 items-center gap-2">
+                        <FileCode2 className="h-4 w-4 flex-shrink-0 text-white/70" />
+                        <span className="truncate">{fileName}</span>
+                      </span>
+                      <ChevronDown
+                        className={`h-4 w-4 flex-shrink-0 text-white/70 transition-transform ${
+                          isCollapsed ? "" : "rotate-180"
+                        }`}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isCollapsed ? null : (
+                        <motion.div
+                          key={`${fileName}-content`}
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.18, ease: "easeOut" }}
+                          className="border-t border-white/6"
+                        >
+                          <CodeBlock code={content} fileName={fileName} className="h-[26rem]" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </section>
+                );
+              })}
             </motion.div>
           )}
         </AnimatePresence>

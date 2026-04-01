@@ -33,12 +33,46 @@ export const Dialog = ({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && open) {
         onClose();
+        return;
+      }
+
+      // Focus Trap: Tab 键循环聚焦在弹窗内
+      if (event.key === "Tab" && open && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey) {
+          if (document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
+
+  // 打开时自动聚焦弹窗
+  useEffect(() => {
+    if (open && dialogRef.current) {
+      const firstFocusable = dialogRef.current.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      firstFocusable?.focus();
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) {

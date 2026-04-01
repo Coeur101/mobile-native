@@ -11,7 +11,6 @@ import {
   Monitor,
   Moon,
   Save,
-  ShieldCheck,
   Sun,
   UserCircle2,
 } from "lucide-react";
@@ -21,6 +20,8 @@ import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { PageTransition } from "@/components/ui/page-transition";
 import { SPRING_BOUNCY, buttonTap } from "@/lib/animations";
+import { getDisplayInitials } from "@/lib/formatters";
+import { validatePasswordPair } from "@/lib/validation";
 import { authService } from "@/services/auth";
 import { mockSettingsService } from "@/services/settings/mock-settings-service";
 import { useAuthStore } from "@/stores/use-auth-store";
@@ -58,42 +59,6 @@ const themeOptions: Array<{
     icon: Moon,
   },
 ];
-
-function getDisplayInitials(name: string) {
-  const source = name.trim();
-  if (!source) {
-    return "用户";
-  }
-
-  const parts = source.split(/[\s_-]+/).filter(Boolean);
-  const initials = parts.length > 1 ? `${parts[0][0]}${parts[1][0]}` : source.slice(0, 2);
-  return initials.toUpperCase();
-}
-
-function formatDateLabel(value: string | null) {
-  if (!value) {
-    return "暂无";
-  }
-
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "暂无" : date.toLocaleString("zh-CN", { hour12: false });
-}
-
-function validatePasswordPair(password: string, confirmPassword: string) {
-  if (!password.trim()) {
-    return "请输入新密码。";
-  }
-
-  if (password.trim().length < 8) {
-    return "新密码至少需要 8 位。";
-  }
-
-  if (password !== confirmPassword) {
-    return "两次输入的密码不一致。";
-  }
-
-  return null;
-}
 
 async function compressImageFile(file: File): Promise<string> {
   if (!file.type.startsWith("image/")) {
@@ -172,7 +137,6 @@ export function UserProfilePage() {
   const hasNicknameChanged = trimmedNickname !== currentNickname;
   const canSaveNickname = Boolean(trimmedNickname) && hasNicknameChanged && !isProfileSaving;
   const passwordActionLabel = profile?.hasPassword ? "重置密码" : "设置密码";
-  const passwordStatusLabel = profile?.hasPassword ? "已设置" : "仅验证码";
 
   const resetSecurityForm = () => {
     setSecurityStep("idle");
@@ -377,15 +341,10 @@ export function UserProfilePage() {
               </motion.button>
             </div>
 
-            <div className="mt-6 grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
+            <div className="mt-6">
               <section className="rounded-[28px] bg-secondary/58 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">基础信息</h3>
-                  </div>
-                  <div className="rounded-full bg-card px-3 py-1 text-xs text-muted-foreground">
-                    最近更新：{formatDateLabel(profile?.updatedAt ?? null)}
-                  </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">基础信息</h3>
                 </div>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
@@ -413,41 +372,11 @@ export function UserProfilePage() {
                   </motion.button>
                 </div>
 
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-[24px] bg-card/90 px-4 py-4">
-                    <p className="text-[11px] tracking-[0.18em] text-muted-foreground">邮箱地址</p>
-                    <p className="mt-3 break-all text-base font-semibold text-foreground">
-                      {profile?.email ?? "暂无邮箱"}
-                    </p>
-                  </div>
-                  <div className="rounded-[24px] bg-card/90 px-4 py-4">
-                    <p className="text-[11px] tracking-[0.18em] text-muted-foreground">邮箱状态</p>
-                    <p className="mt-3 text-base font-semibold text-foreground">
-                      {profile?.emailVerified ? "已验证" : "未验证"}
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              <section className="rounded-[28px] bg-secondary/58 p-4">
-                <h3 className="text-lg font-semibold text-foreground">账户状态</h3>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {[
-                    { label: "登录方式", value: "邮箱验证" },
-                    { label: "密码状态", value: passwordStatusLabel, testId: "password-status" },
-                    { label: "最近登录", value: formatDateLabel(profile?.lastSignInAt ?? null) },
-                    { label: "资料更新时间", value: formatDateLabel(profile?.updatedAt ?? null) },
-                  ].map((item) => (
-                    <div key={item.label} className="rounded-[24px] bg-card/90 px-4 py-4">
-                      <p className="text-[11px] tracking-[0.18em] text-muted-foreground">{item.label}</p>
-                      <p
-                        data-testid={item.testId}
-                        className="mt-3 text-base font-semibold text-foreground"
-                      >
-                        {item.value}
-                      </p>
-                    </div>
-                  ))}
+                <div className="mt-4 rounded-[24px] bg-card/90 px-4 py-4">
+                  <p className="text-[11px] tracking-[0.18em] text-muted-foreground">邮箱地址</p>
+                  <p className="mt-3 break-all text-base font-semibold text-foreground">
+                    {profile?.email ?? "暂无邮箱"}
+                  </p>
                 </div>
               </section>
             </div>
@@ -510,16 +439,6 @@ export function UserProfilePage() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-[1.25rem] font-semibold text-foreground">账户安全</h2>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm text-muted-foreground">
-                    <ShieldCheck className="h-4 w-4" />
-                    {profile?.emailVerified ? "邮箱已验证" : "邮箱未验证"}
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm text-muted-foreground">
-                    <KeyRound className="h-4 w-4" />
-                    {profile?.hasPassword ? "已设置登录密码" : "当前仅支持验证码登录"}
-                  </span>
-                </div>
               </div>
 
               <motion.button
@@ -537,19 +456,11 @@ export function UserProfilePage() {
               </motion.button>
             </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                <p className="text-[11px] tracking-[0.18em] text-muted-foreground">验证邮箱</p>
-                <p className="mt-3 text-base font-semibold text-foreground">
-                  {profile?.email ?? "暂无邮箱"}
-                </p>
-              </div>
-              <div className="rounded-[24px] bg-secondary/72 px-4 py-4">
-                <p className="text-[11px] tracking-[0.18em] text-muted-foreground">最近登录</p>
-                <p className="mt-3 text-base font-semibold text-foreground">
-                  {formatDateLabel(profile?.lastSignInAt ?? null)}
-                </p>
-              </div>
+            <div className="mt-5 rounded-[24px] bg-secondary/72 px-4 py-4">
+              <p className="text-[11px] tracking-[0.18em] text-muted-foreground">当前邮箱</p>
+              <p className="mt-3 text-base font-semibold text-foreground">
+                {profile?.email ?? "暂无邮箱"}
+              </p>
             </div>
           </section>
         </div>
