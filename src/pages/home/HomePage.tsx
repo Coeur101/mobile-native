@@ -85,7 +85,7 @@ export function HomePage() {
             </motion.div>
             <div>
               <h1 className="text-[1.15rem] font-semibold tracking-[-0.04em] text-foreground">
-                AI网页生成器
+                SandBox
               </h1>
               <p className="text-xs text-muted-foreground">最近项目</p>
             </div>
