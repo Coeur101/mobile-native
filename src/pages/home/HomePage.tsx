@@ -64,8 +64,8 @@ export function HomePage() {
   return (
     <PageTransition className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(0,113,227,0.08),_transparent_28%),linear-gradient(180deg,_rgba(255,255,255,0.98),_rgba(246,247,251,0.96))]">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-56 overflow-hidden">
-        <div className="animate-drift absolute left-[-3rem] top-5 h-28 w-28 rounded-full bg-primary/12 blur-3xl" />
-        <div className="animate-glow absolute right-[-2rem] top-10 h-24 w-24 rounded-full bg-sky-300/18 blur-3xl" />
+        <div className="animate-drift absolute left-[-3rem] top-5 hidden h-28 w-28 rounded-full bg-primary/12 blur-3xl sm:block" />
+        <div className="animate-glow absolute right-[-2rem] top-10 hidden h-24 w-24 rounded-full bg-sky-300/18 blur-3xl sm:block" />
       </div>
 
       <header className="sticky top-0 z-20 border-b border-border/70 bg-background/86 backdrop-blur-2xl">
@@ -139,7 +139,7 @@ export function HomePage() {
             transition={reduceMotion ? undefined : { ...SPRING_PANEL, delay: 0.06 }}
             className="relative overflow-hidden rounded-[28px] border border-border/80 bg-card/94 p-4 shadow-[var(--shadow-card)]"
           >
-            <div className="pointer-events-none absolute inset-x-6 -top-8 h-20 rounded-full bg-primary/8 blur-3xl" />
+            <div className="pointer-events-none absolute inset-x-6 -top-8 hidden h-20 rounded-full bg-primary/8 blur-3xl sm:block" />
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
@@ -270,7 +270,7 @@ export function HomePage() {
                     whileHover={reduceMotion ? undefined : cardLift}
                     className="relative overflow-hidden rounded-[28px] border border-border/80 bg-card/94 p-4 shadow-[var(--shadow-card)]"
                   >
-                    <div className="pointer-events-none absolute right-[-1.5rem] top-[-1.5rem] h-20 w-20 rounded-full bg-primary/6 blur-3xl" />
+                    <div className="pointer-events-none absolute right-[-1.5rem] top-[-1.5rem] hidden h-20 w-20 rounded-full bg-primary/6 blur-3xl sm:block" />
                     <div className="flex items-start gap-4">
                       <motion.div
                         animate={reduceMotion ? undefined : { y: [0, -2, 0], scale: [1, 1.03, 1] }}

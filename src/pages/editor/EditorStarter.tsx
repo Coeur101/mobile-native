@@ -59,7 +59,7 @@ export function EditorStarter({ onSelectTemplate }: EditorStarterProps) {
                 onClick={() => onSelectTemplate(template.prompt)}
                 className="relative overflow-hidden rounded-[24px] border border-border/80 bg-card/92 p-4 text-left shadow-[var(--shadow-card)] transition-colors hover:bg-card"
               >
-                <div className="pointer-events-none absolute right-[-1.25rem] top-[-1.25rem] h-16 w-16 rounded-full bg-primary/6 blur-2xl" />
+                <div className="pointer-events-none absolute right-[-1.25rem] top-[-1.25rem] hidden h-16 w-16 rounded-full bg-primary/6 blur-2xl sm:block" />
                 <motion.div
                   animate={reduceMotion ? undefined : { y: [0, -2, 0], scale: [1, 1.04, 1] }}
                   transition={reduceMotion ? undefined : { duration: 4.5 + index * 0.2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}

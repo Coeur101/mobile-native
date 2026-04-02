@@ -41,7 +41,7 @@ export function EditorMessageList({
         transition={SPRING_PANEL}
         className="relative overflow-hidden rounded-[26px] border border-border/80 bg-card/94 p-4 shadow-[var(--shadow-card)]"
       >
-        <div className="pointer-events-none absolute inset-x-8 -top-10 h-20 rounded-full bg-primary/7 blur-3xl" />
+        <div className="pointer-events-none absolute inset-x-8 -top-10 hidden h-20 rounded-full bg-primary/7 blur-3xl sm:block" />
         <div className="flex items-start gap-3">
           <motion.div
             animate={reduceMotion ? undefined : { y: [0, -3, 0], scale: [1, 1.04, 1] }}

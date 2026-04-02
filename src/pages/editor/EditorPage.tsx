@@ -325,8 +325,8 @@ export function EditorPage() {
   return (
     <PageTransition className="relative min-h-screen overflow-hidden">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-64 overflow-hidden">
-        <div className="animate-drift absolute left-[-3rem] top-8 h-28 w-28 rounded-full bg-primary/10 blur-3xl" />
-        <div className="animate-glow absolute right-[-2rem] top-16 h-24 w-24 rounded-full bg-primary/12 blur-3xl" />
+        <div className="animate-drift absolute left-[-3rem] top-8 hidden h-28 w-28 rounded-full bg-primary/10 blur-3xl sm:block" />
+        <div className="animate-glow absolute right-[-2rem] top-16 hidden h-24 w-24 rounded-full bg-primary/12 blur-3xl sm:block" />
       </div>
 
       <EditorHeader

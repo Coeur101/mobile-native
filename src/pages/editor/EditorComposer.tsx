@@ -67,7 +67,7 @@ export function EditorComposer({
               : "shadow-[0_18px_40px_rgba(15,23,42,0.16)]"
           }`}
         >
-          <div className="pointer-events-none absolute inset-x-6 -top-10 h-16 rounded-full bg-primary/8 blur-3xl" />
+          <div className="pointer-events-none absolute inset-x-6 -top-10 hidden h-16 rounded-full bg-primary/8 blur-3xl sm:block" />
           <div className="relative flex items-end gap-3">
             <textarea
               value={prompt}
