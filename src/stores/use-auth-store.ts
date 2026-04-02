@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { authService } from "@/services/auth";
+import { settingsService } from "@/services/settings";
 import type { AuthStateSnapshot } from "@/types";
 
 interface AuthStore extends AuthStateSnapshot {
@@ -10,7 +11,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
   ...authService.getSnapshot(),
   initialize: async () => {
     await authService.initialize();
-    set(authService.getSnapshot());
+    const snapshot = authService.getSnapshot();
+    set(snapshot);
+
+    // 已认证时从 Supabase 预加载用户设置到内存
+    if (snapshot.isAuthenticated) {
+      await settingsService.loadSettings();
+    }
   },
 }));
 

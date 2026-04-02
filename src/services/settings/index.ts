@@ -1,2 +1,2 @@
-export { mockSettingsService as settingsService } from "./mock-settings-service";
+export { supabaseSettingsService as settingsService } from "./supabase-settings-service";
 export type { SettingsService } from "./settings-service";

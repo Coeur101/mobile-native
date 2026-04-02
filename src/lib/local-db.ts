@@ -65,7 +65,6 @@ export const defaultSettings: UserSettings = {
   preferredModel: "",
   customBaseUrl: "",
   apiKey: "",
-  notes: "当前为演示模式，设置仅保存在本地。",
 };
 
 function toIsoDate(value?: string | Date): string {
@@ -263,7 +262,6 @@ function parseSettingsRecords(): UserSettingsRecord[] {
         preferredModel: "",
         customBaseUrl: legacy.baseUrl ?? "",
         apiKey: legacy.apiKey ?? "",
-        notes: "已从旧版设置迁移完成，当前仍为本地演示模式。",
       },
       updatedAt: new Date().toISOString(),
     },

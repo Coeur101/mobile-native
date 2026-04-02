@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { PageTransition } from "@/components/ui/page-transition";
 import { buttonTap } from "@/lib/animations";
 import { authService } from "@/services/auth";
-import { mockSettingsService } from "@/services/settings/mock-settings-service";
+import { settingsService } from "@/services/settings";
 import type { UserSettings } from "@/types";
 
 const defaultForm: UserSettings = {
@@ -15,7 +15,6 @@ const defaultForm: UserSettings = {
   preferredModel: "",
   customBaseUrl: "",
   apiKey: "",
-  notes: "",
 };
 
 export function SettingsPage() {
@@ -24,7 +23,7 @@ export function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
-    setSettings(mockSettingsService.getSettings());
+    setSettings(settingsService.getSettings());
   }, []);
 
   // 安全清理 saveSuccess 定时器
@@ -36,7 +35,7 @@ export function SettingsPage() {
 
   const handleSave = async () => {
     try {
-      await mockSettingsService.saveSettings(settings);
+      await settingsService.saveSettings(settings);
       setSaveSuccess(true);
       toast.success("高级设置已保存。");
     } catch (error) {
@@ -91,93 +90,75 @@ export function SettingsPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-          <section className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
-                <Wrench className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-[1.25rem] font-semibold text-foreground">AI 集成配置</h2>
-              </div>
+        <section className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
+              <Wrench className="h-5 w-5" />
             </div>
-
-            <div className="mt-5 space-y-4">
-              <label className="block text-sm font-medium text-foreground">
-                模型名称
-                <Input
-                  value={settings.preferredModel}
-                  onChange={(event) =>
-                    setSettings((current) => ({ ...current, preferredModel: event.target.value }))
-                  }
-                  placeholder="填写你常用的模型名称"
-                  className="mt-2 h-12"
-                />
-              </label>
-
-              <label className="block text-sm font-medium text-foreground">
-                Base URL
-                <Input
-                  value={settings.customBaseUrl}
-                  onChange={(event) =>
-                    setSettings((current) => ({ ...current, customBaseUrl: event.target.value }))
-                  }
-                  placeholder="https://api.openai.com/v1"
-                  className="mt-2 h-12"
-                />
-              </label>
-
-              <label className="block text-sm font-medium text-foreground">
-                API Key
-                <Input
-                  type="password"
-                  value={settings.apiKey}
-                  onChange={(event) =>
-                    setSettings((current) => ({ ...current, apiKey: event.target.value }))
-                  }
-                  placeholder="仅保存在当前设备"
-                  className="mt-2 h-12"
-                />
-              </label>
+            <div>
+              <h2 className="text-[1.25rem] font-semibold text-foreground">AI 集成配置</h2>
             </div>
-          </section>
+          </div>
 
-          <section>
-            <div className="rounded-[32px] border border-border bg-card/92 p-5 shadow-[var(--shadow-panel)]">
-              <label className="block text-sm font-medium text-foreground">
-                备注
-                <textarea
-                  value={settings.notes}
-                  onChange={(event) =>
-                    setSettings((current) => ({ ...current, notes: event.target.value }))
-                  }
-                  className="mt-2 min-h-36 w-full rounded-[24px] border border-border bg-input-background px-4 py-4 text-sm text-foreground outline-none transition focus:border-primary/25 focus:shadow-[var(--shadow-focus)]"
-                  placeholder="记录当前设备、工作区或 AI 接入的补充说明。"
-                />
-              </label>
+          <div className="mt-5 space-y-4">
+            <label className="block text-sm font-medium text-foreground">
+              模型名称
+              <Input
+                value={settings.preferredModel}
+                onChange={(event) =>
+                  setSettings((current) => ({ ...current, preferredModel: event.target.value }))
+                }
+                placeholder="填写你常用的模型名称"
+                className="mt-2 h-12"
+              />
+            </label>
 
-              <motion.button
-                type="button"
-                whileTap={buttonTap}
-                onClick={() => void handleSave()}
-                className="mt-4 flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground shadow-[0_12px_30px_rgba(0,113,227,0.22)]"
-                title="保存高级设置"
-              >
-                {saveSuccess ? (
-                  <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex items-center gap-2">
-                    <Check className="h-4 w-4" />
-                    <span>已保存</span>
-                  </motion.div>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    <span>保存设置</span>
-                  </>
-                )}
-              </motion.button>
-            </div>
-          </section>
-        </div>
+            <label className="block text-sm font-medium text-foreground">
+              Base URL
+              <Input
+                value={settings.customBaseUrl}
+                onChange={(event) =>
+                  setSettings((current) => ({ ...current, customBaseUrl: event.target.value }))
+                }
+                placeholder="https://api.openai.com/v1"
+                className="mt-2 h-12"
+              />
+            </label>
+
+            <label className="block text-sm font-medium text-foreground">
+              API Key
+              <Input
+                type="password"
+                value={settings.apiKey}
+                onChange={(event) =>
+                  setSettings((current) => ({ ...current, apiKey: event.target.value }))
+                }
+                placeholder="仅保存在当前设备"
+                className="mt-2 h-12"
+              />
+            </label>
+          </div>
+
+          <motion.button
+            type="button"
+            whileTap={buttonTap}
+            onClick={() => void handleSave()}
+            className="mt-5 flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground shadow-[0_12px_30px_rgba(0,113,227,0.22)]"
+            title="保存高级设置"
+          >
+            {saveSuccess ? (
+              <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex items-center gap-2">
+                <Check className="h-4 w-4" />
+                <span>已保存</span>
+              </motion.div>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                <span>保存设置</span>
+              </>
+            )}
+          </motion.button>
+        </section>
       </main>
     </PageTransition>
   );

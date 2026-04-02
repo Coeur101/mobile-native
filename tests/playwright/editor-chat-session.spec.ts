@@ -67,7 +67,6 @@ test("编辑器会话在生成中展示流式内容与思维链", async ({ page 
             preferredModel: "demo-model",
             customBaseUrl: "https://api.example.com/v1",
             apiKey: "demo-api-key",
-            notes: "",
           },
           updatedAt: "2026-03-30T10:00:00.000Z",
         },

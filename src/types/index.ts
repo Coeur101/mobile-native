@@ -145,7 +145,6 @@ export interface UserSettings {
   preferredModel: string;
   customBaseUrl: string;
   apiKey: string;
-  notes: string;
 }
 
 export interface UserSettingsRecord {

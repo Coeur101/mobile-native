@@ -8,7 +8,6 @@ function createSettings(overrides: Partial<UserSettings> = {}): UserSettings {
     preferredModel: "demo-model",
     customBaseUrl: "https://api.example.com/v1",
     apiKey: "demo-api-key",
-    notes: "",
     ...overrides,
   };
 }
@@ -86,6 +85,7 @@ describe("createOpenAICompatibleAIService streaming", () => {
     const service = createOpenAICompatibleAIService({
       settingsService: {
         getSettings: () => createSettings(),
+        loadSettings: async () => {},
         saveSettings: async () => {},
       },
       fetchImpl: vi.fn(async () =>
