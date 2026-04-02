@@ -43,18 +43,16 @@ jobs:
 
       - name: Generate .env from secrets
         run: |
-          cat > .env << 'EOF'
-          VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_SUPABASE_EMAIL_REDIRECT_TO=${{ secrets.VITE_SUPABASE_EMAIL_REDIRECT_TO }}
-          VITE_SUPABASE_PASSWORD_RESET_REDIRECT_TO=${{ secrets.VITE_SUPABASE_PASSWORD_RESET_REDIRECT_TO }}
-          VITE_SUPABASE_SMTP_HOST=${{ secrets.VITE_SUPABASE_SMTP_HOST }}
-          VITE_SUPABASE_SMTP_PORT=${{ secrets.VITE_SUPABASE_SMTP_PORT }}
-          VITE_SUPABASE_SMTP_USER=${{ secrets.VITE_SUPABASE_SMTP_USER }}
-          VITE_SUPABASE_SMTP_PASSWORD=${{ secrets.VITE_SUPABASE_SMTP_PASSWORD }}
-          VITE_SUPABASE_SMTP_SENDER_EMAIL=${{ secrets.VITE_SUPABASE_SMTP_SENDER_EMAIL }}
-          VITE_SUPABASE_SMTP_SENDER_NAME=${{ secrets.VITE_SUPABASE_SMTP_SENDER_NAME }}
-          EOF
+          echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> .env
+          echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> .env
+          echo "VITE_SUPABASE_EMAIL_REDIRECT_TO=${{ secrets.VITE_SUPABASE_EMAIL_REDIRECT_TO }}" >> .env
+          echo "VITE_SUPABASE_PASSWORD_RESET_REDIRECT_TO=${{ secrets.VITE_SUPABASE_PASSWORD_RESET_REDIRECT_TO }}" >> .env
+          echo "VITE_SUPABASE_SMTP_HOST=${{ secrets.VITE_SUPABASE_SMTP_HOST }}" >> .env
+          echo "VITE_SUPABASE_SMTP_PORT=${{ secrets.VITE_SUPABASE_SMTP_PORT }}" >> .env
+          echo "VITE_SUPABASE_SMTP_USER=${{ secrets.VITE_SUPABASE_SMTP_USER }}" >> .env
+          echo "VITE_SUPABASE_SMTP_PASSWORD=${{ secrets.VITE_SUPABASE_SMTP_PASSWORD }}" >> .env
+          echo "VITE_SUPABASE_SMTP_SENDER_EMAIL=${{ secrets.VITE_SUPABASE_SMTP_SENDER_EMAIL }}" >> .env
+          echo "VITE_SUPABASE_SMTP_SENDER_NAME=${{ secrets.VITE_SUPABASE_SMTP_SENDER_NAME }}" >> .env
 
       - name: Build web assets
         run: pnpm build
