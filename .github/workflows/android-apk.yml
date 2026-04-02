@@ -54,31 +54,11 @@ jobs:
           echo "VITE_SUPABASE_SMTP_SENDER_EMAIL=${{ secrets.VITE_SUPABASE_SMTP_SENDER_EMAIL }}" >> .env
           echo "VITE_SUPABASE_SMTP_SENDER_NAME=${{ secrets.VITE_SUPABASE_SMTP_SENDER_NAME }}" >> .env
 
-      - name: Build web assets
-        run: pnpm build
-
-      - name: Sync Capacitor Android
-        run: pnpm android:sync
-
-      - name: Build debug APK
-        working-directory: android
-        run: |
-          chmod +x ./gradlew
-          ./gradlew assembleDebug
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ai-web-builder-debug-apk
-          path: android/app/build/outputs/apk/debug/sandoox.apk
-          if-no-files-found: error
-
       # ── 版本判定：基于 Conventional Commits 自动决定是否发版 ──
 
       - name: Determine release version
         id: version
         run: |
-          # 获取最新 tag（如果没有 tag 则默认 v0.0.0）
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -z "$LATEST_TAG" ]; then
             LATEST_TAG="v0.0.0"
@@ -88,33 +68,27 @@ jobs:
           fi
           echo "latest_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
 
-          # 获取自上次 tag 以来的 commit 消息
           if [ "$COMMIT_RANGE" = "HEAD" ]; then
             COMMITS=$(git log --pretty=format:"%s" 2>/dev/null || echo "")
           else
             COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null || echo "")
           fi
 
-          # 判断版本升级类型
           MAJOR=false
           MINOR=false
           PATCH=false
 
           while IFS= read -r msg; do
             [ -z "$msg" ] && continue
-            # BREAKING CHANGE（通过 ! 后缀或 commit body）
             if echo "$msg" | grep -qE "^[a-z]+(\(.+\))?!:"; then
               MAJOR=true
-            # feat: → 新功能 → minor
             elif echo "$msg" | grep -qE "^feat(\(.+\))?:"; then
               MINOR=true
-            # fix: → Bug 修复 → patch
             elif echo "$msg" | grep -qE "^fix(\(.+\))?:"; then
               PATCH=true
             fi
           done <<< "$COMMITS"
 
-          # 计算新版本号
           CURRENT="${LATEST_TAG#v}"
           IFS='.' read -r CUR_MAJOR CUR_MINOR CUR_PATCH <<< "$CURRENT"
           CUR_MAJOR=${CUR_MAJOR:-0}
@@ -141,7 +115,34 @@ jobs:
           echo "bump_type=$BUMP_TYPE" >> "$GITHUB_OUTPUT"
           echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
 
-          echo "::notice::Latest tag: $LATEST_TAG | Bump: $BUMP_TYPE | New version: v$NEW_VERSION | Release: $SHOULD_RELEASE"
+          echo "::notice::tag=$LATEST_TAG bump=$BUMP_TYPE version=v$NEW_VERSION release=$SHOULD_RELEASE"
+
+      # ── 构建 ──
+
+      - name: Build web assets
+        run: pnpm build
+
+      - name: Sync Capacitor Android
+        run: pnpm android:sync
+
+      - name: Build debug APK
+        working-directory: android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
+
+      - name: Rename APK with version
+        run: |
+          VERSION="${{ steps.version.outputs.new_version }}"
+          mv android/app/build/outputs/apk/debug/sandbox-debug.apk "android/app/build/outputs/apk/debug/sandbox-v${VERSION}.apk"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sandbox-apk
+          path: android/app/build/outputs/apk/debug/sandbox-v*.apk
+
+      # ── 发版 ──
 
       - name: Generate release notes
         if: steps.version.outputs.should_release == 'true'
@@ -157,7 +158,6 @@ jobs:
           {
             echo "body<<RELEASE_NOTES_EOF"
 
-            # 收集 feat 类型
             FEATS=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null | grep -E "^feat(\(.+\))?:" | sed 's/^feat\(.*\)\?:\s*//' || true)
             if [ -n "$FEATS" ]; then
               echo "### Added"
@@ -167,7 +167,6 @@ jobs:
               echo ""
             fi
 
-            # 收集 fix 类型
             FIXES=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null | grep -E "^fix(\(.+\))?:" | sed 's/^fix\(.*\)\?:\s*//' || true)
             if [ -n "$FIXES" ]; then
               echo "### Fixed"
@@ -177,7 +176,6 @@ jobs:
               echo ""
             fi
 
-            # 收集其他类型
             OTHERS=$(git log "$COMMIT_RANGE" --pretty=format:"%s" 2>/dev/null | grep -vE "^(feat|fix)(\(.+\))?:" | head -20 || true)
             if [ -n "$OTHERS" ]; then
               echo "### Other Changes"
@@ -193,8 +191,6 @@ jobs:
             echo "RELEASE_NOTES_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # ── 发版：仅当存在 feat/fix commit 时创建 tag + Release ──
-
       - name: Create versioned release
         if: steps.version.outputs.should_release == 'true'
         uses: ncipollo/release-action@v1
@@ -203,12 +199,10 @@ jobs:
           commit: ${{ github.sha }}
           name: v${{ steps.version.outputs.new_version }}
           body: ${{ steps.notes.outputs.body }}
-          artifacts: android/app/build/outputs/apk/debug/sandoox.apk
+          artifacts: android/app/build/outputs/apk/debug/sandbox-v${{ steps.version.outputs.new_version }}.apk
           artifactContentType: application/vnd.android.package-archive
           prerelease: false
           makeLatest: true
-
-      # ── 始终更新 latest-apk 滚动 Release ──
 
       - name: Publish APK to latest-apk release
         uses: ncipollo/release-action@v1
@@ -222,7 +216,7 @@ jobs:
             Commit: `${{ github.sha }}`
 
             This release is updated on every push to `main` or `master`.
-          artifacts: android/app/build/outputs/apk/debug/sandoox.apk
+          artifacts: android/app/build/outputs/apk/debug/sandbox-v${{ steps.version.outputs.new_version }}.apk
           prerelease: true
           allowUpdates: true
           updateOnlyUnreleased: true

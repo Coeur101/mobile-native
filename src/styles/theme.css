@@ -3,41 +3,41 @@
 :root {
   --font-size: 16px;
 
-  --background: #fafafa;
-  --foreground: #0a0a0a;
+  --background: rgb(250 250 250);
+  --foreground: rgb(10 10 10);
 
-  --card: #fafafa;
-  --card-foreground: #0a0a0a;
+  --card: rgb(250 250 250);
+  --card-foreground: rgb(10 10 10);
 
   --popover: rgba(250, 250, 250, 0.96);
-  --popover-foreground: #0a0a0a;
+  --popover-foreground: rgb(10 10 10);
 
-  --primary: #ff5c00;
-  --primary-foreground: #fafafa;
+  --primary: rgb(255 92 0);
+  --primary-foreground: rgb(250 250 250);
 
-  --secondary: #f5f5f5;
-  --secondary-foreground: #0a0a0a;
+  --secondary: rgb(245 245 245);
+  --secondary-foreground: rgb(10 10 10);
 
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
+  --muted: rgb(245 245 245);
+  --muted-foreground: rgb(115 115 115);
 
   --accent: rgba(255, 92, 0, 0.1);
-  --accent-foreground: #ff5c00;
+  --accent-foreground: rgb(255 92 0);
 
-  --destructive: #d92d20;
-  --destructive-foreground: #fafafa;
+  --destructive: rgb(217 45 32);
+  --destructive-foreground: rgb(250 250 250);
 
-  --border: #e5e5e5;
-  --input: #fafafa;
-  --input-background: #f5f5f5;
-  --switch-background: #d4d4d4;
+  --border: rgb(229 229 229);
+  --input: rgb(250 250 250);
+  --input-background: rgb(245 245 245);
+  --switch-background: rgb(212 212 212);
   --ring: rgba(255, 92, 0, 0.18);
 
-  --chart-1: #ff5c00;
-  --chart-2: #ff8a45;
-  --chart-3: #30d158;
-  --chart-4: #ff9f0a;
-  --chart-5: #ff375f;
+  --chart-1: rgb(255 92 0);
+  --chart-2: rgb(255 138 69);
+  --chart-3: rgb(48 209 88);
+  --chart-4: rgb(255 159 10);
+  --chart-5: rgb(255 55 95);
 
   --radius: 1.25rem;
 
@@ -53,12 +53,12 @@
   --font-weight-normal: 400;
 
   --sidebar: rgba(250, 250, 250, 0.9);
-  --sidebar-foreground: #0a0a0a;
-  --sidebar-primary: #ff5c00;
-  --sidebar-primary-foreground: #fafafa;
+  --sidebar-foreground: rgb(10 10 10);
+  --sidebar-primary: rgb(255 92 0);
+  --sidebar-primary-foreground: rgb(250 250 250);
   --sidebar-accent: rgba(255, 92, 0, 0.1);
-  --sidebar-accent-foreground: #ff5c00;
-  --sidebar-border: #e5e5e5;
+  --sidebar-accent-foreground: rgb(255 92 0);
+  --sidebar-border: rgb(229 229 229);
   --sidebar-ring: rgba(255, 92, 0, 0.18);
   --scrollbar-track: rgba(10, 10, 10, 0.04);
   --scrollbar-thumb: rgba(10, 10, 10, 0.18);
@@ -66,41 +66,41 @@
   }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
+  --background: rgb(10 10 10);
+  --foreground: rgb(250 250 250);
 
-  --card: #171717;
-  --card-foreground: #fafafa;
+  --card: rgb(23 23 23);
+  --card-foreground: rgb(250 250 250);
 
   --popover: rgba(23, 23, 23, 0.96);
-  --popover-foreground: #fafafa;
+  --popover-foreground: rgb(250 250 250);
 
-  --primary: #ff5c00;
-  --primary-foreground: #fafafa;
+  --primary: rgb(255 92 0);
+  --primary-foreground: rgb(250 250 250);
 
-  --secondary: #262626;
-  --secondary-foreground: #fafafa;
+  --secondary: rgb(38 38 38);
+  --secondary-foreground: rgb(250 250 250);
 
-  --muted: #262626;
-  --muted-foreground: #a3a3a3;
+  --muted: rgb(38 38 38);
+  --muted-foreground: rgb(163 163 163);
 
   --accent: rgba(255, 92, 0, 0.16);
-  --accent-foreground: #ff8a45;
+  --accent-foreground: rgb(255 138 69);
 
-  --destructive: #ff453a;
-  --destructive-foreground: #fafafa;
+  --destructive: rgb(255 69 58);
+  --destructive-foreground: rgb(250 250 250);
 
   --border: rgba(255, 255, 255, 0.1);
-  --input: #171717;
-  --input-background: #262626;
+  --input: rgb(23 23 23);
+  --input-background: rgb(38 38 38);
   --switch-background: rgba(255, 255, 255, 0.16);
   --ring: rgba(255, 92, 0, 0.24);
 
-  --chart-1: #ff5c00;
-  --chart-2: #ff8a45;
-  --chart-3: #30d158;
-  --chart-4: #ffd60a;
-  --chart-5: #ff6482;
+  --chart-1: rgb(255 92 0);
+  --chart-2: rgb(255 138 69);
+  --chart-3: rgb(48 209 88);
+  --chart-4: rgb(255 214 10);
+  --chart-5: rgb(255 100 130);
 
   --shadow-card: 0 22px 52px rgba(0, 0, 0, 0.34);
   --shadow-panel: 0 12px 28px rgba(0, 0, 0, 0.24);
@@ -111,11 +111,11 @@
     linear-gradient(180deg, #171717 0%, #0a0a0a 100%);
 
   --sidebar: rgba(23, 23, 23, 0.92);
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #ff5c00;
-  --sidebar-primary-foreground: #fafafa;
+  --sidebar-foreground: rgb(250 250 250);
+  --sidebar-primary: rgb(255 92 0);
+  --sidebar-primary-foreground: rgb(250 250 250);
   --sidebar-accent: rgba(255, 92, 0, 0.16);
-  --sidebar-accent-foreground: #ff8a45;
+  --sidebar-accent-foreground: rgb(255 138 69);
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: rgba(255, 92, 0, 0.24);
   --scrollbar-track: rgba(255, 255, 255, 0.04);
@@ -469,4 +469,88 @@
     right: 0.5rem !important;
     left: 0.5rem !important;
   }
+}
+
+/* Android WebView 兼容补丁
+   Tailwind v4 的 /N alpha 语法依赖 color-mix(in oklab)，
+   不支持时回退为完全不透明的纯色。此块为所有 /N 透明度类
+   提供正确的 rgba 预计算值。 */
+
+@supports not (color: color-mix(in lab, red, red)) {
+  /* destructive 透明度 */
+  .bg-destructive\/5 { background-color: rgba(217, 45, 32, 0.05) !important; }
+  .bg-destructive\/6 { background-color: rgba(217, 45, 32, 0.06) !important; }
+  .bg-destructive\/8 { background-color: rgba(217, 45, 32, 0.08) !important; }
+  .bg-destructive\/10 { background-color: rgba(217, 45, 32, 0.10) !important; }
+  .hover\:bg-destructive\/15:hover { background-color: rgba(217, 45, 32, 0.15) !important; }
+  .border-destructive\/18 { border-color: rgba(217, 45, 32, 0.18) !important; }
+  .border-destructive\/20 { border-color: rgba(217, 45, 32, 0.20) !important; }
+  .border-destructive\/25 { border-color: rgba(217, 45, 32, 0.25) !important; }
+
+  /* card 透明度 */
+  .bg-card\/70 { background-color: rgba(250, 250, 250, 0.70) !important; }
+  .bg-card\/74 { background-color: rgba(250, 250, 250, 0.74) !important; }
+  .bg-card\/80 { background-color: rgba(250, 250, 250, 0.80) !important; }
+  .bg-card\/88 { background-color: rgba(250, 250, 250, 0.88) !important; }
+  .bg-card\/90 { background-color: rgba(250, 250, 250, 0.90) !important; }
+  .bg-card\/92 { background-color: rgba(250, 250, 250, 0.92) !important; }
+  .bg-card\/94 { background-color: rgba(250, 250, 250, 0.94) !important; }
+  .bg-card\/95 { background-color: rgba(250, 250, 250, 0.95) !important; }
+  .bg-card\/96 { background-color: rgba(250, 250, 250, 0.96) !important; }
+
+  /* background 透明度 */
+  .bg-background\/70 { background-color: rgba(250, 250, 250, 0.70) !important; }
+  .bg-background\/82 { background-color: rgba(250, 250, 250, 0.82) !important; }
+  .bg-background\/86 { background-color: rgba(250, 250, 250, 0.86) !important; }
+
+  /* secondary 透明度 */
+  .bg-secondary\/55 { background-color: rgba(245, 245, 245, 0.55) !important; }
+  .bg-secondary\/58 { background-color: rgba(245, 245, 245, 0.58) !important; }
+  .bg-secondary\/65 { background-color: rgba(245, 245, 245, 0.65) !important; }
+  .bg-secondary\/70 { background-color: rgba(245, 245, 245, 0.70) !important; }
+  .bg-secondary\/72 { background-color: rgba(245, 245, 245, 0.72) !important; }
+  .bg-secondary\/75 { background-color: rgba(245, 245, 245, 0.75) !important; }
+  .bg-secondary\/80 { background-color: rgba(245, 245, 245, 0.80) !important; }
+  .hover\:bg-secondary\/55:hover { background-color: rgba(245, 245, 245, 0.55) !important; }
+  .hover\:bg-secondary\/65:hover { background-color: rgba(245, 245, 245, 0.65) !important; }
+  .hover\:bg-secondary\/75:hover { background-color: rgba(245, 245, 245, 0.75) !important; }
+
+  /* border 透明度 */
+  .border-border\/70 { border-color: rgba(229, 229, 229, 0.70) !important; }
+  .border-border\/80 { border-color: rgba(229, 229, 229, 0.80) !important; }
+
+  /* foreground 透明度 */
+  .bg-foreground\/8 { background-color: rgba(10, 10, 10, 0.08) !important; }
+  .hover\:bg-foreground\/8:hover { background-color: rgba(10, 10, 10, 0.08) !important; }
+  .hover\:bg-foreground\/12:hover { background-color: rgba(10, 10, 10, 0.12) !important; }
+
+  /* primary 透明度 */
+  .bg-primary\/8 { background-color: rgba(255, 92, 0, 0.08) !important; }
+  .bg-primary\/10 { background-color: rgba(255, 92, 0, 0.10) !important; }
+  .bg-primary\/12 { background-color: rgba(255, 92, 0, 0.12) !important; }
+  .border-primary\/15 { border-color: rgba(255, 92, 0, 0.15) !important; }
+  .border-primary\/25 { border-color: rgba(255, 92, 0, 0.25) !important; }
+  .border-primary\/30 { border-color: rgba(255, 92, 0, 0.30) !important; }
+  .hover\:bg-primary\/90:hover { background-color: rgba(255, 92, 0, 0.90) !important; }
+  .focus\:border-primary\/25:focus { border-color: rgba(255, 92, 0, 0.25) !important; }
+  .focus\:border-primary\/30:focus { border-color: rgba(255, 92, 0, 0.30) !important; }
+
+  /* muted 透明度 */
+  .bg-muted-foreground\/30 { background-color: rgba(115, 115, 115, 0.30) !important; }
+
+  /* popover 透明度 */
+  .bg-popover\/95 { background-color: rgba(250, 250, 250, 0.95) !important; }
+
+  /* other utility alphas */
+  .bg-black\/35 { background-color: rgba(0, 0, 0, 0.35) !important; }
+  .bg-black\/45 { background-color: rgba(0, 0, 0, 0.45) !important; }
+  .bg-amber-50\/90 { background-color: rgba(255, 251, 235, 0.90) !important; }
+  .bg-emerald-50\/90 { background-color: rgba(236, 253, 245, 0.90) !important; }
+  .bg-rose-50\/90 { background-color: rgba(255, 241, 242, 0.90) !important; }
+  .bg-sky-50\/90 { background-color: rgba(240, 249, 255, 0.90) !important; }
+  .bg-sky-300\/18 { background-color: rgba(125, 211, 252, 0.18) !important; }
+  .outline-ring\/50 { outline-color: rgba(255, 92, 0, 0.09) !important; }
+  .border-ring\/50 { border-color: rgba(255, 92, 0, 0.09) !important; }
+  .disabled\:opacity-55:disabled { opacity: 0.55 !important; }
+  .hover\:opacity-92:hover { opacity: 0.92 !important; }
 }
