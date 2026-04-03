@@ -115,7 +115,7 @@ export function GlobalStatusBar() {
   const otherCount = items.length - 1;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-[4.25rem] z-30">
+    <div className="pointer-events-none fixed inset-x-0 top-[calc(4.25rem+env(safe-area-inset-top))] z-30">
       <div className="mx-auto max-w-md px-4">
         <AnimatePresence mode="wait">
           {activeItem ? (

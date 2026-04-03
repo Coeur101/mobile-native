@@ -243,7 +243,7 @@ export function UserProfilePage() {
 
   return (
     <PageTransition className="min-h-screen">
-      <header className="sticky top-0 z-20 border-b border-border bg-background/82 backdrop-blur-2xl">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/82 pt-[env(safe-area-inset-top)] backdrop-blur-2xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <motion.button

@@ -33,7 +33,7 @@ export function EditorMessageList({
   const reduceMotion = useReducedMotion();
 
   return (
-    <main className="relative z-10 mx-auto flex h-[calc(100dvh-4rem)] min-h-0 w-full max-w-md flex-col px-4 pb-[calc(8.5rem+env(safe-area-inset-bottom))] pt-4">
+    <main className="relative z-10 mx-auto flex h-[calc(100dvh-4rem-env(safe-area-inset-top))] min-h-0 w-full max-w-md flex-col px-4 pb-[calc(8.5rem+env(safe-area-inset-bottom))] pt-4">
       {/* 会话信息卡片 */}
       <motion.section
         initial={reduceMotion ? undefined : { opacity: 0, y: 16, scale: 0.985 }}

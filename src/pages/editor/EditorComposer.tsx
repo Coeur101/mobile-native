@@ -2,6 +2,7 @@ import { Loader2, Send } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { promptTemplates } from "@/features/project/templates";
 import { buttonTap, SPRING_BOUNCY, SPRING_GENTLE, SPRING_PANEL } from "@/lib/animations";
+import { useKeyboardHeight } from "@/hooks/use-keyboard-height";
 
 interface EditorComposerProps {
   prompt: string;
@@ -27,10 +28,12 @@ export function EditorComposer({
   onBlur,
 }: EditorComposerProps) {
   const reduceMotion = useReducedMotion();
+  const keyboardHeight = useKeyboardHeight();
+  const isKeyboardOpen = keyboardHeight > 0;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20">
-      <div className="mx-auto max-w-md px-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+    <div className="fixed inset-x-0 z-20" style={{ bottom: keyboardHeight }}>
+      <div className={`mx-auto max-w-md px-4 ${isKeyboardOpen ? "pb-2" : "pb-[calc(1rem+env(safe-area-inset-bottom))]"}`}>
         {!isStarterMode && !prompt.trim() ? (
           <div className="mb-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {promptTemplates.map((template, index) => (

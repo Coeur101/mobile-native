@@ -68,7 +68,7 @@ export function HomePage() {
         <div className="animate-glow absolute right-[-2rem] top-10 hidden h-24 w-24 rounded-full bg-sky-300/18 blur-3xl sm:block" />
       </div>
 
-      <header className="sticky top-0 z-20 border-b border-border/70 bg-background/86 backdrop-blur-2xl">
+      <header className="sticky top-0 z-20 border-b border-border/70 bg-background/86 pt-[env(safe-area-inset-top)] backdrop-blur-2xl">
         <div className="mx-auto flex h-16 max-w-md items-center justify-between px-4">
           <motion.div
             initial={reduceMotion ? undefined : { opacity: 0, y: 10 }}

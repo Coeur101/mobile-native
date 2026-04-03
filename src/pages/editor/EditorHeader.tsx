@@ -51,7 +51,7 @@ export function EditorHeader({
       : "从一句需求开始";
 
   return (
-    <header className="sticky top-0 z-20 border-b border-border/70 bg-background/86 backdrop-blur-2xl">
+    <header className="sticky top-0 z-20 border-b border-border/70 bg-background/86 pt-[env(safe-area-inset-top)] backdrop-blur-2xl">
       <div className="mx-auto flex h-16 max-w-md items-center justify-between gap-3 px-4">
         <motion.div
           initial={reduceMotion ? undefined : { opacity: 0, y: 10 }}

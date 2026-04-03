@@ -13,7 +13,7 @@ export function EditorStarter({ onSelectTemplate }: EditorStarterProps) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <main className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-md flex-col px-4 pb-[calc(6.25rem+env(safe-area-inset-bottom))] pt-6">
+    <main className="relative z-10 mx-auto flex min-h-[calc(100dvh-4rem-env(safe-area-inset-top))] w-full max-w-md flex-col px-4 pb-[calc(6.25rem+env(safe-area-inset-bottom))] pt-6">
       <section className="flex flex-1 flex-col justify-center">
         <motion.div
           initial={reduceMotion ? undefined : { opacity: 0, y: 18, scale: 0.9 }}
